@@ -1,0 +1,70 @@
+import 'package:base_flutter/components/background.dart';
+import 'package:base_flutter/components/custom_appbar.dart';
+import 'package:base_flutter/routes/app_pages.dart';
+import 'package:base_flutter/ui/responsive.dart';
+import 'package:base_flutter/utils/const.dart';
+import 'package:base_flutter/utils/global/globals_functions.dart';
+import 'package:flutter/material.dart';
+import 'package:get/get.dart';
+import 'message_controller.dart';
+
+class MessagePage extends GetView<MessageController> {
+  const MessagePage({Key? key}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Background(
+      child: Responsive(
+        mobile: MessageMobilePage(controller: controller),
+        desktop: MessageMobilePage(controller: controller),
+      ),
+    );
+  }
+}
+
+class MessageMobilePage extends StatelessWidget {
+  const MessageMobilePage({super.key, required this.controller});
+
+  final MessageController controller;
+
+  Widget _buildSearchView() {
+    return TextFormField(
+      style: tNormalTextStyle.copyWith(color: Colors.white),
+      cursorColor: kPrimaryColor,
+      decoration: InputDecoration(
+        hintText: 'search'.tr,
+        filled: true,
+        fillColor: kTextFieldBackground,
+        hintStyle: tNormalTextStyle.copyWith(color: kHintColor),
+        disabledBorder: defaultBorderRounded,
+        errorBorder: errorBorderRounded,
+        focusedBorder: focusedBorderRounded,
+        enabledBorder: defaultBorderRounded,
+        contentPadding: const EdgeInsets.symmetric(horizontal: 16),
+        isDense: true,
+        suffixIcon: const Icon(
+          Icons.search_rounded,
+          color: Colors.white,
+        ),
+      ),
+    );
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: appbarCustom(
+        title: Text('message_list'.tr),
+        automaticallyImplyLeading: false,
+      ),
+      body: SingleChildScrollView(
+        padding: const EdgeInsets.all(16),
+        child: Column(
+          children: [
+            _buildSearchView(),
+          ],
+        ),
+      ),
+    );
+  }
+}
