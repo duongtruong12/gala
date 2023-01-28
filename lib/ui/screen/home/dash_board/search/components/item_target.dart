@@ -24,13 +24,16 @@ class ItemTarget extends StatelessWidget {
           children: [
             Expanded(
               child: Container(
-                color: Colors.white,
+                color: kTextColorSecond,
                 width: double.infinity,
-                child: CustomNetworkImage(url: model.avatar),
+                child: CustomNetworkImage(
+                  url: model.avatar,
+                  borderRadius: 0,
+                ),
               ),
             ),
             Container(
-              color: Colors.white,
+              color: kTextColorSecond,
               width: double.infinity,
               padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
               child: Row(

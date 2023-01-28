@@ -32,7 +32,7 @@ showError(String message) {
     ScaffoldMessenger.of(Get.context!).showSnackBar(
       SnackBar(
         content: Text(message,
-            style: tNormalTextStyle.copyWith(color: Colors.white)),
+            style: tNormalTextStyle.copyWith(color: kTextColorSecond)),
         backgroundColor: kErrorColor,
         behavior: SnackBarBehavior.floating,
         duration: const Duration(seconds: 2),
@@ -155,9 +155,15 @@ setSp(num value) {
   return ScreenUtil().setSp(value);
 }
 
-String formatDateTime({required DateTime date, required String formatString}) {
+String formatDateTime({required DateTime? date, required String formatString}) {
   try {
-    return DateFormat(formatString).format(date);
+    if (date == null) {
+      return '';
+    }
+    if (formatString == DateTimeFormatString.textBehind) {
+      return '${date.year}${'year'.tr}${date.month}${'month'.tr}${date.day}${'day'.tr}';
+    }
+    return DateFormat(formatString, 'ja_JA').format(date);
   } catch (e) {
     return '$date';
   }

@@ -1,9 +1,9 @@
 import 'package:base_flutter/components/background.dart';
 import 'package:base_flutter/components/custom_appbar.dart';
-import 'package:base_flutter/routes/app_pages.dart';
+import 'package:base_flutter/components/paging_list.dart';
 import 'package:base_flutter/ui/responsive.dart';
+import 'package:base_flutter/ui/screen/home/dash_board/message/components/message_group.dart';
 import 'package:base_flutter/utils/const.dart';
-import 'package:base_flutter/utils/global/globals_functions.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'message_controller.dart';
@@ -29,7 +29,7 @@ class MessageMobilePage extends StatelessWidget {
 
   Widget _buildSearchView() {
     return TextFormField(
-      style: tNormalTextStyle.copyWith(color: Colors.white),
+      style: tNormalTextStyle.copyWith(color: kTextColorSecond),
       cursorColor: kPrimaryColor,
       decoration: InputDecoration(
         hintText: 'search'.tr,
@@ -44,7 +44,7 @@ class MessageMobilePage extends StatelessWidget {
         isDense: true,
         suffixIcon: const Icon(
           Icons.search_rounded,
-          color: Colors.white,
+          color: kTextColorSecond,
         ),
       ),
     );
@@ -57,11 +57,24 @@ class MessageMobilePage extends StatelessWidget {
         title: Text('message_list'.tr),
         automaticallyImplyLeading: false,
       ),
-      body: SingleChildScrollView(
+      body: Padding(
         padding: const EdgeInsets.all(16),
         child: Column(
           children: [
             _buildSearchView(),
+            Obx(() {
+              return Expanded(
+                child: PagingListCustom(
+                    childWidget: controller.list
+                        .map((element) => InkWell(
+                              onTap: () {
+                                controller.onSwitchMessageDetail(element.id);
+                              },
+                              child: MessageGroupItem(model: element),
+                            ))
+                        .toList()),
+              );
+            })
           ],
         ),
       ),

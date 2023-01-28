@@ -15,7 +15,7 @@ class SearchController extends GetxController {
       "age": 25,
       "point": 10000,
       "avatar":
-          "https://gravatar.com/avatar/8305ec25259a1ebe06e94a478cc6453f?s=400&d=robohash&r=x"
+          "https://fastly.picsum.photos/id/16/2500/1667.jpg?hmac=uAkZwYc5phCRNFTrV_prJ_0rP0EdwJaZ4ctje2bY7aE"
     }));
 
     list.add(FemaleModel.fromJson({
@@ -23,7 +23,7 @@ class SearchController extends GetxController {
       "age": 35,
       "point": 20000,
       "avatar":
-          "https://gravatar.com/avatar/8d4d8398d95737a9d9958c61f2a88879?s=400&d=robohash&r=x"
+          "https://fastly.picsum.photos/id/16/2500/1667.jpg?hmac=uAkZwYc5phCRNFTrV_prJ_0rP0EdwJaZ4ctje2bY7aE"
     }));
 
     list.add(FemaleModel.fromJson({
@@ -31,7 +31,7 @@ class SearchController extends GetxController {
       "age": 25,
       "point": 10000,
       "avatar":
-          "https://gravatar.com/avatar/8305ec25259a1ebe06e94a478cc6453f?s=400&d=robohash&r=x"
+          "https://fastly.picsum.photos/id/16/2500/1667.jpg?hmac=uAkZwYc5phCRNFTrV_prJ_0rP0EdwJaZ4ctje2bY7aE"
     }));
 
     list.add(FemaleModel.fromJson({
@@ -39,7 +39,7 @@ class SearchController extends GetxController {
       "age": 35,
       "point": 20000,
       "avatar":
-          "https://gravatar.com/avatar/8d4d8398d95737a9d9958c61f2a88879?s=400&d=robohash&r=x"
+          "https://fastly.picsum.photos/id/28/4928/3264.jpg?hmac=GnYF-RnBUg44PFfU5pcw_Qs0ReOyStdnZ8MtQWJqTfA"
     }));
 
     list.add(FemaleModel.fromJson({
@@ -47,7 +47,7 @@ class SearchController extends GetxController {
       "age": 25,
       "point": 10000,
       "avatar":
-          "https://gravatar.com/avatar/8305ec25259a1ebe06e94a478cc6453f?s=400&d=robohash&r=x"
+          "https://fastly.picsum.photos/id/20/3670/2462.jpg?hmac=CmQ0ln-k5ZqkdtLvVO23LjVAEabZQx2wOaT4pyeG10I"
     }));
 
     list.add(FemaleModel.fromJson({
@@ -55,7 +55,7 @@ class SearchController extends GetxController {
       "age": 35,
       "point": 20000,
       "avatar":
-          "https://gravatar.com/avatar/8d4d8398d95737a9d9958c61f2a88879?s=400&d=robohash&r=x"
+          "https://fastly.picsum.photos/id/28/4928/3264.jpg?hmac=GnYF-RnBUg44PFfU5pcw_Qs0ReOyStdnZ8MtQWJqTfA"
     }));
   }
 

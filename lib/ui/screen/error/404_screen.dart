@@ -17,15 +17,15 @@ class ErrorScreen extends GetView<ErrorController> {
         crossAxisAlignment: CrossAxisAlignment.center,
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          Expanded(
-              child: getLottieImage('404_error', boxFit: BoxFit.fitHeight)),
+          getLottieImage('404_error',
+              width: Get.width / 2, boxFit: BoxFit.fitWidth),
           const SizedBox(height: 16),
           TextButton(
               onPressed: () {
                 Get.offAllNamed(Routes.home);
               },
               child: Text(
-                'back_to_home'.tr,
+                'back'.tr,
                 style: tNormalTextStyle.copyWith(
                     color: kPrimaryColor,
                     fontSize: 16,

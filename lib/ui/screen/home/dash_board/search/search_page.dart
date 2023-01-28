@@ -45,7 +45,7 @@ class SearchMobilePage extends StatelessWidget {
             onTap: controller.onSwitchSearchDetail,
             child: Container(
               decoration: const BoxDecoration(
-                color: Colors.white,
+                color: kTextColorSecond,
                 borderRadius: radiusBorder,
               ),
               padding: const EdgeInsets.symmetric(

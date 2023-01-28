@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 
 const kPrimaryColor = Color(0xFFBCA674);
 const kPrimaryLightColor = Color(0xFFF1E6FF);
-const kTextColorPrimary = Color(0xFFBCA674);
+const kTextColorPrimary = Color(0xFFBBA478);
 const kTextColorSecond = Colors.white;
 const kTextColorDark = Color(0xFF2F2F2F);
 const kTextColorDarkLight = Color(0xFF787878);
@@ -48,7 +48,9 @@ const double kNormalTextSize = 14.0;
 const tNormalTextStyle = TextStyle(
     fontSize: kNormalTextSize, color: kTextColorDark, fontFamily: 'NotoSansJP');
 const tButtonWhiteTextStyle = TextStyle(
-    color: Colors.white, fontSize: kMediumTextSize, fontFamily: 'NotoSansJP');
+    color: kTextColorSecond,
+    fontSize: kMediumTextSize,
+    fontFamily: 'NotoSansJP');
 
 const defaultBorder =
     UnderlineInputBorder(borderSide: BorderSide(color: kBorderColor, width: 1));
@@ -69,6 +71,26 @@ ThemeData tThemeData = ThemeData(
   scaffoldBackgroundColor: Colors.transparent,
   textTheme: const TextTheme(bodyText1: tNormalTextStyle),
   fontFamily: 'NotoSansJP',
+  switchTheme: SwitchThemeData(
+    thumbColor: MaterialStateProperty.resolveWith<Color?>(
+      (Set<MaterialState> states) {
+        if (states.contains(MaterialState.selected)) {
+          return kPrimaryColor;
+        }
+        return Colors.white;
+      },
+    ),
+    trackColor: MaterialStateProperty.resolveWith<Color?>(
+      (Set<MaterialState> states) {
+        if (states.contains(MaterialState.selected)) {
+          return kPrimaryColor.withOpacity(0.57);
+        }
+        return Colors.white;
+      },
+    ),
+  ),
+  dividerTheme: const DividerThemeData(
+      thickness: 0.5, space: kDefaultPadding, color: kDividerColor),
   chipTheme: ChipThemeData(
     elevation: 3,
     backgroundColor: kPrimaryColor,
@@ -89,4 +111,6 @@ ThemeData tThemeData = ThemeData(
     enabledBorder: defaultBorder,
     border: defaultBorder,
   ),
+  colorScheme: ColorScheme.fromSwatch()
+      .copyWith(secondary: kPrimaryColor, primary: kPrimaryColor),
 );

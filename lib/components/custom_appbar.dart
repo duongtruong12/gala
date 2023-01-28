@@ -12,15 +12,17 @@ PreferredSizeWidget appbarCustom(
     bool isDark = false,
     bool automaticallyImplyLeading = true,
     PreferredSizeWidget? bottom,
-    double? elevation = 3}) {
+    double? elevation = 3,
+    double? leadingWidth}) {
   return AppBar(
       title: title,
       actions: actions,
       iconTheme: iconTheme,
       bottom: bottom,
       leading: leading,
+      leadingWidth: leadingWidth,
       titleTextStyle: tNormalTextStyle.copyWith(
-          color: Colors.white, fontSize: 18, fontWeight: FontWeight.bold),
+          color: kTextColorSecond, fontSize: 18, fontWeight: FontWeight.bold),
       centerTitle: true,
       automaticallyImplyLeading: automaticallyImplyLeading,
       systemOverlayStyle: SystemUiOverlayStyle(

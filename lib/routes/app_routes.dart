@@ -8,5 +8,7 @@ abstract class Routes {
   static const call = '/call';
   static const myPage = '/my-page';
   static const searchDetail = '/search_detail';
+  static const editProfile = '/editProfile';
   static const femaleProfile = '/femaleProfile/';
+  static const messageDetail = '/messageDetail/';
 }

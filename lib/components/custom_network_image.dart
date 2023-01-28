@@ -1,3 +1,4 @@
+import 'package:base_flutter/utils/global/globals_functions.dart';
 import 'package:extended_image/extended_image.dart';
 import 'package:flutter/material.dart';
 
@@ -26,13 +27,8 @@ class CustomNetworkImage extends StatelessWidget {
   Widget build(BuildContext context) {
     return ClipRRect(
       borderRadius: BorderRadius.all(Radius.circular(borderRadius)),
-      child: url == null
-          ? const Center(
-              child: Icon(
-                Icons.error_outline_rounded,
-                size: 32,
-              ),
-            )
+      child: url == null || url!.isEmpty
+          ? getSvgImage('ic_default_avatar')
           : ExtendedImage.network(
               url!,
               width: width,

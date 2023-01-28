@@ -52,7 +52,7 @@ class FemaleDetailMobilePage extends StatelessWidget {
         controller.model.value!.previewImages!.isEmpty) {
       return Text(
         'preview_image_empty'.tr,
-        style: tNormalTextStyle.copyWith(color: Colors.white, fontSize: 18),
+        style: tNormalTextStyle.copyWith(color: kTextColorSecond, fontSize: 18),
       );
     }
     final list = controller.model.value!.previewImages!;
@@ -89,7 +89,7 @@ class FemaleDetailMobilePage extends StatelessWidget {
           child: RichText(
             text: TextSpan(
                 style: tNormalTextStyle.copyWith(
-                    color: Colors.white,
+                    color: kTextColorSecond,
                     fontWeight: FontWeight.bold,
                     fontSize: 24),
                 children: [
@@ -102,7 +102,9 @@ class FemaleDetailMobilePage extends StatelessWidget {
         Text(
           '1${'hour'.tr}/${formatCurrency(controller.model.value?.point)}',
           style: tNormalTextStyle.copyWith(
-              color: Colors.white, fontWeight: FontWeight.bold, fontSize: 24),
+              color: kTextColorSecond,
+              fontWeight: FontWeight.bold,
+              fontSize: 24),
         )
       ],
     );
@@ -133,7 +135,7 @@ class FemaleDetailMobilePage extends StatelessWidget {
         Text(
           'description'.tr,
           style: tNormalTextStyle.copyWith(
-            color: Colors.white,
+            color: kTextColorSecond,
             fontWeight: FontWeight.bold,
             fontSize: 20,
           ),
@@ -142,7 +144,7 @@ class FemaleDetailMobilePage extends StatelessWidget {
         Text(
           controller.model.value?.description ?? '',
           style: tNormalTextStyle.copyWith(
-            color: Colors.white,
+            color: kTextColorSecond,
             fontSize: 14,
           ),
         )
@@ -160,11 +162,11 @@ class FemaleDetailMobilePage extends StatelessWidget {
             Expanded(
                 child: Text(
               label,
-              style: tNormalTextStyle.copyWith(color: Colors.white),
+              style: tNormalTextStyle.copyWith(color: kTextColorSecond),
             )),
             Text(
               content,
-              style: tNormalTextStyle.copyWith(color: Colors.white),
+              style: tNormalTextStyle.copyWith(color: kTextColorSecond),
             )
           ],
         ),
@@ -184,7 +186,7 @@ class FemaleDetailMobilePage extends StatelessWidget {
         Text(
           'information'.tr,
           style: tNormalTextStyle.copyWith(
-            color: Colors.white,
+            color: kTextColorSecond,
             fontWeight: FontWeight.bold,
             fontSize: 20,
           ),
@@ -259,7 +261,7 @@ class FemaleDetailMobilePage extends StatelessWidget {
                 )
               ],
             ),
-            color: Colors.white,
+            color: kTextColorSecond,
           ),
         ),
         body: Stack(

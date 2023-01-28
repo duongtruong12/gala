@@ -34,7 +34,7 @@ class SearchDetailMobilePage extends StatelessWidget {
           child: Text(
             search.tr,
             style: tNormalTextStyle.copyWith(
-                fontWeight: FontWeight.bold, color: Colors.white),
+                fontWeight: FontWeight.bold, color: kTextColorSecond),
           ),
         ),
         Row(
@@ -68,19 +68,19 @@ class SearchDetailMobilePage extends StatelessWidget {
           const SizedBox(height: 16),
           _buildSelectSearch('address'.tr),
           const SizedBox(height: 16),
-          const Divider(color: Colors.white, height: 1),
+          const Divider(color: kTextColorSecond, height: 1),
           const SizedBox(height: 16),
           _buildSelectSearch('birth_place'.tr),
           const SizedBox(height: 16),
-          const Divider(color: Colors.white, height: 1),
+          const Divider(color: kTextColorSecond, height: 1),
           const SizedBox(height: 16),
           _buildSelectSearch('age_drop_down'.tr),
           const SizedBox(height: 16),
-          const Divider(color: Colors.white, height: 1),
+          const Divider(color: kTextColorSecond, height: 1),
           const SizedBox(height: 16),
           _buildSelectSearch('height'.tr),
           const SizedBox(height: 16),
-          const Divider(color: Colors.white, height: 1),
+          const Divider(color: kTextColorSecond, height: 1),
           const SizedBox(height: 24),
           Text(
             'tag'.tr,
@@ -92,7 +92,7 @@ class SearchDetailMobilePage extends StatelessWidget {
           const SizedBox(height: 16),
           Text(
             'tag_content'.tr,
-            style: tNormalTextStyle.copyWith(color: Colors.white),
+            style: tNormalTextStyle.copyWith(color: kTextColorSecond),
           ),
           const SizedBox(height: 32),
           CustomButton(

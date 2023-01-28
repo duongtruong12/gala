@@ -50,10 +50,14 @@ dependencies:
   get: ^4.6.1
 
   url_launcher: ^6.1.0
-  image_picker: ^0.8.5
+  image_picker: ^0.8.6+1
 
   permission_handler: ^9.2.0
   shared_preferences: ^2.0.13
+  flutter_chat_bubble: ^2.0.0
+  firebase_core: ^2.1.1
+  firebase_auth: ^4.1.1
+  cloud_firestore: ^4.0.4
   lottie: ^1.4.3
 
   sprintf: ^6.0.0

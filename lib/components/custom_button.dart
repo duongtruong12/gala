@@ -49,7 +49,7 @@ class CustomButtonState extends State<CustomButton> {
     }
 
     final child = isLoading
-        ? const CircularProgressIndicator(color: Colors.white)
+        ? const CircularProgressIndicator(color: kTextColorSecond)
         : InkWell(
             child: widget.widget,
             onTap: pressed,

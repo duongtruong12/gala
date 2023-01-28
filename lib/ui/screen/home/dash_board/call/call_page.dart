@@ -1,7 +1,6 @@
 import 'package:base_flutter/components/background.dart';
 import 'package:base_flutter/components/custom_appbar.dart';
 import 'package:base_flutter/ui/responsive.dart';
-import 'package:base_flutter/utils/const.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'call_controller.dart';
@@ -29,6 +28,7 @@ class CallMobilePage extends StatelessWidget {
     return Scaffold(
       appBar: appbarCustom(
         title: Text('message_list'.tr),
+        automaticallyImplyLeading: false,
       ),
     );
   }
