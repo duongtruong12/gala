@@ -16,10 +16,12 @@ class PointCostModel {
     this.id,
     this.point,
     this.reason,
+    this.status,
     this.createTime,
   });
 
   String? id;
+  String? status;
   int? point;
   String? reason;
   Timestamp? createTime;
@@ -28,6 +30,7 @@ class PointCostModel {
         id: json["id"],
         point: json["point"],
         reason: json["reason"],
+        status: json["status"],
         createTime: json["createTime"],
       );
 
@@ -35,6 +38,7 @@ class PointCostModel {
         "id": id,
         "point": point,
         "reason": reason,
+        "status": status,
         "createTime": createTime,
       };
 }

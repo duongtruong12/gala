@@ -1,21 +1,24 @@
 import 'package:base_flutter/utils/const.dart';
-import 'package:base_flutter/utils/constant.dart';
-import 'package:base_flutter/utils/global/globals_functions.dart';
 import 'package:flutter/material.dart';
-import 'package:get/get.dart';
 
-class TabBarCall extends StatelessWidget {
-  const TabBarCall({super.key, required this.controller});
+class TabBarCustom extends StatelessWidget {
+  const TabBarCustom(
+      {super.key,
+      required this.controller,
+      required this.tabs,
+      this.padding = kDefaultPadding * 3});
 
   final TabController controller;
+  final List<Widget> tabs;
+  final double padding;
 
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: kDefaultPadding * 3),
+      padding: EdgeInsets.symmetric(horizontal: padding),
       child: Card(
         elevation: 6,
-        shadowColor: Colors.black26,
+        shadowColor: Colors.black54,
         shape: RoundedRectangleBorder(
           side: const BorderSide(color: Colors.transparent),
           borderRadius: BorderRadius.circular(kSmallPadding),
@@ -39,12 +42,7 @@ class TabBarCall extends StatelessWidget {
               unselectedLabelStyle: tNormalTextStyle,
               unselectedLabelColor: kTextColorDark,
               labelColor: kTextColorSecond,
-              tabs: [
-                Tab(
-                    text:
-                        '${'today'.tr}(${formatDateTime(date: DateTime.now(), formatString: DateTimeFormatString.textBehindddMM)})'),
-                Tab(text: 'next_day'.tr),
-              ]),
+              tabs: tabs),
         ),
       ),
     );

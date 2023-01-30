@@ -90,7 +90,7 @@ class MyPageFemaleMobilePage extends StatelessWidget {
               const SizedBox(height: kDefaultPadding),
               _buildRecordItem(
                   label: 'sale_proceed',
-                  onCallBack: controller.switchPaymentInformation),
+                  onCallBack: controller.switchSaleProceed),
               const SizedBox(height: kDefaultPadding),
               const Divider(color: kTextColorDark, height: 1),
               const SizedBox(height: kDefaultPadding),

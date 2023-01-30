@@ -1,9 +1,10 @@
 import 'package:base_flutter/components/background.dart';
 import 'package:base_flutter/components/custom_appbar.dart';
+import 'package:base_flutter/components/tab_bar_custom.dart';
+import 'package:base_flutter/components/ticket_view.dart';
 import 'package:base_flutter/ui/responsive.dart';
-import 'package:base_flutter/ui/screen/home/dash_board/call_female/components/tab_bar_call.dart';
-import 'package:base_flutter/ui/screen/home/dash_board/call_female/components/ticket_view.dart';
 import 'package:base_flutter/utils/const.dart';
+import 'package:base_flutter/utils/constant.dart';
 import 'package:base_flutter/utils/global/globals_functions.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -55,7 +56,15 @@ class CallMobilePage extends StatelessWidget {
       body: Column(
         children: [
           const SizedBox(height: kDefaultPadding),
-          TabBarCall(controller: controller.tabController),
+          TabBarCustom(
+            controller: controller.tabController,
+            tabs: [
+              Tab(
+                  text:
+                      '${'today'.tr}(${formatDateTime(date: DateTime.now(), formatString: DateTimeFormatString.textBehindddMM)})'),
+              Tab(text: 'next_day'.tr),
+            ],
+          ),
           Expanded(
               child: TabBarView(
             controller: controller.tabController,

@@ -12,8 +12,10 @@ class TicketView extends StatelessWidget {
   const TicketView({
     super.key,
     required this.model,
+    this.chatGroup = false,
   });
 
+  final bool chatGroup;
   final Ticket model;
 
   Widget _buildItemIcon({required String content, required String icon}) {
@@ -128,10 +130,10 @@ class TicketView extends StatelessWidget {
             padding: const EdgeInsets.only(left: kDefaultPadding * 2),
             child: CustomButton(
                 onPressed: () async {},
-                color: kGrayColorFemale,
+                color: chatGroup ? kColorWaiting : kGrayColorFemale,
                 borderRadius: kSmallPadding,
                 widget: Text(
-                  'apply'.tr,
+                  chatGroup ? 'chat_group'.tr : 'apply'.tr,
                   style: tButtonWhiteTextStyle.copyWith(
                       fontSize: 16, fontWeight: FontWeight.w500),
                 )),
@@ -147,8 +149,8 @@ class TicketView extends StatelessWidget {
       child: IntrinsicHeight(
         child: Row(
           children: [
-            const VerticalDivider(
-              color: kGrayColorFemale,
+            VerticalDivider(
+              color: chatGroup ? kColorWaiting : kGrayColorFemale,
               width: 5,
               thickness: 5,
             ),

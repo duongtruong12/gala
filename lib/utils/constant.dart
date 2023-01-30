@@ -37,4 +37,11 @@ enum SendMessageType { text, image, video, join, create, leave, disband }
 
 enum MessageGroupType { admin, group }
 
-enum PointReason { buy, gift, pay }
+enum PointReason { buy, gift, pay, remittancePayment }
+
+enum TransferStatus {
+  waiting,
+  received,
+  alreadyTransfer,
+  cancel,
+}

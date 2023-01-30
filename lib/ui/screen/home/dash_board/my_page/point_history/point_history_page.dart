@@ -2,7 +2,6 @@ import 'package:base_flutter/components/background.dart';
 import 'package:base_flutter/components/custom_appbar.dart';
 import 'package:base_flutter/components/custom_view.dart';
 import 'package:base_flutter/components/paging_list.dart';
-import 'package:base_flutter/model/point_cost_model.dart';
 import 'package:base_flutter/model/purchase_model.dart';
 import 'package:base_flutter/ui/responsive.dart';
 import 'package:base_flutter/utils/const.dart';
@@ -10,6 +9,7 @@ import 'package:base_flutter/utils/constant.dart';
 import 'package:base_flutter/utils/global/globals_functions.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'components/item_point_history.dart';
 import 'components/point_widget.dart';
 import 'point_history_controller.dart';
 
@@ -30,49 +30,6 @@ class PointHistoryMobilePage extends StatelessWidget {
   const PointHistoryMobilePage({super.key, required this.controller});
 
   final PointHistoryController controller;
-
-  Widget _buildItemList(PointCostModel model) {
-    return Column(
-      children: [
-        Row(
-            crossAxisAlignment: CrossAxisAlignment.end,
-            mainAxisAlignment: MainAxisAlignment.end,
-            children: [
-              Expanded(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  children: [
-                    Text(
-                      formatDateTime(
-                          date: model.createTime?.toDate(),
-                          formatString: DateTimeFormatString.textBehindHour),
-                      style: tNormalTextStyle.copyWith(
-                          color: kTextColorSecond, fontSize: 12),
-                    ),
-                    const SizedBox(height: kSmallPadding),
-                    Text(
-                      'reason_${model.reason}'.tr,
-                      style: tNormalTextStyle.copyWith(
-                          fontSize: 16,
-                          fontWeight: FontWeight.w500,
-                          color: kTextColorSecond),
-                    )
-                  ],
-                ),
-              ),
-              Text(
-                '${(model.point ?? 0) > 0 ? '+' : ''}${formatCurrency(model.point)}',
-                style: tNormalTextStyle.copyWith(
-                    fontSize: 16,
-                    fontWeight: FontWeight.w500,
-                    color: kTextColorSecond),
-              )
-            ]),
-        const Divider(),
-      ],
-    );
-  }
 
   Widget _buildItemPurchase(PurchaseModel model) {
     return Column(
@@ -122,8 +79,9 @@ class PointHistoryMobilePage extends StatelessWidget {
 
   Widget _buildList() {
     return PagingListCustom(
-      childWidget:
-          controller.list.map((element) => _buildItemList(element)).toList(),
+      childWidget: controller.list
+          .map((element) => ItemPointHistory(model: element))
+          .toList(),
     );
   }
 

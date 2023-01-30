@@ -4,11 +4,13 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
 Widget backButtonText({required VoidCallback callback}) {
-  return TextButton(
-      onPressed: callback,
+  return InkWell(
+      onTap: callback,
       child: Row(
         mainAxisSize: MainAxisSize.min,
+        crossAxisAlignment: CrossAxisAlignment.center,
         children: [
+          const SizedBox(width: kDefaultPadding),
           getSvgImage('ic_back'),
           const SizedBox(width: 3),
           Text(

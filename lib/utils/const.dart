@@ -17,6 +17,7 @@ const kPrimaryLightColor = Color(0xFFF1E6FF);
 const kPurchaseColor = Color(0xFF857552);
 const kTextColorDark = Color(0xFF2F2F2F);
 const kTextColorDarkLight = Color(0xFF787878);
+const kColorWaiting = Color(0xFFDDBC0B);
 const kGrayColor = Color(0xFF707070);
 const kGrayColorFemale = Color(0xFFBFBFBF);
 const kBorderColor = Color(0xFF999999);

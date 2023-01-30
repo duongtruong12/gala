@@ -16,9 +16,15 @@ abstract class Routes {
   static const femaleProfile = '/femaleProfile/';
   static const messageDetail = '/messageDetail/';
   static const pointHistory = '/pointHistory';
+  static const pointHistoryFemale = '/pointHistoryFemale';
   static const paymentInformation = '/paymentInformation';
+  static const saleProceed = '/saleProceed';
+  static const transferInformation = '/transferInformation';
+  static const instantDeposit = '/instantDeposit';
   static const userGuide = '/userGuide';
+  static const userGuideFemale = '/userGuideFemale';
   static const help = '/help';
+  static const helpFemale = '/helpFemale';
   static const selectMood = '/selectMood';
   static const firstTimeUser = '/firstTimeUser';
   static const confirmCall = '/confirmCall';

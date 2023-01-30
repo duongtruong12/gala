@@ -26,8 +26,20 @@ import 'package:base_flutter/ui/screen/home/dash_board/my_page/point_history/poi
 import 'package:base_flutter/ui/screen/home/dash_board/my_page/point_history/point_history_page.dart';
 import 'package:base_flutter/ui/screen/home/dash_board/my_page/user_guide/user_guide_binding.dart';
 import 'package:base_flutter/ui/screen/home/dash_board/my_page/user_guide/user_guide_page.dart';
+import 'package:base_flutter/ui/screen/home/dash_board/my_page_female/help_female/help_female_binding.dart';
+import 'package:base_flutter/ui/screen/home/dash_board/my_page_female/help_female/help_female_page.dart';
 import 'package:base_flutter/ui/screen/home/dash_board/my_page_female/my_page_female.dart';
 import 'package:base_flutter/ui/screen/home/dash_board/my_page_female/my_page_female_binding.dart';
+import 'package:base_flutter/ui/screen/home/dash_board/my_page_female/point_history_female/point_history_female_binding.dart';
+import 'package:base_flutter/ui/screen/home/dash_board/my_page_female/point_history_female/point_history_female_page.dart';
+import 'package:base_flutter/ui/screen/home/dash_board/my_page_female/sale_proceed/instant_deposit/instant_deposit_binding.dart';
+import 'package:base_flutter/ui/screen/home/dash_board/my_page_female/sale_proceed/instant_deposit/instant_deposit_page.dart';
+import 'package:base_flutter/ui/screen/home/dash_board/my_page_female/sale_proceed/sale_proceed_binding.dart';
+import 'package:base_flutter/ui/screen/home/dash_board/my_page_female/sale_proceed/sale_proceed_page.dart';
+import 'package:base_flutter/ui/screen/home/dash_board/my_page_female/sale_proceed/transfer_information/transfer_information_binding.dart';
+import 'package:base_flutter/ui/screen/home/dash_board/my_page_female/sale_proceed/transfer_information/transfer_information_page.dart';
+import 'package:base_flutter/ui/screen/home/dash_board/my_page_female/user_guide_female/user_guide_female_binding.dart';
+import 'package:base_flutter/ui/screen/home/dash_board/my_page_female/user_guide_female/user_guide_female_page.dart';
 import 'package:base_flutter/ui/screen/home/dash_board/search/search_binding.dart';
 import 'package:base_flutter/ui/screen/home/dash_board/search/search_page.dart';
 import 'package:base_flutter/ui/screen/login/login_binding.dart';
@@ -152,6 +164,27 @@ Route onGenerateRouteDashboard(RouteSettings settings) {
         bindings: PaymentInformationBinding());
   }
 
+  if (settings.name == Routes.saleProceed) {
+    return _getPageRoute(
+        name: Routes.saleProceed,
+        child: const SaleProceed(),
+        bindings: SaleProceedBinding());
+  }
+
+  if (settings.name == Routes.transferInformation) {
+    return _getPageRoute(
+        name: Routes.transferInformation,
+        child: const TransferInformation(),
+        bindings: TransferInformationBinding());
+  }
+
+  if (settings.name == Routes.instantDeposit) {
+    return _getPageRoute(
+        name: Routes.instantDeposit,
+        child: const InstantDeposit(),
+        bindings: InstantDepositBinding());
+  }
+
   if (settings.name == Routes.userGuide) {
     return _getPageRoute(
         name: Routes.userGuide,
@@ -159,11 +192,25 @@ Route onGenerateRouteDashboard(RouteSettings settings) {
         bindings: UserGuideBinding());
   }
 
+  if (settings.name == Routes.userGuideFemale) {
+    return _getPageRoute(
+        name: Routes.userGuideFemale,
+        child: const UserGuideFemale(),
+        bindings: UserGuideFemaleBinding());
+  }
+
   if (settings.name == Routes.help) {
     return _getPageRoute(
         name: Routes.help,
         child: const HelpPage(),
         bindings: HelpPageBinding());
+  }
+
+  if (settings.name == Routes.helpFemale) {
+    return _getPageRoute(
+        name: Routes.helpFemale,
+        child: const HelpFemale(),
+        bindings: HelpFemaleBinding());
   }
 
   if (settings.name == Routes.selectMood) {
@@ -192,6 +239,13 @@ Route onGenerateRouteDashboard(RouteSettings settings) {
         name: Routes.pointHistory,
         child: const PointHistory(),
         bindings: PointHistoryBinding());
+  }
+
+  if (settings.name == Routes.pointHistoryFemale) {
+    return _getPageRoute(
+        name: Routes.pointHistoryFemale,
+        child: const PointHistoryFemale(),
+        bindings: PointHistoryFemaleBinding());
   }
 
   return _getPageRoute(

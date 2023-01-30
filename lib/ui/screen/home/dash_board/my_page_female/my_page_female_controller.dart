@@ -10,18 +10,18 @@ class MyPageFemaleController extends GetxController {
   }
 
   void switchPointHistory() {
-    Get.toNamed(Routes.pointHistory, id: getRouteMyPage());
+    Get.toNamed(Routes.pointHistoryFemale, id: getRouteMyPage());
   }
 
-  void switchPaymentInformation() {
-    Get.toNamed(Routes.paymentInformation, id: getRouteMyPage());
+  void switchSaleProceed() {
+    Get.toNamed(Routes.saleProceed, id: getRouteMyPage());
   }
 
   void switchUserGuide() {
-    Get.toNamed(Routes.userGuide, id: getRouteMyPage());
+    Get.toNamed(Routes.userGuideFemale, id: getRouteMyPage());
   }
 
   void switchHelp() {
-    Get.toNamed(Routes.help, id: getRouteMyPage());
+    Get.toNamed(Routes.helpFemale, id: getRouteMyPage());
   }
 }

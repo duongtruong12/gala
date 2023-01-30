@@ -7,6 +7,7 @@ import 'package:base_flutter/model/faq_model.dart';
 import 'package:base_flutter/ui/responsive.dart';
 import 'package:base_flutter/utils/const.dart';
 import 'package:base_flutter/utils/global/globals_functions.dart';
+import 'package:base_flutter/utils/global/globals_variable.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'user_guide_controller.dart';
@@ -42,7 +43,7 @@ class UserGuideMobilePage extends StatelessWidget {
               child: Text(
                 content ?? '',
                 style: tNormalTextStyle.copyWith(
-                    color: kTextColorSecond, fontSize: 16),
+                    color: getTextColorSecond(), fontSize: 16),
               ),
             )
           ]);
@@ -72,10 +73,11 @@ class UserGuideMobilePage extends StatelessWidget {
             height: 60,
             widget: Text(
               'faq'.tr,
-              style:
-                  tNormalTextStyle.copyWith(color: kPrimaryColor, fontSize: 18),
+              style: tNormalTextStyle.copyWith(
+                  color: femaleGender.value ? kTextColorDark : kPrimaryColor,
+                  fontSize: 18),
             ),
-            borderColor: kPrimaryColor,
+            borderColor: femaleGender.value ? kTextColorDark : kPrimaryColor,
             color: Colors.transparent,
           ),
           Expanded(
