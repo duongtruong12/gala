@@ -1,5 +1,3 @@
-import 'dart:io';
-
 import 'package:base_flutter/utils/const.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -8,7 +6,7 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
 import 'package:lottie/lottie.dart';
-import 'package:path_provider/path_provider.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:sprintf/sprintf.dart';
 import 'package:url_launcher/url_launcher.dart';
 
@@ -22,6 +20,39 @@ showInfo(String message) {
         content: Text(message),
         behavior: SnackBarBehavior.floating,
         duration: const Duration(seconds: 2),
+      ),
+    );
+  }
+}
+
+String obscureText(String str) {
+  String secure = str;
+  int numSpace = str.length - 4;
+  if (numSpace > 0) {
+    try {
+      if (str.isNotEmpty && str.length > numSpace) {
+        secure = "*************${str.substring(numSpace)}";
+      }
+    } catch (e) {
+      logger.e(e);
+    }
+  }
+  return secure;
+}
+
+showCustomDialog({required Widget widget}) {
+  if (Get.context != null) {
+    showDialog(
+      context: Get.context!,
+      barrierDismissible: false,
+      builder: (BuildContext context) => WillPopScope(
+        onWillPop: () {
+          return Future.value(true);
+        },
+        child: Stack(
+          alignment: Alignment.center,
+          children: [widget],
+        ),
       ),
     );
   }
@@ -62,21 +93,6 @@ showCustomBottomSheet(Widget childWidget) {
   }
 }
 
-Future<String?> getDownloadDirectory() async {
-  try {
-    final temp = await getTemporaryDirectory();
-    String path = temp.path;
-    final directories = Directory(path);
-    if (!directories.existsSync()) {
-      directories.createSync();
-    }
-    return path;
-  } catch (e) {
-    logger.e(e);
-    return null;
-  }
-}
-
 dismissKeyboard() {
   if (Get.context != null) {
     FocusScope.of(Get.context!).requestFocus(FocusNode());
@@ -100,8 +116,12 @@ void setStatusBarColor({Brightness brightness = Brightness.light}) {
 
 Widget getSvgImage(String assetName,
     {BoxFit? boxFit, double? height, double? width, Color? color}) {
+  String path = 'assets/image/$assetName.svg';
+  if (femaleGender.value) {
+    path = 'assets/image_female/$assetName.svg';
+  }
   return SvgPicture.asset(
-    'assets/image/$assetName.svg',
+    path,
     height: height,
     width: width,
     color: color,
@@ -162,6 +182,10 @@ String formatDateTime({required DateTime? date, required String formatString}) {
     }
     if (formatString == DateTimeFormatString.textBehind) {
       return '${date.year}${'year'.tr}${date.month}${'month'.tr}${date.day}${'day'.tr}';
+    } else if (formatString == DateTimeFormatString.textBehindHour) {
+      return '${date.year}${'year'.tr}${date.month}${'month'.tr}${date.day}${'day'.tr}${formatDateTime(date: date, formatString: DateTimeFormatString.hhmm)}';
+    } else if (formatString == DateTimeFormatString.textBehindddMM) {
+      return '${date.month}${'month'.tr}${date.day}${'day'.tr}';
     }
     return DateFormat(formatString, 'ja_JA').format(date);
   } catch (e) {
@@ -185,9 +209,17 @@ String formatCurrency(num? number, {String symbol = CurrencySymbol.point}) {
           NumberFormat.currency(locale: "ja_JP", customPattern: "#,###")
               .format(number)
               .replaceAll('.', ',');
-      return '$currency $symbol';
+      if (symbol == CurrencySymbol.japan) {
+        return '$symbol$currency';
+      } else {
+        return '$currency$symbol';
+      }
     } else {
-      return '0 $symbol';
+      if (symbol == CurrencySymbol.japan) {
+        return '${symbol}0';
+      } else {
+        return '0$symbol';
+      }
     }
   } catch (e) {
     logger.e(e);
@@ -249,6 +281,47 @@ Widget buildRowItem(Widget item1, Widget item2) {
   );
 }
 
+Future<bool> storeData({required String key, required dynamic value}) async {
+  final prefs = await SharedPreferences.getInstance();
+  if (value is bool) {
+    return await prefs.setBool(key, value);
+  } else if (value is String) {
+    return await prefs.setString(key, value);
+  } else if (value is int) {
+    return await prefs.setInt(key, value);
+  } else if (value is double) {
+    return await prefs.setDouble(key, value);
+  } else if (value is List<String>) {
+    return await prefs.setStringList(key, value);
+  }
+  return false;
+}
+
+Color getColorPrimary() {
+  return femaleGender.value ? kPrimaryColorFemale : kTextColorPrimary;
+}
+
+Color getColorAppBar() {
+  return femaleGender.value ? kTextColorSecond : kTextColorPrimary;
+}
+
+int getRouteMyPage() {
+  return femaleGender.value ? RouteId.myPageFemale : RouteId.myPage;
+}
+
+Color getTextColorButton() {
+  return femaleGender.value ? kTextColorSecond : kTextColorDark;
+}
+
+Color getTextColorSecond() {
+  return femaleGender.value ? kTextColorDark : kTextColorSecond;
+}
+
+Future<bool> getBool({required String key}) async {
+  final prefs = await SharedPreferences.getInstance();
+  return prefs.getBool(key) ?? false;
+}
+
 Widget buildRichText(String text1, String text2, {bool isBold = false}) {
   return RichText(
     maxLines: 2,
@@ -260,7 +333,7 @@ Widget buildRichText(String text1, String text2, {bool isBold = false}) {
       TextSpan(
           text: text2,
           style: isBold
-              ? tNormalTextStyle.copyWith(fontWeight: FontWeight.bold)
+              ? tNormalTextStyle.copyWith(fontWeight: FontWeight.w500)
               : tNormalTextStyle.copyWith()),
     ]),
   );

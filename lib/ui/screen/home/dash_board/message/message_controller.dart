@@ -1,6 +1,7 @@
 import 'package:base_flutter/model/message_group_model.dart';
 import 'package:base_flutter/routes/app_pages.dart';
 import 'package:base_flutter/utils/constant.dart';
+import 'package:base_flutter/utils/global/globals_variable.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:get/get.dart';
 
@@ -40,8 +41,7 @@ class MessageController extends GetxController {
         id: '管人',
         title: '01/01(火) 20:00〜 @キャスト名',
         messageGroupType: MessageGroupType.group.name,
-        avatar:
-            'https://fastly.picsum.photos/id/22/4434/3729.jpg?hmac=fjZdkSMZJNFgsoDh8Qo5zdA_nSGUAWvKLyyqmEt2xs0',
+        avatar: listImage[r.nextInt(listImage.length)],
         createTime: Timestamp.fromMillisecondsSinceEpoch(
             DateTime.now().millisecondsSinceEpoch),
         userIds: ['管理人', '管理', '管'],
@@ -60,8 +60,7 @@ class MessageController extends GetxController {
         id: '管理',
         title: '01/01(火) 22:00〜 @キャスト名',
         messageGroupType: MessageGroupType.group.name,
-        avatar:
-            'https://fastly.picsum.photos/id/25/5000/3333.jpg?hmac=yCz9LeSs-i72Ru0YvvpsoECnCTxZjzGde805gWrAHkM',
+        avatar: listImage[r.nextInt(listImage.length)],
         createTime: Timestamp.fromMillisecondsSinceEpoch(
             DateTime.now().millisecondsSinceEpoch),
         userIds: ['管理人', '管理', '管'],
@@ -80,8 +79,7 @@ class MessageController extends GetxController {
         id: '管人',
         title: '02/05(火) 20:00〜 @キャスト名',
         messageGroupType: MessageGroupType.group.name,
-        avatar:
-            'https://fastly.picsum.photos/id/26/4209/2769.jpg?hmac=vcInmowFvPCyKGtV7Vfh7zWcA_Z0kStrPDW3ppP0iGI',
+        avatar: listImage[r.nextInt(listImage.length)],
         createTime: Timestamp.fromMillisecondsSinceEpoch(
             DateTime.now().millisecondsSinceEpoch),
         userIds: ['管理人', '管理', '管'],

@@ -1,6 +1,7 @@
 import 'package:base_flutter/model/female_model.dart';
 import 'package:base_flutter/routes/app_pages.dart';
 import 'package:base_flutter/utils/constant.dart';
+import 'package:base_flutter/utils/global/globals_variable.dart';
 import 'package:get/get.dart';
 
 class SearchController extends GetxController {
@@ -14,48 +15,42 @@ class SearchController extends GetxController {
       "display_name": "あかね",
       "age": 25,
       "point": 10000,
-      "avatar":
-          "https://fastly.picsum.photos/id/16/2500/1667.jpg?hmac=uAkZwYc5phCRNFTrV_prJ_0rP0EdwJaZ4ctje2bY7aE"
+      "avatar": listImage[r.nextInt(listImage.length)]
     }));
 
     list.add(FemaleModel.fromJson({
       "display_name": "あかね",
       "age": 35,
       "point": 20000,
-      "avatar":
-          "https://fastly.picsum.photos/id/16/2500/1667.jpg?hmac=uAkZwYc5phCRNFTrV_prJ_0rP0EdwJaZ4ctje2bY7aE"
+      "avatar": listImage[r.nextInt(listImage.length)]
     }));
 
     list.add(FemaleModel.fromJson({
       "display_name": "あかね",
       "age": 25,
       "point": 10000,
-      "avatar":
-          "https://fastly.picsum.photos/id/16/2500/1667.jpg?hmac=uAkZwYc5phCRNFTrV_prJ_0rP0EdwJaZ4ctje2bY7aE"
+      "avatar": listImage[r.nextInt(listImage.length)]
     }));
 
     list.add(FemaleModel.fromJson({
       "display_name": "あかね",
       "age": 35,
       "point": 20000,
-      "avatar":
-          "https://fastly.picsum.photos/id/28/4928/3264.jpg?hmac=GnYF-RnBUg44PFfU5pcw_Qs0ReOyStdnZ8MtQWJqTfA"
+      "avatar": listImage[r.nextInt(listImage.length)]
     }));
 
     list.add(FemaleModel.fromJson({
       "display_name": "あかね",
       "age": 25,
       "point": 10000,
-      "avatar":
-          "https://fastly.picsum.photos/id/20/3670/2462.jpg?hmac=CmQ0ln-k5ZqkdtLvVO23LjVAEabZQx2wOaT4pyeG10I"
+      "avatar": listImage[r.nextInt(listImage.length)]
     }));
 
     list.add(FemaleModel.fromJson({
       "display_name": "あかね",
       "age": 35,
       "point": 20000,
-      "avatar":
-          "https://fastly.picsum.photos/id/28/4928/3264.jpg?hmac=GnYF-RnBUg44PFfU5pcw_Qs0ReOyStdnZ8MtQWJqTfA"
+      "avatar": listImage[r.nextInt(listImage.length)]
     }));
   }
 

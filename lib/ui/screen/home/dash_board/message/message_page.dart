@@ -4,6 +4,7 @@ import 'package:base_flutter/components/paging_list.dart';
 import 'package:base_flutter/ui/responsive.dart';
 import 'package:base_flutter/ui/screen/home/dash_board/message/components/message_group.dart';
 import 'package:base_flutter/utils/const.dart';
+import 'package:base_flutter/utils/global/globals_functions.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'message_controller.dart';
@@ -30,7 +31,7 @@ class MessageMobilePage extends StatelessWidget {
   Widget _buildSearchView() {
     return TextFormField(
       style: tNormalTextStyle.copyWith(color: kTextColorSecond),
-      cursorColor: kPrimaryColor,
+      cursorColor: getColorPrimary(),
       decoration: InputDecoration(
         hintText: 'search'.tr,
         filled: true,

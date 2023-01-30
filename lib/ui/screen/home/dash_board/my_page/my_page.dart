@@ -46,62 +46,79 @@ class MyPageMobilePage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: appbarCustom(
-          title: Text('my_page'.tr), automaticallyImplyLeading: false),
-      body: SingleChildScrollView(
-        padding: const EdgeInsetsDirectional.all(kDefaultPadding),
+    final list = [
+      const SizedBox(height: kDefaultPadding),
+      const SizedBox(
+          height: 78,
+          width: 78,
+          child: CustomCircleImage(
+              radius: 99,
+              image: CustomNetworkImage(
+                url: null,
+                fit: BoxFit.fitHeight,
+              ))),
+      const SizedBox(height: kSmallPadding),
+      Center(
+        child: Text(
+          'ニックネーム',
+          style: tNormalTextStyle.copyWith(
+              color: kTextColorSecond,
+              fontWeight: FontWeight.w500,
+              fontSize: 18),
+        ),
+      ),
+      const SizedBox(height: 4),
+      Center(
+        child: Text(
+          formatCurrency(10000),
+          style: tNormalTextStyle.copyWith(color: kTextColorPrimary),
+        ),
+      ),
+      const SizedBox(height: kDefaultPadding),
+      Container(
+        color: kTextColorSecond,
+        padding: const EdgeInsets.all(kDefaultPadding),
         child: Column(
           children: [
             const SizedBox(height: kDefaultPadding),
-            const CustomCircleImage(
-                radius: 99, image: CustomNetworkImage(url: null)),
-            const SizedBox(height: kSmallPadding),
-            Text(
-              'ニックネーム',
-              style: tNormalTextStyle.copyWith(
-                  color: kTextColorSecond,
-                  fontWeight: FontWeight.bold,
-                  fontSize: 18),
-            ),
-            const SizedBox(height: 4),
-            Text(
-              formatCurrency(10000),
-              style: tNormalTextStyle.copyWith(color: kTextColorPrimary),
-            ),
+            _buildRecordItem(
+                label: 'edit_profile',
+                onCallBack: controller.switchEditProfile),
             const SizedBox(height: kDefaultPadding),
-            Container(
-              color: kTextColorSecond,
-              padding: const EdgeInsets.all(kDefaultPadding),
-              child: Column(
-                children: [
-                  const SizedBox(height: kDefaultPadding),
-                  _buildRecordItem(
-                      label: 'edit_profile',
-                      onCallBack: controller.switchEditProfile),
-                  const SizedBox(height: kDefaultPadding),
-                  const Divider(color: kTextColorDark, height: 1),
-                  const SizedBox(height: kDefaultPadding),
-                  _buildRecordItem(label: 'point_history', onCallBack: () {}),
-                  const SizedBox(height: kDefaultPadding),
-                  const Divider(color: kTextColorDark, height: 1),
-                  const SizedBox(height: kDefaultPadding),
-                  _buildRecordItem(
-                      label: 'payment_information', onCallBack: () {}),
-                  const SizedBox(height: kDefaultPadding),
-                  const Divider(color: kTextColorDark, height: 1),
-                  const SizedBox(height: kDefaultPadding),
-                  _buildRecordItem(label: 'user_guide', onCallBack: () {}),
-                  const SizedBox(height: kDefaultPadding),
-                  const Divider(color: kTextColorDark, height: 1),
-                  const SizedBox(height: kDefaultPadding),
-                  _buildRecordItem(label: 'help', onCallBack: () {}),
-                  const SizedBox(height: kDefaultPadding),
-                ],
-              ),
-            )
+            const Divider(color: kTextColorDark, height: 1),
+            const SizedBox(height: kDefaultPadding),
+            _buildRecordItem(
+                label: 'point_history',
+                onCallBack: controller.switchPointHistory),
+            const SizedBox(height: kDefaultPadding),
+            const Divider(color: kTextColorDark, height: 1),
+            const SizedBox(height: kDefaultPadding),
+            _buildRecordItem(
+                label: 'payment_information',
+                onCallBack: controller.switchPaymentInformation),
+            const SizedBox(height: kDefaultPadding),
+            const Divider(color: kTextColorDark, height: 1),
+            const SizedBox(height: kDefaultPadding),
+            _buildRecordItem(
+                label: 'user_guide', onCallBack: controller.switchUserGuide),
+            const SizedBox(height: kDefaultPadding),
+            const Divider(color: kTextColorDark, height: 1),
+            const SizedBox(height: kDefaultPadding),
+            _buildRecordItem(label: 'help', onCallBack: controller.switchHelp),
+            const SizedBox(height: kDefaultPadding),
           ],
         ),
+      )
+    ];
+    return Scaffold(
+      appBar: appbarCustom(
+          title: Text('my_page'.tr), automaticallyImplyLeading: false),
+      body: ListView.builder(
+        padding: const EdgeInsetsDirectional.all(kDefaultPadding),
+        itemCount: list.length,
+        itemBuilder: (BuildContext context, int index) {
+          return list[index];
+        },
       ),
     );
   }

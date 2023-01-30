@@ -1,7 +1,9 @@
 import 'package:base_flutter/model/message_group_model.dart';
 import 'package:base_flutter/routes/app_pages.dart';
 import 'package:base_flutter/utils/constant.dart';
+import 'package:base_flutter/utils/global/globals_variable.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:get/get.dart';
 
 class MessageDetailController extends GetxController {
@@ -10,6 +12,7 @@ class MessageDetailController extends GetxController {
   bool? canPop;
   Rxn<MessageGroupModel> model = Rxn<MessageGroupModel>();
   final list = <MessageModel>[].obs;
+  final scrollController = ScrollController();
 
   @override
   void onInit() {
@@ -21,6 +24,12 @@ class MessageDetailController extends GetxController {
     } else {
       onCallBack();
     }
+  }
+
+  @override
+  void onClose() {
+    scrollController.dispose();
+    super.onClose();
   }
 
   Future<void> getGroupModel(dynamic id) async {
@@ -144,7 +153,7 @@ class MessageDetailController extends GetxController {
     ));
     if (model.value?.messageGroupType == MessageGroupType.group.name) {
       list.add(MessageModel(
-        content: '〇〇〇〇が解散しました\n消費ポイント：0P',
+        content: femaleGender.value ? '〇〇〇〇が解散しました' : '〇〇〇〇が解散しました\n消費ポイント：0P',
         userId: '管理人',
         delete: false,
         createdTime: Timestamp.fromMillisecondsSinceEpoch(
@@ -153,7 +162,7 @@ class MessageDetailController extends GetxController {
       ));
 
       list.add(MessageModel(
-        content: '全員が解散しました\n消費ポイント：0P',
+        content: femaleGender.value ? '全員が解散しました' : '全員が解散しました\n消費ポイント：0P',
         userId: '管理人',
         delete: false,
         createdTime: Timestamp.fromMillisecondsSinceEpoch(
@@ -161,6 +170,8 @@ class MessageDetailController extends GetxController {
         type: SendMessageType.disband.name,
       ));
     }
+    await Future.delayed(const Duration(milliseconds: 100));
+    scrollController.jumpTo(scrollController.position.maxScrollExtent);
   }
 
   void onCallBack() {

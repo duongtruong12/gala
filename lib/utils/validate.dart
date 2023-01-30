@@ -95,10 +95,29 @@ class Validate {
     return null;
   }
 
+  static String? emailValidate(String? email, {bool checkEmpty = true}) {
+    final emailString = email.toString().trim();
+    const String emailPattern = r'^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}';
+    RegExp regExp = RegExp(emailPattern);
+
+    if (checkEmpty) {
+      if (emailString.isEmpty) {
+        return "msg_email_empty".tr;
+      } else if (!regExp.hasMatch(emailString)) {
+        return "msg_email_format".tr;
+      }
+    } else {
+      if (emailString.isNotEmpty && !regExp.hasMatch(emailString)) {
+        return "msg_email_format".tr;
+      }
+    }
+    return null;
+  }
+
   // validate phone number
   static String? userValidate(String? phone) {
     final phoneString = phone.toString().trim();
-    RegExp regExp = RegExp(r'^[0-9\-\+]{9,15}$');
+    RegExp regExp = RegExp(r'^[0-9\-+]{9,15}$');
     if (phoneString.isEmpty) {
       return "msg_phone_empty".tr;
     } else if (!regExp.hasMatch(phoneString)) {

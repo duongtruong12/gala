@@ -11,20 +11,10 @@ class HomeController extends GetxController {
     Routes.myPage,
   ];
 
-  @override
-  void onInit() {
-    super.onInit();
-    final name = Get.currentRoute;
-    final index = pages.indexWhere((element) => name == element);
-    if (index != -1) {
-      onTapItem(index);
-    }
-  }
-
-  void onTapItem(int index) {
+  void onTapItem(int? index) {
     if (index == currentIndex.value) {
       return;
     }
-    currentIndex.value = index;
+    currentIndex.value = index ?? 0;
   }
 }

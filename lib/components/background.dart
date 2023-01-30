@@ -1,4 +1,5 @@
 import 'package:base_flutter/utils/const.dart';
+import 'package:base_flutter/utils/global/globals_variable.dart';
 import 'package:flutter/material.dart';
 
 class Background extends StatelessWidget {
@@ -12,15 +13,20 @@ class Background extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-        decoration: const BoxDecoration(
-          gradient: LinearGradient(
-            stops: [0.0, 0.5, 1.0],
-            colors: [
-              Colors.black,
-              Color(0xFF242424),
-              Colors.black,
-            ],
-          ),
+        decoration: BoxDecoration(
+          color: femaleGender.value
+              ? kPrimaryBackgroundColorFemale
+              : kPrimaryBackgroundColor,
+          gradient: femaleGender.value
+              ? null
+              : const LinearGradient(
+                  stops: [0.0, 0.5, 1.0],
+                  colors: [
+                    Colors.black,
+                    Color(0xFF242424),
+                    Colors.black,
+                  ],
+                ),
         ),
         child: Scaffold(
           resizeToAvoidBottomInset: false,

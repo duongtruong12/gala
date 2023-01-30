@@ -1,4 +1,5 @@
 import 'package:base_flutter/utils/const.dart';
+import 'package:base_flutter/utils/global/globals_functions.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_chat_bubble/bubble_type.dart';
 import 'package:flutter_chat_bubble/chat_bubble.dart';
@@ -20,7 +21,7 @@ class SentMyMessage extends StatelessWidget {
           type: BubbleType.sendBubble, radius: kSmallPadding),
       alignment: Alignment.topLeft,
       padding: const EdgeInsets.all(kSmallPadding),
-      backGroundColor: kPrimaryColor,
+      backGroundColor: getColorPrimary(),
       child: Container(
         constraints: BoxConstraints(
           maxWidth: Get.width * 0.7,
@@ -29,7 +30,8 @@ class SentMyMessage extends StatelessWidget {
           padding: const EdgeInsets.only(right: kSmallPadding),
           child: Text(
             message,
-            style: tNormalTextStyle.copyWith(fontSize: 12),
+            style: tNormalTextStyle.copyWith(
+                fontSize: 12, color: getTextColorButton()),
           ),
         ),
       ),

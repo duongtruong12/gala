@@ -1,4 +1,5 @@
 import 'package:base_flutter/model/female_model.dart';
+import 'package:base_flutter/utils/global/globals_variable.dart';
 import 'package:get/get.dart';
 
 class FemaleDetailController extends GetxController {
@@ -16,16 +17,8 @@ class FemaleDetailController extends GetxController {
       "age": 25,
       "display_name": "あなた",
       "point": 10000,
-      "avatar":
-          "https://i.picsum.photos/id/0/5000/3333.jpg?hmac=_j6ghY5fCfSD6tvtcV74zXivkJSPIfR9B8w34XeQmvU",
-      "preview_images": [
-        "https://i.picsum.photos/id/1/5000/3333.jpg?hmac=Asv2DU3rA_5D1xSe22xZK47WEAN0wjWeFOhzd13ujW4",
-        "https://i.picsum.photos/id/1/5000/3333.jpg?hmac=Asv2DU3rA_5D1xSe22xZK47WEAN0wjWeFOhzd13ujW4",
-        "https://i.picsum.photos/id/4/5000/3333.jpg?hmac=ghf06FdmgiD0-G4c9DdNM8RnBIN7BO0-ZGEw47khHP4",
-        "https://i.picsum.photos/id/1/5000/3333.jpg?hmac=Asv2DU3rA_5D1xSe22xZK47WEAN0wjWeFOhzd13ujW4",
-        "https://i.picsum.photos/id/1/5000/3333.jpg?hmac=Asv2DU3rA_5D1xSe22xZK47WEAN0wjWeFOhzd13ujW4",
-        "https://i.picsum.photos/id/4/5000/3333.jpg?hmac=ghf06FdmgiD0-G4c9DdNM8RnBIN7BO0-ZGEw47khHP4",
-      ],
+      "avatar": listImage[r.nextInt(listImage.length)],
+      "preview_images": listImage,
       "tags": [
         "わいわい",
         "ゴルフ",

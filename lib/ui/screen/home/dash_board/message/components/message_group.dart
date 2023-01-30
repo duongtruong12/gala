@@ -39,8 +39,8 @@ class MessageGroupItem extends StatelessWidget {
               Text(
                 model.title ?? '',
                 style: tNormalTextStyle.copyWith(
-                    color: kTextColorSecond,
-                    fontWeight: FontWeight.bold,
+                    color: getTextColorSecond(),
+                    fontWeight: FontWeight.w500,
                     fontSize: 16),
               ),
               const SizedBox(height: 8),
@@ -56,7 +56,8 @@ class MessageGroupItem extends StatelessWidget {
             formatDateTime(
                 date: model.lastMessage?.createdTime?.toDate(),
                 formatString: DateTimeFormatString.yyyyMMdd),
-            style: tNormalTextStyle.copyWith(fontSize: 8, color: kBorderColor),
+            style: tNormalTextStyle.copyWith(
+                fontSize: 8, color: getTextColorSecond()),
           )
         ],
       ),

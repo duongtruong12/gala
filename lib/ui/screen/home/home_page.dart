@@ -1,11 +1,12 @@
 import 'package:base_flutter/components/background.dart';
 import 'package:base_flutter/routes/app_pages.dart';
 import 'package:base_flutter/ui/responsive.dart';
-import 'package:base_flutter/utils/const.dart';
 import 'package:base_flutter/utils/constant.dart';
 import 'package:base_flutter/utils/global/globals_functions.dart';
+import 'package:base_flutter/utils/global/globals_variable.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'components/bottom_navigation_bar.dart';
 import 'home_controller.dart';
 
 class HomePage extends GetView<HomeController> {
@@ -31,24 +32,14 @@ class MobileHomePage extends StatelessWidget {
     required this.controller,
   });
 
-  BottomNavigationBarItem _buildItem({required String label, required index}) {
-    final color =
-        index == controller.currentIndex.value ? kPrimaryColor : kMenuGray;
-    return BottomNavigationBarItem(
-      icon: getSvgImage(
-          index == controller.currentIndex.value ? '$label${'_select'}' : label,
-          color: color),
-      backgroundColor: kPrimaryBackgroundColor,
-      label: label.tr,
-    );
-  }
-
   Map<int, String> _buildTab() {
     return {
       RouteId.search: Routes.search,
       RouteId.message: Routes.message,
-      RouteId.call: Routes.call,
-      RouteId.myPage: Routes.myPage,
+      femaleGender.value ? RouteId.callFemale : RouteId.call:
+          femaleGender.value ? Routes.callFemale : Routes.call,
+      getRouteMyPage():
+          femaleGender.value ? Routes.myPageFemale : Routes.myPage,
     };
   }
 
@@ -64,6 +55,7 @@ class MobileHomePage extends StatelessWidget {
                 (e) => Navigator(
                   key: Get.nestedKey(e.key),
                   initialRoute: e.value,
+                  observers: [GetObserver((_) {}, Get.routing)],
                   onGenerateRoute: onGenerateRouteDashboard,
                 ),
               )
@@ -71,21 +63,10 @@ class MobileHomePage extends StatelessWidget {
         );
       }),
       bottomNavigationBar: Obx(() {
-        return BottomNavigationBar(
-          items: [
-            _buildItem(label: 'search', index: 0),
-            _buildItem(label: 'message', index: 1),
-            _buildItem(label: 'call', index: 2),
-            _buildItem(label: 'my_page', index: 3),
-          ],
+        return BottomNavigatorWidget(
           currentIndex: controller.currentIndex.value,
           onTap: controller.onTapItem,
-          selectedItemColor: kPrimaryColor,
-          unselectedItemColor: kMenuGray,
-          showSelectedLabels: true,
-          showUnselectedLabels: true,
-          selectedLabelStyle: tNormalTextStyle.copyWith(color: kPrimaryColor),
-          unselectedLabelStyle: tNormalTextStyle.copyWith(color: kMenuGray),
+          femaleGender: femaleGender.value,
         );
       }),
     );

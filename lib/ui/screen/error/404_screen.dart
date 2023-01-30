@@ -29,7 +29,7 @@ class ErrorScreen extends GetView<ErrorController> {
                 style: tNormalTextStyle.copyWith(
                     color: kPrimaryColor,
                     fontSize: 16,
-                    fontWeight: FontWeight.bold),
+                    fontWeight: FontWeight.w500),
               ))
         ],
       ),

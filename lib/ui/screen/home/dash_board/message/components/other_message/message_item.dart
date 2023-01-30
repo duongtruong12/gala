@@ -38,7 +38,7 @@ class MessageItem extends StatelessWidget {
                   Text(
                     model.userId ?? '',
                     style: tNormalTextStyle.copyWith(
-                        color: kTextColorSecond, fontSize: 10),
+                        color: getTextColorSecond(), fontSize: 10),
                   ),
                   const SizedBox(height: kSmallPadding),
                   SentMessage(message: model.content ?? ''),

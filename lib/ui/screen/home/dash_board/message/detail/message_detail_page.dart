@@ -2,13 +2,16 @@ import 'package:base_flutter/components/background.dart';
 import 'package:base_flutter/components/custom_appbar.dart';
 import 'package:base_flutter/components/custom_circle_image.dart';
 import 'package:base_flutter/components/custom_network_image.dart';
+import 'package:base_flutter/components/custom_view.dart';
 import 'package:base_flutter/ui/responsive.dart';
 import 'package:base_flutter/ui/screen/home/dash_board/message/components/my_message/my_message_item.dart';
 import 'package:base_flutter/ui/screen/home/dash_board/message/components/notification_message.dart';
 import 'package:base_flutter/ui/screen/home/dash_board/message/components/other_message/message_item.dart';
+import 'package:base_flutter/ui/screen/home/dash_board/message/detail/components/field_input.dart';
 import 'package:base_flutter/utils/const.dart';
 import 'package:base_flutter/utils/constant.dart';
 import 'package:base_flutter/utils/global/globals_functions.dart';
+import 'package:base_flutter/utils/global/globals_variable.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import '../components/notification_border_message.dart';
@@ -39,30 +42,29 @@ class MessageMobilePage extends StatelessWidget {
       return const SizedBox();
     }
     return Container(
-      color: kPrimaryColor,
-      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+      color: femaleGender.value ? const Color(0xFFE6E6E6) : kPrimaryColor,
+      padding: const EdgeInsets.symmetric(
+          horizontal: kDefaultPadding, vertical: kSmallPadding),
+      height: 48,
+      alignment: Alignment.centerLeft,
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.center,
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
           Expanded(
-            child: SingleChildScrollView(
+            child: ListView.builder(
               scrollDirection: Axis.horizontal,
-              child: Row(
-                children: controller.model.value?.userIds
-                        .map((e) => const Padding(
-                              padding: EdgeInsets.only(right: kDefaultPadding),
-                              child: CustomCircleImage(
-                                  radius: 99,
-                                  image: CustomNetworkImage(
-                                    url: null,
-                                    height: 34,
-                                    width: 34,
-                                  )),
-                            ))
-                        .toList() ??
-                    [],
-              ),
+              itemCount: controller.model.value?.userIds.length,
+              itemBuilder: (BuildContext context, int index) {
+                return const CustomCircleImage(
+                    radius: 99,
+                    image: CustomNetworkImage(
+                      url: null,
+                      fit: BoxFit.fitHeight,
+                      height: 48,
+                      width: 48,
+                    ));
+              },
             ),
           ),
           getSvgImage('ic_arrow_down'),
@@ -133,6 +135,7 @@ class MessageMobilePage extends StatelessWidget {
                 _buildGroupUser(),
                 Expanded(
                   child: ListView.separated(
+                    controller: controller.scrollController,
                     padding: const EdgeInsets.symmetric(
                         horizontal: kDefaultPadding, vertical: kSmallPadding),
                     itemBuilder: _buildMessageList,
@@ -161,21 +164,11 @@ class MessageMobilePage extends StatelessWidget {
             }),
             automaticallyImplyLeading: false,
             leadingWidth: 100,
-            leading: TextButton(
-                onPressed: controller.onCallBack,
-                child: Row(
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    getSvgImage('ic_back'),
-                    const SizedBox(width: 3),
-                    Text(
-                      'back'.tr,
-                      style:
-                          tNormalTextStyle.copyWith(color: kTextColorPrimary),
-                    ),
-                  ],
-                ))),
+            leading: backButtonText(callback: controller.onCallBack)),
         body: _buildBody(),
+        bottomNavigationBar: FieldInput(
+          onInput: (String value) {},
+        ),
       ),
     );
   }

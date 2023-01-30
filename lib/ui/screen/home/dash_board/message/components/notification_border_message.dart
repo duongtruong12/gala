@@ -1,4 +1,5 @@
 import 'package:base_flutter/utils/const.dart';
+import 'package:base_flutter/utils/global/globals_variable.dart';
 import 'package:flutter/material.dart';
 
 class NotificationBorderMessage extends StatelessWidget {
@@ -17,16 +18,17 @@ class NotificationBorderMessage extends StatelessWidget {
       mainAxisSize: MainAxisSize.max,
       children: [
         Container(
-          color: kGrayColor,
+          color: femaleGender.value ? Colors.transparent : kGrayColor,
           alignment: Alignment.center,
-          constraints: const BoxConstraints(
-            minHeight: 60,
+          constraints: BoxConstraints(
+            minHeight: femaleGender.value ? 0 : 60,
           ),
           padding: const EdgeInsets.symmetric(horizontal: 64),
           child: Text(
             content ?? '',
             textAlign: TextAlign.center,
-            style: tNormalTextStyle.copyWith(color: kTextColorSecond),
+            style: tNormalTextStyle.copyWith(
+                color: femaleGender.value ? kBorderColor : kTextColorSecond),
           ),
         ),
       ],

@@ -5,6 +5,7 @@ import 'package:base_flutter/routes/app_pages.dart';
 import 'package:base_flutter/ui/responsive.dart';
 import 'package:base_flutter/utils/const.dart';
 import 'package:base_flutter/utils/global/globals_functions.dart';
+import 'package:base_flutter/utils/global/globals_variable.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'female_detail_controller.dart';
@@ -26,26 +27,6 @@ class FemaleDetailMobilePage extends StatelessWidget {
   const FemaleDetailMobilePage({super.key, required this.controller});
 
   final FemaleDetailController controller;
-
-  List<Widget> _buildPreviewImage(List<String> list) {
-    final listWidget = <Widget>[];
-    for (int i = 0; i < list.length; i++) {
-      listWidget.add(Padding(
-        padding: const EdgeInsets.only(right: 16),
-        child: InkWell(
-          onTap: () {
-            controller.onSwitchImage(i);
-          },
-          child: CustomNetworkImage(
-            url: list[i],
-            height: 80,
-            borderRadius: 4,
-          ),
-        ),
-      ));
-    }
-    return listWidget;
-  }
 
   Widget _buildImageSelect() {
     if (controller.model.value?.previewImages == null ||
@@ -69,12 +50,25 @@ class FemaleDetailMobilePage extends StatelessWidget {
           const SizedBox(height: 16),
           SizedBox(
             height: 80,
-            child: SingleChildScrollView(
+            child: ListView.builder(
               padding: const EdgeInsets.only(left: 16),
               scrollDirection: Axis.horizontal,
-              child: Row(
-                children: _buildPreviewImage(list),
-              ),
+              itemCount: list.length,
+              itemBuilder: (BuildContext context, int i) {
+                return Padding(
+                  padding: const EdgeInsets.only(right: 16),
+                  child: InkWell(
+                    onTap: () {
+                      controller.onSwitchImage(i);
+                    },
+                    child: CustomNetworkImage(
+                      url: list[i],
+                      height: 80,
+                      borderRadius: 4,
+                    ),
+                  ),
+                );
+              },
             ),
           )
         ],
@@ -90,7 +84,7 @@ class FemaleDetailMobilePage extends StatelessWidget {
             text: TextSpan(
                 style: tNormalTextStyle.copyWith(
                     color: kTextColorSecond,
-                    fontWeight: FontWeight.bold,
+                    fontWeight: FontWeight.w500,
                     fontSize: 24),
                 children: [
                   TextSpan(
@@ -103,7 +97,7 @@ class FemaleDetailMobilePage extends StatelessWidget {
           '1${'hour'.tr}/${formatCurrency(controller.model.value?.point)}',
           style: tNormalTextStyle.copyWith(
               color: kTextColorSecond,
-              fontWeight: FontWeight.bold,
+              fontWeight: FontWeight.w500,
               fontSize: 24),
         )
       ],
@@ -135,8 +129,8 @@ class FemaleDetailMobilePage extends StatelessWidget {
         Text(
           'description'.tr,
           style: tNormalTextStyle.copyWith(
-            color: kTextColorSecond,
-            fontWeight: FontWeight.bold,
+            color: getTextColorSecond(),
+            fontWeight: FontWeight.w500,
             fontSize: 20,
           ),
         ),
@@ -144,7 +138,7 @@ class FemaleDetailMobilePage extends StatelessWidget {
         Text(
           controller.model.value?.description ?? '',
           style: tNormalTextStyle.copyWith(
-            color: kTextColorSecond,
+            color: getTextColorSecond(),
             fontSize: 14,
           ),
         )
@@ -162,19 +156,16 @@ class FemaleDetailMobilePage extends StatelessWidget {
             Expanded(
                 child: Text(
               label,
-              style: tNormalTextStyle.copyWith(color: kTextColorSecond),
+              style: tNormalTextStyle.copyWith(color: getTextColorSecond()),
             )),
             Text(
               content,
-              style: tNormalTextStyle.copyWith(color: kTextColorSecond),
+              style: tNormalTextStyle.copyWith(color: getTextColorSecond()),
             )
           ],
         ),
         const SizedBox(height: 16),
-        const Divider(
-          color: kDividerColor,
-          height: 1,
-        )
+        const Divider()
       ],
     );
   }
@@ -187,7 +178,7 @@ class FemaleDetailMobilePage extends StatelessWidget {
           'information'.tr,
           style: tNormalTextStyle.copyWith(
             color: kTextColorSecond,
-            fontWeight: FontWeight.bold,
+            fontWeight: FontWeight.w500,
             fontSize: 20,
           ),
         ),
@@ -236,6 +227,26 @@ class FemaleDetailMobilePage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final list = [
+      Obx(() {
+        return _buildImageSelect();
+      }),
+      const SizedBox(height: 16),
+      Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 16),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            _buildName(),
+            _buildChipTag(),
+            const SizedBox(height: 24),
+            _buildDescription(),
+            const SizedBox(height: 24),
+            _buildInformation(),
+          ],
+        ),
+      )
+    ];
     return Scaffold(
         backgroundColor: Colors.transparent,
         bottomNavigationBar: Container(
@@ -246,18 +257,20 @@ class FemaleDetailMobilePage extends StatelessWidget {
             height: 43,
             width: 223,
             borderRadius: 99,
+            borderColor:
+                femaleGender.value ? kTextColorDark : Colors.transparent,
             widget: Row(
               mainAxisSize: MainAxisSize.min,
               children: [
-                const Icon(
+                Icon(
                   Icons.favorite_rounded,
-                  color: kTextColorPrimary,
+                  color: getColorPrimary(),
                 ),
                 const SizedBox(width: 4),
                 Text(
                   'favorite'.tr,
                   style:
-                      tButtonWhiteTextStyle.copyWith(color: kTextColorPrimary),
+                      tButtonWhiteTextStyle.copyWith(color: getColorPrimary()),
                 )
               ],
             ),
@@ -266,29 +279,11 @@ class FemaleDetailMobilePage extends StatelessWidget {
         ),
         body: Stack(
           children: [
-            SingleChildScrollView(
-              child: Column(
-                children: [
-                  Obx(() {
-                    return _buildImageSelect();
-                  }),
-                  const SizedBox(height: 16),
-                  Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 16),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        _buildName(),
-                        _buildChipTag(),
-                        const SizedBox(height: 24),
-                        _buildDescription(),
-                        const SizedBox(height: 24),
-                        _buildInformation(),
-                      ],
-                    ),
-                  )
-                ],
-              ),
+            ListView.builder(
+              itemCount: list.length,
+              itemBuilder: (BuildContext context, int index) {
+                return list[index];
+              },
             ),
             Padding(
               padding: const EdgeInsets.all(16.0),

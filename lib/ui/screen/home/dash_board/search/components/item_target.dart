@@ -8,11 +8,13 @@ import 'package:get/get.dart';
 class ItemTarget extends StatelessWidget {
   final FemaleModel model;
   final VoidCallback onPressed;
+  final bool femaleGender;
 
   const ItemTarget({
     Key? key,
     required this.model,
     required this.onPressed,
+    this.femaleGender = false,
   }) : super(key: key);
 
   @override
@@ -33,7 +35,8 @@ class ItemTarget extends StatelessWidget {
               ),
             ),
             Container(
-              color: kTextColorSecond,
+              color:
+                  femaleGender ? kItemHomeBackgroundFemale : kTextColorSecond,
               width: double.infinity,
               padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
               child: Row(
@@ -53,21 +56,23 @@ class ItemTarget extends StatelessWidget {
                           Text(
                             '${model.age}${'age'.tr}',
                             style: tNormalTextStyle.copyWith(
-                                fontWeight: FontWeight.bold),
+                                fontWeight: FontWeight.w500),
                           ),
                           const SizedBox(width: 4),
                           Text(
                             model.displayName ?? '',
                             style: tNormalTextStyle.copyWith(
-                                fontWeight: FontWeight.bold),
+                                fontWeight: FontWeight.w500),
                           )
                         ],
                       ),
-                      Text(
-                        formatCurrency(model.point),
-                        style: tNormalTextStyle.copyWith(
-                            fontWeight: FontWeight.bold),
-                      )
+                      femaleGender == true
+                          ? const SizedBox()
+                          : Text(
+                              formatCurrency(model.point),
+                              style: tNormalTextStyle.copyWith(
+                                  fontWeight: FontWeight.w500),
+                            )
                     ],
                   ),
                 ],

@@ -1,13 +1,12 @@
 import 'package:base_flutter/utils/const.dart';
+import 'package:base_flutter/utils/global/globals_variable.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 
 PreferredSizeWidget appbarCustom(
     {Widget? title,
     Widget? leading,
-    Color? backgroundColor = kPrimaryBackgroundColor,
+    Color? backgroundColor,
     List<Widget>? actions,
-    IconThemeData? iconTheme,
     bool flexibleSpace = false,
     bool isDark = false,
     bool automaticallyImplyLeading = true,
@@ -17,18 +16,20 @@ PreferredSizeWidget appbarCustom(
   return AppBar(
       title: title,
       actions: actions,
-      iconTheme: iconTheme,
+      iconTheme: IconThemeData(
+          color: femaleGender.value
+              ? kPrimaryBackgroundColorFemale
+              : kTextColorPrimary),
+      actionsIconTheme: IconThemeData(
+          color: femaleGender.value
+              ? kPrimaryBackgroundColorFemale
+              : kTextColorPrimary),
       bottom: bottom,
       leading: leading,
       leadingWidth: leadingWidth,
       titleTextStyle: tNormalTextStyle.copyWith(
-          color: kTextColorSecond, fontSize: 18, fontWeight: FontWeight.bold),
+          color: kTextColorSecond, fontSize: 18, fontWeight: FontWeight.w500),
       centerTitle: true,
       automaticallyImplyLeading: automaticallyImplyLeading,
-      systemOverlayStyle: SystemUiOverlayStyle(
-          statusBarColor: Colors.transparent,
-          statusBarBrightness: isDark ? Brightness.dark : Brightness.light,
-          statusBarIconBrightness: isDark ? Brightness.dark : Brightness.light),
-      backgroundColor: backgroundColor,
       elevation: elevation);
 }

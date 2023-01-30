@@ -52,10 +52,13 @@ class PagingListState extends State<PagingListCustom>
         _page = 1;
         if (widget.onRefresh != null) widget.onRefresh!(_page);
       },
-      child: ListView(
+      child: ListView.builder(
         controller: _scrollController,
         physics: const AlwaysScrollableScrollPhysics(),
-        children: widget.childWidget,
+        itemCount: widget.childWidget.length,
+        itemBuilder: (BuildContext context, int index) {
+          return widget.childWidget[index];
+        },
       ),
     );
   }

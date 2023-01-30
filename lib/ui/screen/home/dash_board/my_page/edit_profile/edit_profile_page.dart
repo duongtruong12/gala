@@ -1,6 +1,7 @@
 import 'package:base_flutter/components/background.dart';
 import 'package:base_flutter/components/custom_appbar.dart';
 import 'package:base_flutter/components/custom_circle_image.dart';
+import 'package:base_flutter/components/custom_view.dart';
 import 'package:base_flutter/ui/responsive.dart';
 import 'package:base_flutter/utils/const.dart';
 import 'package:base_flutter/utils/constant.dart';
@@ -27,6 +28,35 @@ class EditProfileMobilePage extends StatelessWidget {
 
   final EditProfileController controller;
 
+  Widget _buildItemInformation({
+    required String label,
+    required String content,
+    required VoidCallback onPressed,
+  }) {
+    return Padding(
+      padding: const EdgeInsets.only(top: kDefaultPadding),
+      child: Row(
+        crossAxisAlignment: CrossAxisAlignment.center,
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Expanded(
+              child: Text(
+            label,
+            style: tNormalTextStyle.copyWith(color: getTextColorSecond()),
+          )),
+          Text(
+            content,
+            style: tNormalTextStyle.copyWith(
+                color: getTextColorSecond(),
+                fontSize: 12,
+                fontWeight: FontWeight.w500),
+          ),
+          getSvgImage('ic_arrow_down', color: getColorPrimary())
+        ],
+      ),
+    );
+  }
+
   Widget buildFieldInput({
     required String label,
     required String content,
@@ -40,8 +70,8 @@ class EditProfileMobilePage extends StatelessWidget {
           label,
           style: tNormalTextStyle.copyWith(
               fontSize: 16,
-              fontWeight: FontWeight.bold,
-              color: kTextColorSecond),
+              fontWeight: FontWeight.w500,
+              color: getTextColorSecond()),
         ),
         const SizedBox(height: kDefaultPadding),
         Row(
@@ -51,11 +81,11 @@ class EditProfileMobilePage extends StatelessWidget {
                 child: Text(
               content,
               style: tNormalTextStyle.copyWith(
-                  fontWeight: FontWeight.bold,
+                  fontWeight: FontWeight.w500,
                   fontSize: 14,
-                  color: kTextColorSecond),
+                  color: getTextColorSecond()),
             )),
-            getSvgImage('ic_arrow_down', color: kPrimaryColor)
+            getSvgImage('ic_arrow_down', color: getColorPrimary())
           ],
         )
       ],
@@ -71,28 +101,27 @@ class EditProfileMobilePage extends StatelessWidget {
         Expanded(
             child: SizedBox(
           height: 44,
-          child: SingleChildScrollView(
-            scrollDirection: Axis.horizontal,
-            child: Obx(() {
-              return Row(
-                children: controller.listImage
-                    .map((e) => Padding(
-                          padding:
-                              const EdgeInsets.only(right: kDefaultPadding),
-                          child: CustomCircleImage(
-                            radius: 99,
-                            image: Image.network(
-                              e.path,
-                              fit: BoxFit.cover,
-                              height: 44,
-                              width: 44,
-                            ),
-                          ),
-                        ))
-                    .toList(),
-              );
-            }),
-          ),
+          child: Obx(() {
+            return ListView.builder(
+              scrollDirection: Axis.horizontal,
+              itemCount: controller.listImage.length,
+              itemBuilder: (BuildContext context, int index) {
+                final e = controller.listImage[index];
+                return Padding(
+                  padding: const EdgeInsets.only(right: kDefaultPadding),
+                  child: CustomCircleImage(
+                    radius: 99,
+                    image: Image.network(
+                      e.path,
+                      fit: BoxFit.cover,
+                      height: 44,
+                      width: 44,
+                    ),
+                  ),
+                );
+              },
+            );
+          }),
         )),
         InkWell(
           onTap: controller.selectImage,
@@ -109,9 +138,9 @@ class EditProfileMobilePage extends StatelessWidget {
             child: Text(
           'hide_your_age'.tr,
           style: tNormalTextStyle.copyWith(
-              fontWeight: FontWeight.bold,
+              fontWeight: FontWeight.w500,
               fontSize: 14,
-              color: kTextColorSecond),
+              color: getTextColorSecond()),
         )),
         Obx(() {
           return Switch(
@@ -122,40 +151,129 @@ class EditProfileMobilePage extends StatelessWidget {
     );
   }
 
-  Widget _buildBody() {
-    return SingleChildScrollView(
-      padding: const EdgeInsets.all(kDefaultPadding),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          const SizedBox(height: kSmallPadding),
-          Row(children: [
-            Text(
-              'profile_image'.tr,
+  Widget _buildInformation() {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        const SizedBox(height: kDefaultPadding),
+        Text(
+          'information'.tr,
+          style: tNormalTextStyle.copyWith(
+              color: getTextColorSecond(), fontSize: 16),
+        ),
+        _buildItemInformation(
+            label: 'height'.tr, content: 'unselected'.tr, onPressed: () {}),
+        const Divider(),
+        _buildItemInformation(
+            label: 'address'.tr, content: 'not_entered'.tr, onPressed: () {}),
+        const Divider(),
+        _buildItemInformation(
+            label: 'birth_place'.tr,
+            content: 'not_entered'.tr,
+            onPressed: () {}),
+        const Divider(),
+        _buildItemInformation(
+            label: 'education'.tr, content: 'not_entered'.tr, onPressed: () {}),
+        const Divider(),
+        _buildItemInformation(
+            label: 'annual_income'.tr,
+            content: 'not_entered'.tr,
+            onPressed: () {}),
+        const Divider(),
+        _buildItemInformation(
+            label: 'job'.tr, content: 'not_entered'.tr, onPressed: () {}),
+        const Divider(),
+        _buildItemInformation(
+            label: 'sake'.tr, content: 'not_entered'.tr, onPressed: () {}),
+        const Divider(),
+        _buildItemInformation(
+            label: 'smoke'.tr, content: 'not_entered'.tr, onPressed: () {}),
+        const Divider(),
+        _buildItemInformation(
+            label: 'family'.tr, content: 'not_entered'.tr, onPressed: () {}),
+        const Divider(),
+        _buildItemInformation(
+            label: 'living_family'.tr,
+            content: 'not_entered'.tr,
+            onPressed: () {}),
+        const Divider(),
+      ],
+    );
+  }
+
+  Widget _buildChangePassword() {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(
+          'change_password'.tr,
+          style: tNormalTextStyle.copyWith(
+              color: getTextColorSecond(),
+              fontSize: 16,
+              fontWeight: FontWeight.w500),
+        ),
+        const SizedBox(height: kDefaultPadding),
+        Row(
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            Expanded(
+                child: Text(
+              '• • • • • • •',
               style: tNormalTextStyle.copyWith(
-                  color: kTextColorSecond, fontSize: 16),
-            ),
-            const SizedBox(width: 4),
-            getSvgImage('ic_camera'),
-          ]),
-          const SizedBox(height: kDefaultPadding),
-          _buildImagePicker(),
-          const Divider(),
-          buildFieldInput(
-              label: 'nick_name'.tr,
-              content: 'enter_nick_name'.tr,
-              onPressed: () {}),
-          const Divider(),
-          buildFieldInput(
-              label: 'birthday'.tr,
-              content: formatDateTime(
-                  date: DateTime.now(),
-                  formatString: DateTimeFormatString.textBehind),
-              onPressed: () {}),
-          _hideAge(),
-          const Divider(),
-        ],
-      ),
+                  color: getTextColorSecond(), fontWeight: FontWeight.w500),
+            )),
+            getSvgImage('ic_arrow_down', color: getColorPrimary())
+          ],
+        )
+      ],
+    );
+  }
+
+  Widget _buildBody() {
+    final _listWidget = <Widget>[
+      const SizedBox(height: kSmallPadding),
+      Row(children: [
+        Text(
+          'profile_image'.tr,
+          style: tNormalTextStyle.copyWith(
+              color: getTextColorSecond(),
+              fontSize: 16,
+              fontWeight: FontWeight.w500),
+        ),
+        const SizedBox(width: 4),
+        getSvgImage('ic_camera'),
+      ]),
+      const SizedBox(height: kDefaultPadding),
+      _buildImagePicker(),
+      const Divider(),
+      buildFieldInput(
+          label: 'nick_name'.tr,
+          content: 'enter_nick_name'.tr,
+          onPressed: () {}),
+      const Divider(),
+      buildFieldInput(
+          label: 'birthday'.tr,
+          content: formatDateTime(
+              date: DateTime.now(),
+              formatString: DateTimeFormatString.textBehind),
+          onPressed: () {}),
+      _hideAge(),
+      const Divider(),
+      buildFieldInput(label: 'good_place'.tr, content: '東京', onPressed: () {}),
+      const Divider(),
+      buildFieldInput(
+          label: 'description'.tr, content: 'not_entered'.tr, onPressed: () {}),
+      const Divider(),
+      _buildInformation(),
+      const SizedBox(height: kDefaultPadding),
+      _buildChangePassword(),
+    ];
+    return ListView.builder(
+      padding: const EdgeInsets.all(kDefaultPadding),
+      itemCount: _listWidget.length,
+      itemBuilder: (BuildContext context, int index) {
+        return _listWidget[index];
+      },
     );
   }
 
@@ -165,21 +283,9 @@ class EditProfileMobilePage extends StatelessWidget {
       appBar: appbarCustom(
         title: Text('edit_profile'.tr),
         leadingWidth: 100,
-        leading: TextButton(
-            onPressed: () {
-              Get.back(id: RouteId.myPage);
-            },
-            child: Row(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                getSvgImage('ic_back'),
-                const SizedBox(width: 3),
-                Text(
-                  'back'.tr,
-                  style: tNormalTextStyle.copyWith(color: kTextColorPrimary),
-                ),
-              ],
-            )),
+        leading: backButtonText(callback: () {
+          Get.back(id: getRouteMyPage());
+        }),
       ),
       body: _buildBody(),
     );
