@@ -37,6 +37,7 @@ dependencies:
   cupertino_icons: ^1.0.4
   connectivity_plus: ^2.3.0
   syncfusion_flutter_datepicker: ^20.4.44
+  selectable_autolink_text: ^2.4.1
 
   dio: ^4.0.6
 

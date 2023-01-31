@@ -1,8 +1,6 @@
 import 'package:base_flutter/components/background.dart';
 import 'package:base_flutter/routes/app_pages.dart';
 import 'package:base_flutter/ui/responsive.dart';
-import 'package:base_flutter/utils/constant.dart';
-import 'package:base_flutter/utils/global/globals_functions.dart';
 import 'package:base_flutter/utils/global/globals_variable.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -32,25 +30,13 @@ class MobileHomePage extends StatelessWidget {
     required this.controller,
   });
 
-  Map<int, String> _buildTab() {
-    return {
-      RouteId.search: Routes.search,
-      RouteId.message: Routes.message,
-      femaleGender.value ? RouteId.callFemale : RouteId.call:
-          femaleGender.value ? Routes.callFemale : Routes.call,
-      getRouteMyPage():
-          femaleGender.value ? Routes.myPageFemale : Routes.myPage,
-    };
-  }
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       body: Obx(() {
         return IndexedStack(
           index: controller.currentIndex.value,
-          children: _buildTab()
-              .entries
+          children: controller.map.entries
               .map(
                 (e) => Navigator(
                   key: Get.nestedKey(e.key),

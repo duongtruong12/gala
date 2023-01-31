@@ -26,25 +26,28 @@ class HelpPageMobilePage extends StatelessWidget {
 
   final HelpPageController controller;
 
-  Widget buildItemLaw({required label}) {
-    return Column(
-      children: [
-        const SizedBox(height: kSmallPadding),
-        Row(
-          crossAxisAlignment: CrossAxisAlignment.center,
-          mainAxisAlignment: MainAxisAlignment.start,
-          children: [
-            Expanded(
-                child: Text(
-              label,
-              style: tNormalTextStyle.copyWith(color: kTextColorSecond),
-            )),
-            getSvgImage('ic_arrow_right', color: kPrimaryColor)
-          ],
-        ),
-        const SizedBox(height: kSmallPadding),
-        const Divider(),
-      ],
+  Widget buildItemLaw({required label, required VoidCallback onPressed}) {
+    return InkWell(
+      onTap: onPressed,
+      child: Column(
+        children: [
+          const SizedBox(height: kSmallPadding),
+          Row(
+            crossAxisAlignment: CrossAxisAlignment.center,
+            mainAxisAlignment: MainAxisAlignment.start,
+            children: [
+              Expanded(
+                  child: Text(
+                label,
+                style: tNormalTextStyle.copyWith(color: kTextColorSecond),
+              )),
+              getSvgImage('ic_arrow_right', color: kPrimaryColor)
+            ],
+          ),
+          const SizedBox(height: kSmallPadding),
+          const Divider(),
+        ],
+      ),
     );
   }
 
@@ -55,9 +58,11 @@ class HelpPageMobilePage extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         mainAxisAlignment: MainAxisAlignment.start,
         children: [
-          buildItemLaw(label: 'term_service'.tr),
-          buildItemLaw(label: 'privacy_policy'.tr),
-          buildItemLaw(label: 'law'.tr),
+          buildItemLaw(
+              label: 'term_service'.tr, onPressed: controller.switchTerm),
+          buildItemLaw(
+              label: 'privacy_policy'.tr, onPressed: controller.switchPrivacy),
+          buildItemLaw(label: 'law'.tr, onPressed: controller.switchLaw),
         ],
       ),
     );

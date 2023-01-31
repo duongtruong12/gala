@@ -58,7 +58,7 @@ class Validate {
 
   // validate confirm password
   static String? passwordConfirmValidate(
-      {required String password, required String confPass}) {
+      {required String password, required String? confPass}) {
     final confPassString = confPass.toString();
 
     if (confPassString.isEmpty) {

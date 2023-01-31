@@ -57,9 +57,11 @@ class HelpFemaleMobilePage extends StatelessWidget {
       child: Column(
         children: [
           _buildItem(label: 'faq'.tr, onPressed: controller.switchFaq),
-          _buildItem(label: 'term_service'.tr, onPressed: () {}),
-          _buildItem(label: 'privacy_policy'.tr, onPressed: () {}),
-          _buildItem(label: 'law'.tr, onPressed: () {}),
+          _buildItem(
+              label: 'term_service'.tr, onPressed: controller.switchTerm),
+          _buildItem(
+              label: 'privacy_policy'.tr, onPressed: controller.switchPrivacy),
+          _buildItem(label: 'law'.tr, onPressed: controller.switchLaw),
         ],
       ),
     );

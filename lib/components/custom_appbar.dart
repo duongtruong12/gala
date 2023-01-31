@@ -26,6 +26,7 @@ PreferredSizeWidget appbarCustom(
               : kTextColorPrimary),
       bottom: bottom,
       leading: leading,
+      backgroundColor: backgroundColor,
       leadingWidth: leadingWidth,
       titleTextStyle: tNormalTextStyle.copyWith(
           color: kTextColorSecond, fontSize: 18, fontWeight: FontWeight.w500),

@@ -12,4 +12,16 @@ class HelpFemaleController extends GetxController {
   void switchFaq() {
     Get.toNamed(Routes.userGuide, id: getRouteMyPage());
   }
+
+  void switchTerm() {
+    Get.toNamed(Routes.term, arguments: true);
+  }
+
+  void switchLaw() {
+    Get.toNamed(Routes.law, arguments: true);
+  }
+
+  void switchPrivacy() {
+    Get.toNamed(Routes.privacyPolicy, arguments: true);
+  }
 }

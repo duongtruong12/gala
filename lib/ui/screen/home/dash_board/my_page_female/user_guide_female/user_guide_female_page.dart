@@ -58,9 +58,24 @@ class UserGuideMobilePage extends StatelessWidget {
             controller: controller.tabController,
             padding: 0,
             tabs: [
-              Tab(text: 'wanted_call'.tr),
-              Tab(text: 'current_call'.tr),
-              Tab(text: 'past_call'.tr),
+              Tab(
+                child: Text(
+                  'wanted_call'.tr,
+                  textAlign: TextAlign.center,
+                ),
+              ),
+              Tab(
+                child: Text(
+                  'current_call'.tr,
+                  textAlign: TextAlign.center,
+                ),
+              ),
+              Tab(
+                child: Text(
+                  'past_call'.tr,
+                  textAlign: TextAlign.center,
+                ),
+              ),
             ],
           ),
           const SizedBox(height: kDefaultPadding),

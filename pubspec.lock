@@ -595,6 +595,13 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "4.2.4"
+  selectable_autolink_text:
+    dependency: "direct main"
+    description:
+      name: selectable_autolink_text
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "2.4.1"
   shared_preferences:
     dependency: "direct main"
     description:

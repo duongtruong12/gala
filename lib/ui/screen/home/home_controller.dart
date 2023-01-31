@@ -1,4 +1,6 @@
 import 'package:base_flutter/routes/app_pages.dart';
+import 'package:base_flutter/utils/constant.dart';
+import 'package:base_flutter/utils/global/globals_variable.dart';
 import 'package:get/get.dart';
 
 class HomeController extends GetxController {
@@ -10,6 +12,28 @@ class HomeController extends GetxController {
     Routes.call,
     Routes.myPage,
   ];
+
+  late Map<int, String> map;
+
+  @override
+  void onInit() {
+    super.onInit();
+    if (femaleGender.value) {
+      map = <int, String>{
+        RouteId.search: Routes.search,
+        RouteId.message: Routes.message,
+        RouteId.callFemale: Routes.callFemale,
+        RouteId.myPageFemale: Routes.myPageFemale,
+      };
+    } else {
+      map = <int, String>{
+        RouteId.search: Routes.search,
+        RouteId.message: Routes.message,
+        RouteId.call: Routes.call,
+        RouteId.myPage: Routes.myPage,
+      };
+    }
+  }
 
   void onTapItem(int? index) {
     if (index == currentIndex.value) {

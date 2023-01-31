@@ -62,33 +62,36 @@ class EditProfileMobilePage extends StatelessWidget {
     required String content,
     required VoidCallback onPressed,
   }) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      mainAxisAlignment: MainAxisAlignment.start,
-      children: [
-        Text(
-          label,
-          style: tNormalTextStyle.copyWith(
-              fontSize: 16,
-              fontWeight: FontWeight.w500,
-              color: getTextColorSecond()),
-        ),
-        const SizedBox(height: kDefaultPadding),
-        Row(
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: [
-            Expanded(
-                child: Text(
-              content,
-              style: tNormalTextStyle.copyWith(
-                  fontWeight: FontWeight.w500,
-                  fontSize: 14,
-                  color: getTextColorSecond()),
-            )),
-            getSvgImage('ic_arrow_down', color: getColorPrimary())
-          ],
-        )
-      ],
+    return InkWell(
+      onTap: onPressed,
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        mainAxisAlignment: MainAxisAlignment.start,
+        children: [
+          Text(
+            label,
+            style: tNormalTextStyle.copyWith(
+                fontSize: 16,
+                fontWeight: FontWeight.w500,
+                color: getTextColorSecond()),
+          ),
+          const SizedBox(height: kDefaultPadding),
+          Row(
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              Expanded(
+                  child: Text(
+                content,
+                style: tNormalTextStyle.copyWith(
+                    fontWeight: FontWeight.w500,
+                    fontSize: 14,
+                    color: getTextColorSecond()),
+              )),
+              getSvgImage('ic_arrow_down', color: getColorPrimary())
+            ],
+          )
+        ],
+      ),
     );
   }
 
@@ -202,30 +205,33 @@ class EditProfileMobilePage extends StatelessWidget {
   }
 
   Widget _buildChangePassword() {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Text(
-          'change_password'.tr,
-          style: tNormalTextStyle.copyWith(
-              color: getTextColorSecond(),
-              fontSize: 16,
-              fontWeight: FontWeight.w500),
-        ),
-        const SizedBox(height: kDefaultPadding),
-        Row(
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: [
-            Expanded(
-                child: Text(
-              '• • • • • • •',
-              style: tNormalTextStyle.copyWith(
-                  color: getTextColorSecond(), fontWeight: FontWeight.w500),
-            )),
-            getSvgImage('ic_arrow_down', color: getColorPrimary())
-          ],
-        )
-      ],
+    return InkWell(
+      onTap: controller.showPasswordChange,
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(
+            'change_password'.tr,
+            style: tNormalTextStyle.copyWith(
+                color: getTextColorSecond(),
+                fontSize: 16,
+                fontWeight: FontWeight.w500),
+          ),
+          const SizedBox(height: kDefaultPadding),
+          Row(
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              Expanded(
+                  child: Text(
+                '• • • • • • •',
+                style: tNormalTextStyle.copyWith(
+                    color: getTextColorSecond(), fontWeight: FontWeight.w500),
+              )),
+              getSvgImage('ic_arrow_down', color: getColorPrimary())
+            ],
+          )
+        ],
+      ),
     );
   }
 
@@ -246,23 +252,43 @@ class EditProfileMobilePage extends StatelessWidget {
       const SizedBox(height: kDefaultPadding),
       _buildImagePicker(),
       const Divider(),
-      buildFieldInput(
-          label: 'nick_name'.tr,
-          content: 'enter_nick_name'.tr,
-          onPressed: () {}),
+      Obx(() {
+        return buildFieldInput(
+            label: 'nick_name'.tr,
+            content: controller.nickname.value.isEmpty
+                ? 'enter_nick_name'.tr
+                : controller.nickname.value,
+            onPressed: controller.showInputNickName);
+      }),
       const Divider(),
-      buildFieldInput(
-          label: 'birthday'.tr,
-          content: formatDateTime(
-              date: DateTime.now(),
-              formatString: DateTimeFormatString.textBehind),
-          onPressed: () {}),
+      Obx(() {
+        return buildFieldInput(
+            label: 'birthday'.tr,
+            content: controller.dateTime.value == null
+                ? 'not_entered'.tr
+                : formatDateTime(
+                    date: controller.dateTime.value,
+                    formatString: DateTimeFormatString.textBehind),
+            onPressed: controller.showDateBottom);
+      }),
       _hideAge(),
       const Divider(),
-      buildFieldInput(label: 'good_place'.tr, content: '東京', onPressed: () {}),
+      Obx(() {
+        return buildFieldInput(
+          label: 'good_place'.tr,
+          content: controller.placeToPlay.value ?? 'please_select'.tr,
+          onPressed: controller.showSelectCity,
+        );
+      }),
       const Divider(),
-      buildFieldInput(
-          label: 'description'.tr, content: 'not_entered'.tr, onPressed: () {}),
+      Obx(() {
+        return buildFieldInput(
+            label: 'description'.tr,
+            content: controller.description.value.isEmpty
+                ? 'not_entered'.tr
+                : controller.description.value,
+            onPressed: controller.showInputDescription);
+      }),
       const Divider(),
       _buildInformation(),
       const SizedBox(height: kDefaultPadding),

@@ -40,6 +40,7 @@ import 'package:base_flutter/ui/screen/home/dash_board/my_page_female/sale_proce
 import 'package:base_flutter/ui/screen/home/dash_board/my_page_female/sale_proceed/transfer_information/transfer_information_page.dart';
 import 'package:base_flutter/ui/screen/home/dash_board/my_page_female/user_guide_female/user_guide_female_binding.dart';
 import 'package:base_flutter/ui/screen/home/dash_board/my_page_female/user_guide_female/user_guide_female_page.dart';
+import 'package:base_flutter/ui/screen/home/dash_board/right_term/right_binding.dart';
 import 'package:base_flutter/ui/screen/home/dash_board/search/search_binding.dart';
 import 'package:base_flutter/ui/screen/home/dash_board/search/search_page.dart';
 import 'package:base_flutter/ui/screen/login/login_binding.dart';
@@ -51,6 +52,7 @@ import 'package:base_flutter/ui/screen/user_detail/female_detail_page.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
+import '../ui/screen/home/dash_board/right_term/right_page.dart';
 import '../ui/screen/home/home_binding.dart';
 import '../ui/screen/home/home_page.dart';
 
@@ -62,6 +64,21 @@ class AppPages {
       name: Routes.home,
       page: () => const HomePage(),
       binding: HomeBinding(),
+    ),
+    GetPage(
+      name: Routes.term,
+      page: () => const RightTermPage(label: 'term_service_label'),
+      binding: RightTermBinding(),
+    ),
+    GetPage(
+      name: Routes.law,
+      page: () => const RightTermPage(label: 'law_label'),
+      binding: RightTermBinding(),
+    ),
+    GetPage(
+      name: Routes.privacyPolicy,
+      page: () => const RightTermPage(label: 'privacy_policy_label'),
+      binding: RightTermBinding(),
     ),
     GetPage(
       name: Routes.homeFemale,
