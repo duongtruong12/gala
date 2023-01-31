@@ -1,4 +1,5 @@
 import 'package:base_flutter/routes/app_pages.dart';
+import 'package:base_flutter/ui/screen/home/dash_board/right_term/map.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 
@@ -22,7 +23,7 @@ class RightTermController extends GetxController {
 
   Future<String> getFileData(String label) async {
     try {
-      return await rootBundle.loadString('json/$label.txt');
+      return mapTerm[label] ?? '';
     } catch (e) {
       return '';
     }

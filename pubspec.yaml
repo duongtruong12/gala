@@ -89,7 +89,6 @@ flutter:
   uses-material-design: true
 
   assets:
-    - assets/json/
     - assets/image/
     - assets/image_female/
     - assets/fonts/
