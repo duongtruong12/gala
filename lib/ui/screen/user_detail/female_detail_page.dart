@@ -247,57 +247,53 @@ class FemaleDetailMobilePage extends StatelessWidget {
         ),
       )
     ];
-    return Scaffold(
-        backgroundColor: Colors.transparent,
-        bottomNavigationBar: Container(
-          padding:
-              EdgeInsets.symmetric(vertical: 16, horizontal: Get.width / 4),
-          child: CustomButton(
-            onPressed: () async {},
-            height: 43,
-            width: 223,
-            borderRadius: 99,
-            borderColor:
-                femaleGender.value ? kTextColorDark : Colors.transparent,
-            widget: Row(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                Icon(
-                  Icons.favorite_rounded,
-                  color: getColorPrimary(),
-                ),
-                const SizedBox(width: 4),
-                Text(
-                  'favorite'.tr,
-                  style:
-                      tButtonWhiteTextStyle.copyWith(color: getColorPrimary()),
-                )
-              ],
+    return Background(
+      child: Scaffold(
+          backgroundColor: Colors.transparent,
+          bottomNavigationBar: Container(
+            padding:
+                EdgeInsets.symmetric(vertical: 16, horizontal: Get.width / 4),
+            child: CustomButton(
+              onPressed: () async {},
+              height: 43,
+              width: 223,
+              borderRadius: 99,
+              borderColor:
+                  casterAccount.value ? kTextColorDark : Colors.transparent,
+              widget: Row(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Icon(
+                    Icons.favorite_rounded,
+                    color: getColorPrimary(),
+                  ),
+                  const SizedBox(width: 4),
+                  Text(
+                    'favorite'.tr,
+                    style: tButtonWhiteTextStyle.copyWith(
+                        color: getColorPrimary()),
+                  )
+                ],
+              ),
+              color: kTextColorSecond,
             ),
-            color: kTextColorSecond,
           ),
-        ),
-        body: Stack(
-          children: [
-            ListView.builder(
-              itemCount: list.length,
-              itemBuilder: (BuildContext context, int index) {
-                return list[index];
-              },
-            ),
-            Padding(
-              padding: const EdgeInsets.all(16.0),
-              child: InkWell(
-                  onTap: () {
-                    if (controller.canPop == true) {
-                      Get.back();
-                    } else {
-                      Get.offAndToNamed(Routes.home);
-                    }
-                  },
-                  child: getSvgImage('ic_back_circle')),
-            ),
-          ],
-        ));
+          body: Stack(
+            children: [
+              ListView.builder(
+                itemCount: list.length,
+                itemBuilder: (BuildContext context, int index) {
+                  return list[index];
+                },
+              ),
+              Padding(
+                padding: const EdgeInsets.all(16.0),
+                child: InkWell(
+                    onTap: controller.onPressedBack,
+                    child: getSvgImage('ic_back_circle')),
+              ),
+            ],
+          )),
+    );
   }
 }

@@ -74,10 +74,10 @@ class UserGuideMobilePage extends StatelessWidget {
             widget: Text(
               'faq'.tr,
               style: tNormalTextStyle.copyWith(
-                  color: femaleGender.value ? kTextColorDark : kPrimaryColor,
+                  color: casterAccount.value ? kTextColorDark : kPrimaryColor,
                   fontSize: 18),
             ),
-            borderColor: femaleGender.value ? kTextColorDark : kPrimaryColor,
+            borderColor: casterAccount.value ? kTextColorDark : kPrimaryColor,
             color: Colors.transparent,
           ),
           Expanded(

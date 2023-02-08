@@ -18,9 +18,9 @@ class SearchDetail extends GetView<SearchDetailController> {
     return Background(
         child: Responsive(
       mobile: SearchDetailMobilePage(
-          controller: controller, femaleGender: femaleGender.value),
+          controller: controller, femaleGender: casterAccount.value),
       desktop: SearchDetailMobilePage(
-          controller: controller, femaleGender: femaleGender.value),
+          controller: controller, femaleGender: casterAccount.value),
     ));
   }
 }

@@ -169,6 +169,11 @@ const Map<String, String> ja = {
   'current_pass': '現在のパスワード',
   'new_pass': '新規パスワード',
   'pass_confirm': 'パスワード確認',
+  'caster_manager': 'キャスト管理',
+  'guest_manager': 'ゲスト管理',
+  'chat_manager': 'チャット管理',
+  'payment_manager': '支払い受取管理',
+  'cast_payment_manager': 'キャスト支払い管理',
   'extension_price':
       '※延長時間は30分から15分毎に1,950Pです。優先マッチング希望が成立した場合、別途希望キャスト1人あたり2,000P(固定)発生します。',
   'add_payment_content':

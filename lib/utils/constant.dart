@@ -24,6 +24,16 @@ class CurrencySymbol {
   static const japan = '￥';
 }
 
+
+class RouteIdAdmin {
+  static const casterManager = 0;
+  static const guestManager = 1;
+  static const chatManager = 2;
+  static const paymentManager = 4;
+  static const castPaymentManager = 3;
+  static const callList = 5;
+}
+
 class RouteId {
   static const search = 0;
   static const message = 1;

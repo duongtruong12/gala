@@ -1,4 +1,5 @@
 import 'package:base_flutter/model/female_model.dart';
+import 'package:base_flutter/routes/app_pages.dart';
 import 'package:base_flutter/utils/global/globals_variable.dart';
 import 'package:get/get.dart';
 
@@ -55,5 +56,13 @@ class FemaleDetailController extends GetxController {
 
   void onSwitchImage(int i) {
     currentSelect.value = i;
+  }
+
+  void onPressedBack() {
+    if (canPop == true) {
+      Get.back();
+    } else {
+      Get.offAndToNamed(Routes.home);
+    }
   }
 }

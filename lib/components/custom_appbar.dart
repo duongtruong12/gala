@@ -9,6 +9,7 @@ PreferredSizeWidget appbarCustom(
     List<Widget>? actions,
     bool flexibleSpace = false,
     bool isDark = false,
+    bool centerTitle = true,
     bool automaticallyImplyLeading = true,
     PreferredSizeWidget? bottom,
     double? elevation = 3,
@@ -17,11 +18,11 @@ PreferredSizeWidget appbarCustom(
       title: title,
       actions: actions,
       iconTheme: IconThemeData(
-          color: femaleGender.value
+          color: casterAccount.value
               ? kPrimaryBackgroundColorFemale
               : kTextColorPrimary),
       actionsIconTheme: IconThemeData(
-          color: femaleGender.value
+          color: casterAccount.value
               ? kPrimaryBackgroundColorFemale
               : kTextColorPrimary),
       bottom: bottom,
@@ -30,7 +31,7 @@ PreferredSizeWidget appbarCustom(
       leadingWidth: leadingWidth,
       titleTextStyle: tNormalTextStyle.copyWith(
           color: kTextColorSecond, fontSize: 18, fontWeight: FontWeight.w500),
-      centerTitle: true,
+      centerTitle: centerTitle,
       automaticallyImplyLeading: automaticallyImplyLeading,
       elevation: elevation);
 }

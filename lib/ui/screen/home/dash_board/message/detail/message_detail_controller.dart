@@ -153,7 +153,7 @@ class MessageDetailController extends GetxController {
     ));
     if (model.value?.messageGroupType == MessageGroupType.group.name) {
       list.add(MessageModel(
-        content: femaleGender.value ? '〇〇〇〇が解散しました' : '〇〇〇〇が解散しました\n消費ポイント：0P',
+        content: casterAccount.value ? '〇〇〇〇が解散しました' : '〇〇〇〇が解散しました\n消費ポイント：0P',
         userId: '管理人',
         delete: false,
         createdTime: Timestamp.fromMillisecondsSinceEpoch(
@@ -162,7 +162,7 @@ class MessageDetailController extends GetxController {
       ));
 
       list.add(MessageModel(
-        content: femaleGender.value ? '全員が解散しました' : '全員が解散しました\n消費ポイント：0P',
+        content: casterAccount.value ? '全員が解散しました' : '全員が解散しました\n消費ポイント：0P',
         userId: '管理人',
         delete: false,
         createdTime: Timestamp.fromMillisecondsSinceEpoch(

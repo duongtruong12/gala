@@ -57,7 +57,7 @@ class CustomButtonState extends State<CustomButton> {
         : widget.widget;
     final gradient = widget.gradient;
     Color? color = widget.color;
-    if (femaleGender.value && !widget.loginPage && widget.color == null) {
+    if (casterAccount.value && !widget.loginPage && widget.color == null) {
       color = kPrimaryColorFemale;
     }
     return InkWell(

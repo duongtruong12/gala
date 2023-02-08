@@ -35,7 +35,7 @@ class SearchMobilePage extends StatelessWidget {
         Obx(() {
           return AppBarSearch(
             onPressed: controller.onSwitchSearchDetail,
-            femaleGender: femaleGender.value,
+            femaleGender: casterAccount.value,
           );
         }),
         Expanded(
@@ -49,7 +49,7 @@ class SearchMobilePage extends StatelessWidget {
                   childWidget: controller.list
                       .map((element) => ItemTarget(
                             model: element,
-                            femaleGender: femaleGender.value,
+                            femaleGender: casterAccount.value,
                             onPressed: () {
                               controller.onSwitchFemaleDetail(element.age ?? 0);
                             },

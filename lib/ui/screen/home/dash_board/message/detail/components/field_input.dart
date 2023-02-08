@@ -26,7 +26,7 @@ class FieldInput extends StatelessWidget {
     final controller = TextEditingController();
     return Container(
       padding: const EdgeInsets.all(kDefaultPadding),
-      color: femaleGender.value ? kPrimaryBackgroundColorFemale : kMenuBk,
+      color: casterAccount.value ? kPrimaryBackgroundColorFemale : kMenuBk,
       child: Row(
         children: [
           getSvgImage('ic_add_input'),

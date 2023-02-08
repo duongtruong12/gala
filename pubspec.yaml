@@ -34,10 +34,10 @@ dependencies:
 
   # The following adds the Cupertino Icons font to your application.
   # Use with the CupertinoIcons class for iOS style icons.
-  cupertino_icons: ^1.0.4
   connectivity_plus: ^2.3.0
   syncfusion_flutter_datepicker: ^20.4.44
   selectable_autolink_text: ^2.4.1
+  google_fonts: ^4.0.1
 
   dio: ^4.0.6
 
@@ -59,9 +59,9 @@ dependencies:
   permission_handler: ^9.2.0
   shared_preferences: ^2.0.13
   flutter_chat_bubble: ^2.0.0
-  firebase_core: ^2.1.1
-  firebase_auth: ^4.1.1
-  cloud_firestore: ^4.0.4
+  firebase_core: ^2.4.1
+  firebase_auth: ^4.2.5
+  cloud_firestore: ^4.3.1
   lottie: ^1.4.3
 
   sprintf: ^6.0.0
@@ -91,7 +91,6 @@ flutter:
   assets:
     - assets/image/
     - assets/image_female/
-    - assets/fonts/
     - assets/lottie/
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware.
@@ -104,14 +103,5 @@ flutter:
   # "family" key with the fonts family name, and a "fonts" key with a
   # list giving the asset and other descriptors for the fonts. For
   # example:
-  fonts:
-    - family: NotoSansJP
-      fonts:
-        - asset: assets/fonts/NotoSansJP-Regular.otf
-        - asset: assets/fonts/NotoSansJP-Medium.otf
-        - asset: assets/fonts/NotoSansJP-Light.otf
-        - asset: assets/fonts/NotoSansJP-Black.otf
-        - asset: assets/fonts/NotoSansJP-Bold.otf
-        - asset: assets/fonts/NotoSansJP-Thin.otf
   # For details regarding fonts from package dependencies,
   # see https://flutter.dev/custom-fonts/#from-packages

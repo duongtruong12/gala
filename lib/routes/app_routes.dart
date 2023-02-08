@@ -2,6 +2,13 @@ part of './app_pages.dart';
 
 abstract class Routes {
   static const home = '/home';
+  static const homeAdmin = '/homeAdmin';
+  static const casterManager = '/casterManager';
+  static const guestManager = '/guestManager';
+  static const chatManager = '/chatManager';
+  static const paymentManager = '/paymentManager';
+  static const castPaymentManager = '/castPaymentManager';
+  static const callList = '/callList';
   static const homeFemale = '/homeFemale';
   static const error = '/error';
   static const search = '/search';

@@ -12,29 +12,32 @@ class Background extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-        decoration: BoxDecoration(
-          color: femaleGender.value
-              ? kPrimaryBackgroundColorFemale
-              : kPrimaryBackgroundColor,
-          gradient: femaleGender.value
-              ? null
-              : const LinearGradient(
-                  stops: [0.0, 0.5, 1.0],
-                  colors: [
-                    Colors.black,
-                    Color(0xFF242424),
-                    Colors.black,
-                  ],
-                ),
-        ),
-        child: Scaffold(
-          resizeToAvoidBottomInset: false,
-          body: SizedBox(
-            width: double.infinity,
-            height: MediaQuery.of(context).size.height,
-            child: SafeArea(child: child),
+    return WillPopScope(
+      onWillPop: () => Future.value(true),
+      child: Container(
+          decoration: BoxDecoration(
+            color: casterAccount.value
+                ? kPrimaryBackgroundColorFemale
+                : kPrimaryBackgroundColor,
+            gradient: casterAccount.value
+                ? null
+                : const LinearGradient(
+                    stops: [0.0, 0.5, 1.0],
+                    colors: [
+                      Colors.black,
+                      Color(0xFF242424),
+                      Colors.black,
+                    ],
+                  ),
           ),
-        ));
+          child: Scaffold(
+            resizeToAvoidBottomInset: false,
+            body: SizedBox(
+              width: double.infinity,
+              height: MediaQuery.of(context).size.height,
+              child: SafeArea(child: child),
+            ),
+          )),
+    );
   }
 }

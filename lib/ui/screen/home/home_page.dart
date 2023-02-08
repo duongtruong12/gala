@@ -52,7 +52,7 @@ class MobileHomePage extends StatelessWidget {
         return BottomNavigatorWidget(
           currentIndex: controller.currentIndex.value,
           onTap: controller.onTapItem,
-          femaleGender: femaleGender.value,
+          femaleGender: casterAccount.value,
         );
       }),
     );

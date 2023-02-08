@@ -38,8 +38,7 @@ class TabBarCustom extends StatelessWidget {
                   ),
                 ],
               ),
-              labelStyle: tNormalTextStyle.copyWith(
-                  color: kTextColorSecond, fontSize: 12),
+              labelStyle: tButtonWhiteTextStyle.copyWith(fontSize: 12),
               unselectedLabelStyle: tNormalTextStyle.copyWith(fontSize: 12),
               unselectedLabelColor: kTextColorDark,
               labelColor: kTextColorSecond,

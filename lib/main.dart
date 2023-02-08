@@ -1,7 +1,6 @@
 import 'package:base_flutter/lang/locale_service.dart';
 import 'package:base_flutter/ui/screen/error/404_screen.dart';
 import 'package:base_flutter/ui/screen/error/404_screen_binding.dart';
-import 'package:base_flutter/ui/screen/login/login_binding.dart';
 import 'package:base_flutter/utils/const.dart';
 import 'package:base_flutter/utils/global/globals_functions.dart';
 import 'package:base_flutter/utils/global/globals_variable.dart';
@@ -11,8 +10,10 @@ import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
+import 'package:google_fonts/google_fonts.dart';
 
 import 'routes/app_pages.dart';
+import 'ui/login/login_binding.dart';
 import 'utils/connect_internet_check.dart';
 import 'utils/constant.dart';
 
@@ -21,7 +22,8 @@ var connectivity = ConnectivityChangeNotifier();
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await GetStorage.init();
-  femaleGender.value = await getBool(key: SharedPrefKey.femaleGender);
+  GoogleFonts.notoSansJavanese();
+  casterAccount.value = await getBool(key: SharedPrefKey.femaleGender);
   runApp(const MyApp());
 }
 
@@ -40,7 +42,7 @@ class MyApp extends StatelessWidget {
     setStatusBarColor();
     return ScreenUtilInit(
       designSize: const Size(375, 904),
-      builder: (context) => GetMaterialApp(
+      builder: (context, child) => GetMaterialApp(
         debugShowCheckedModeBanner: false,
         smartManagement: SmartManagement.keepFactory,
         builder: (context, child) {
@@ -49,7 +51,7 @@ class MyApp extends StatelessWidget {
             data: MediaQuery.of(context).copyWith(textScaleFactor: 1.0),
           );
         },
-        theme: femaleGender.value ? femaleTheme : lightTheme,
+        theme: casterAccount.value ? femaleTheme : lightTheme,
         defaultTransition: Transition.fade,
         localizationsDelegates: const [
           GlobalWidgetsLocalizations.delegate,

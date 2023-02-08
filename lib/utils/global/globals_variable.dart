@@ -18,7 +18,7 @@ final listImage = [
 Random r = Random();
 
 RxBool loading = RxBool(false);
-RxBool femaleGender = RxBool(false);
+RxBool casterAccount = RxBool(false);
 final picker = ImagePicker();
 final logger = Logger(
     printer:

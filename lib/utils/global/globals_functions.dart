@@ -117,7 +117,7 @@ void setStatusBarColor({Brightness brightness = Brightness.light}) {
 Widget getSvgImage(String assetName,
     {BoxFit? boxFit, double? height, double? width, Color? color}) {
   String path = 'assets/image/$assetName.svg';
-  if (femaleGender.value) {
+  if (casterAccount.value) {
     path = 'assets/image_female/$assetName.svg';
   }
   return SvgPicture.asset(
@@ -298,23 +298,23 @@ Future<bool> storeData({required String key, required dynamic value}) async {
 }
 
 Color getColorPrimary() {
-  return femaleGender.value ? kPrimaryColorFemale : kTextColorPrimary;
+  return casterAccount.value ? kPrimaryColorFemale : kTextColorPrimary;
 }
 
 Color getColorAppBar() {
-  return femaleGender.value ? kTextColorSecond : kTextColorPrimary;
+  return casterAccount.value ? kTextColorSecond : kTextColorPrimary;
 }
 
 int getRouteMyPage() {
-  return femaleGender.value ? RouteId.myPageFemale : RouteId.myPage;
+  return casterAccount.value ? RouteId.myPageFemale : RouteId.myPage;
 }
 
 Color getTextColorButton() {
-  return femaleGender.value ? kTextColorSecond : kTextColorDark;
+  return casterAccount.value ? kTextColorSecond : kTextColorDark;
 }
 
 Color getTextColorSecond() {
-  return femaleGender.value ? kTextColorDark : kTextColorSecond;
+  return casterAccount.value ? kTextColorDark : kTextColorSecond;
 }
 
 Future<bool> getBool({required String key}) async {

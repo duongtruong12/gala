@@ -1,3 +1,19 @@
+import 'package:base_flutter/ui/admin/dash_board/call_list/call_list_binding.dart';
+import 'package:base_flutter/ui/admin/dash_board/call_list/call_list_page.dart';
+import 'package:base_flutter/ui/admin/dash_board/cast_payment_manager/cast_payment_manager_binding.dart';
+import 'package:base_flutter/ui/admin/dash_board/cast_payment_manager/cast_payment_manager_page.dart';
+import 'package:base_flutter/ui/admin/dash_board/caster_manager/caster_manager_binding.dart';
+import 'package:base_flutter/ui/admin/dash_board/caster_manager/caster_manager_page.dart';
+import 'package:base_flutter/ui/admin/dash_board/chat_manager/chat_manager_binding.dart';
+import 'package:base_flutter/ui/admin/dash_board/chat_manager/chat_manager_page.dart';
+import 'package:base_flutter/ui/admin/dash_board/guest_manager/guest_manager_binding.dart';
+import 'package:base_flutter/ui/admin/dash_board/guest_manager/guest_manager_page.dart';
+import 'package:base_flutter/ui/admin/dash_board/payment_manager/payment_manager_binding.dart';
+import 'package:base_flutter/ui/admin/dash_board/payment_manager/payment_manager_page.dart';
+import 'package:base_flutter/ui/admin/home_admin/home_admin_binding.dart';
+import 'package:base_flutter/ui/admin/home_admin/home_admin_page.dart';
+import 'package:base_flutter/ui/login/login_binding.dart';
+import 'package:base_flutter/ui/login/login_page.dart';
 import 'package:base_flutter/ui/screen/error/404_screen.dart';
 import 'package:base_flutter/ui/screen/error/404_screen_binding.dart';
 import 'package:base_flutter/ui/screen/home/dash_board/call/call_binding.dart';
@@ -43,8 +59,6 @@ import 'package:base_flutter/ui/screen/home/dash_board/my_page_female/user_guide
 import 'package:base_flutter/ui/screen/home/dash_board/right_term/right_binding.dart';
 import 'package:base_flutter/ui/screen/home/dash_board/search/search_binding.dart';
 import 'package:base_flutter/ui/screen/home/dash_board/search/search_page.dart';
-import 'package:base_flutter/ui/screen/login/login_binding.dart';
-import 'package:base_flutter/ui/screen/login/login_page.dart';
 import 'package:base_flutter/ui/screen/search_detail/search_detail_binding.dart';
 import 'package:base_flutter/ui/screen/search_detail/search_detail_page.dart';
 import 'package:base_flutter/ui/screen/user_detail/female_detail_binding.dart';
@@ -64,6 +78,11 @@ class AppPages {
       name: Routes.home,
       page: () => const HomePage(),
       binding: HomeBinding(),
+    ),
+    GetPage(
+      name: Routes.homeAdmin,
+      page: () => const HomeAdminPage(),
+      binding: HomeAdminBinding(),
     ),
     GetPage(
       name: Routes.term,
@@ -106,6 +125,69 @@ class AppPages {
       binding: MessageDetailBinding(),
     ),
   ];
+}
+
+Route onGenerateRouteDashboardAdmin(RouteSettings settings) {
+  GetPageRoute _getPageRoute(
+      {required String name,
+      required Widget child,
+      required Bindings? bindings}) {
+    return GetPageRoute(
+      settings: settings,
+      routeName: name,
+      title: name.tr,
+      page: () => child,
+      binding: bindings,
+    );
+  }
+
+  if (settings.name == Routes.casterManager) {
+    return _getPageRoute(
+        name: Routes.casterManager,
+        child: const CasterManagerPage(),
+        bindings: CasterManagerBinding());
+  }
+
+  if (settings.name == Routes.guestManager) {
+    return _getPageRoute(
+        name: Routes.guestManager,
+        child: const GuestManagerPage(),
+        bindings: GuestManagerBinding());
+  }
+
+  if (settings.name == Routes.chatManager) {
+    return _getPageRoute(
+        name: Routes.chatManager,
+        child: const ChatManagerPage(),
+        bindings: ChatManagerBinding());
+  }
+
+  if (settings.name == Routes.paymentManager) {
+    return _getPageRoute(
+        name: Routes.paymentManager,
+        child: const PaymentManagerPage(),
+        bindings: PaymentManagerBinding());
+  }
+
+  if (settings.name == Routes.castPaymentManager) {
+    return _getPageRoute(
+        name: Routes.castPaymentManager,
+        child: const CastPaymentManagerPage(),
+        bindings: CastPaymentManagerBinding());
+  }
+
+  if (settings.name == Routes.callList) {
+    return _getPageRoute(
+        name: Routes.callList,
+        child: const CallListPage(),
+        bindings: CallListBinding());
+  }
+
+  return _getPageRoute(
+    name: Routes.error,
+    child: const ErrorScreen(),
+    bindings: ErrorBinding(),
+  );
 }
 
 Route onGenerateRouteDashboard(RouteSettings settings) {

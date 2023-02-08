@@ -42,14 +42,14 @@ class PointWidget extends StatelessWidget {
                       color: getColorPrimary(),
                       fontSize: 32,
                       fontWeight: FontWeight.w500)),
-              const TextSpan(
+              TextSpan(
                 text: 'pt',
                 style: tNormalTextStyle,
               )
             ])),
             const SizedBox(height: kDefaultPadding),
             onPressed == null
-                ? femaleGender.value
+                ? casterAccount.value
                     ? const SizedBox()
                     : Text(
                         'cart_content'.tr,

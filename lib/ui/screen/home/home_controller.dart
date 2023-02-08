@@ -6,19 +6,13 @@ import 'package:get/get.dart';
 class HomeController extends GetxController {
   static HomeController get to => Get.find();
   RxInt currentIndex = 0.obs;
-  final pages = <String>[
-    Routes.search,
-    Routes.message,
-    Routes.call,
-    Routes.myPage,
-  ];
 
   late Map<int, String> map;
 
   @override
   void onInit() {
     super.onInit();
-    if (femaleGender.value) {
+    if (casterAccount.value) {
       map = <int, String>{
         RouteId.search: Routes.search,
         RouteId.message: Routes.message,

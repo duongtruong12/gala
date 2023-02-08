@@ -42,7 +42,7 @@ class MessageMobilePage extends StatelessWidget {
       return const SizedBox();
     }
     return Container(
-      color: femaleGender.value ? const Color(0xFFE6E6E6) : kPrimaryColor,
+      color: casterAccount.value ? const Color(0xFFE6E6E6) : kPrimaryColor,
       padding: const EdgeInsets.symmetric(
           horizontal: kDefaultPadding, vertical: kSmallPadding),
       height: 48,

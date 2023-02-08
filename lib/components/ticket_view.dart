@@ -82,16 +82,18 @@ class TicketView extends StatelessWidget {
   Widget _buildPoint() {
     return Row(
       crossAxisAlignment: CrossAxisAlignment.end,
+      mainAxisAlignment: MainAxisAlignment.center,
       children: [
         Expanded(
             child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
+          mainAxisAlignment: MainAxisAlignment.center,
           children: [
             Text(
               'expected_point'.tr,
               style: tNormalTextStyle.copyWith(fontSize: 10),
             ),
-            const SizedBox(height: 4),
+            const SizedBox(height: kSmallPadding),
             Text(
               '${formatCurrency(model.expectedPoint)}~',
               style: tNormalTextStyle.copyWith(
@@ -99,8 +101,9 @@ class TicketView extends StatelessWidget {
                 fontSize: 24,
               ),
             ),
-            const SizedBox(height: kDefaultPadding),
+            const SizedBox(height: kSmallPadding),
             Row(
+              crossAxisAlignment: CrossAxisAlignment.center,
               children: [
                 Chip(
                   label: Text(
