@@ -34,6 +34,10 @@ class FieldInput extends StatelessWidget {
           Expanded(
             child: TextField(
               controller: controller,
+              onSubmitted: (str) {
+                onInput(controller.text);
+                controller.clear();
+              },
               decoration: InputDecoration(
                 hintText: 'input_hint'.tr,
                 filled: true,
@@ -50,6 +54,7 @@ class FieldInput extends StatelessWidget {
           InkWell(
             onTap: () {
               onInput(controller.text);
+              controller.clear();
             },
             child: getSvgImage('ic_send'),
           )

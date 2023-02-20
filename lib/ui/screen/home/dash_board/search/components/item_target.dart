@@ -1,12 +1,12 @@
 import 'package:base_flutter/components/custom_network_image.dart';
-import 'package:base_flutter/model/female_model.dart';
+import 'package:base_flutter/model/user_model.dart';
 import 'package:base_flutter/utils/const.dart';
+import 'package:base_flutter/utils/constant.dart';
 import 'package:base_flutter/utils/global/globals_functions.dart';
 import 'package:flutter/material.dart';
-import 'package:get/get.dart';
 
 class ItemTarget extends StatelessWidget {
-  final FemaleModel model;
+  final UserModel model;
   final VoidCallback onPressed;
   final bool femaleGender;
 
@@ -54,7 +54,7 @@ class ItemTarget extends StatelessWidget {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Text(
-                            '${model.age}${'age'.tr}',
+                            model.getAge(),
                             style: tNormalTextStyle.copyWith(
                                 fontWeight: FontWeight.w500),
                           ),
@@ -69,7 +69,8 @@ class ItemTarget extends StatelessWidget {
                       femaleGender == true
                           ? const SizedBox()
                           : Text(
-                              formatCurrency(model.point),
+                              formatCurrency(model.pointPer30Minutes,
+                                  symbol: CurrencySymbol.pointPerMinutes),
                               style: tNormalTextStyle.copyWith(
                                   fontWeight: FontWeight.w500),
                             )

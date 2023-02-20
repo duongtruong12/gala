@@ -2,6 +2,7 @@ import 'package:base_flutter/utils/global/globals_functions.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
+const kPagingSize = 25;
 const kPrimaryColor = Color(0xFFBCA674);
 const kPrimaryColorFemale = Color(0xFFFB78A4);
 

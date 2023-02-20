@@ -20,27 +20,40 @@ class LoginController extends GetxController {
     SchedulerBinding.instance.addPostFrameCallback((_) async {
       storeData(key: SharedPrefKey.femaleGender, value: false);
       casterAccount.value = false;
+      await handleLogin();
     });
   }
 
-  Future<void> onLogin() async {
-    if (emailController.text == 'admin@gmail.com') {
-      casterAccount.value = false;
-      Get.changeTheme(lightTheme);
-      await storeData(
-          key: SharedPrefKey.femaleGender, value: casterAccount.value);
-      Get.offAllNamed(Routes.homeAdmin, predicate: (route) => false);
-    } else {
-      if (emailController.text == '2@gmail.com') {
-        casterAccount.value = true;
-        Get.changeTheme(femaleTheme);
-      } else {
+  Future<void> handleLogin() async {
+    if (user.value != null) {
+      if (user.value?.typeAccount == TypeAccount.admin.name) {
         casterAccount.value = false;
         Get.changeTheme(lightTheme);
+        await storeData(
+            key: SharedPrefKey.femaleGender, value: casterAccount.value);
+        Get.offAllNamed(Routes.homeAdmin, predicate: (route) => false);
+      } else if (user.value?.typeAccount == TypeAccount.caster.name) {
+        casterAccount.value = true;
+        await storeData(
+            key: SharedPrefKey.femaleGender, value: casterAccount.value);
+        Get.changeTheme(femaleTheme);
+        Get.offAllNamed(Routes.home, predicate: (route) => false);
+      } else {
+        casterAccount.value = false;
+        await storeData(
+            key: SharedPrefKey.femaleGender, value: casterAccount.value);
+        Get.changeTheme(lightTheme);
+        Get.offAllNamed(Routes.home, predicate: (route) => false);
       }
-      await storeData(
-          key: SharedPrefKey.femaleGender, value: casterAccount.value);
-      Get.offAllNamed(Routes.home, predicate: (route) => false);
+    }
+  }
+
+  Future<void> onLogin() async {
+    if (formKey.currentState?.validate() == true) {
+      await fireStoreProvider.loginUser(
+          email: emailController.text.trim(),
+          password: passController.text.trim());
+      await handleLogin();
     }
   }
 }

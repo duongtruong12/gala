@@ -3,7 +3,6 @@ import 'package:base_flutter/components/custom_appbar.dart';
 import 'package:base_flutter/components/custom_button.dart';
 import 'package:base_flutter/ui/responsive.dart';
 import 'package:base_flutter/utils/const.dart';
-import 'package:base_flutter/utils/constant.dart';
 import 'package:base_flutter/utils/global/globals_functions.dart';
 import 'package:base_flutter/utils/global/globals_variable.dart';
 import 'package:flutter/material.dart';
@@ -99,7 +98,7 @@ class SearchDetailMobilePage extends StatelessWidget {
       const SizedBox(height: 32),
       CustomButton(
         onPressed: () async {
-          Get.back(id: RouteId.search);
+          Get.back(id: getRouteSearch());
         },
         widget: Text(
           'search_condition'.tr,
@@ -123,7 +122,7 @@ class SearchDetailMobilePage extends StatelessWidget {
         title: Text('search'.tr),
         leading: InkWell(
           onTap: () {
-            Get.back(id: RouteId.search);
+            Get.back(id: getRouteSearch());
           },
           child: const Icon(
             Icons.close_rounded,

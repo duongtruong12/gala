@@ -4,8 +4,6 @@ import 'package:base_flutter/ui/admin/dash_board/cast_payment_manager/cast_payme
 import 'package:base_flutter/ui/admin/dash_board/cast_payment_manager/cast_payment_manager_page.dart';
 import 'package:base_flutter/ui/admin/dash_board/caster_manager/caster_manager_binding.dart';
 import 'package:base_flutter/ui/admin/dash_board/caster_manager/caster_manager_page.dart';
-import 'package:base_flutter/ui/admin/dash_board/chat_manager/chat_manager_binding.dart';
-import 'package:base_flutter/ui/admin/dash_board/chat_manager/chat_manager_page.dart';
 import 'package:base_flutter/ui/admin/dash_board/guest_manager/guest_manager_binding.dart';
 import 'package:base_flutter/ui/admin/dash_board/guest_manager/guest_manager_page.dart';
 import 'package:base_flutter/ui/admin/dash_board/payment_manager/payment_manager_binding.dart';
@@ -26,6 +24,8 @@ import 'package:base_flutter/ui/screen/home/dash_board/call/select_mood/select_m
 import 'package:base_flutter/ui/screen/home/dash_board/call/select_mood/select_mood_page.dart';
 import 'package:base_flutter/ui/screen/home/dash_board/call_female/call_female_binding.dart';
 import 'package:base_flutter/ui/screen/home/dash_board/call_female/call_female_page.dart';
+import 'package:base_flutter/ui/screen/home/dash_board/call_female/search_call_date/search_call_binding.dart';
+import 'package:base_flutter/ui/screen/home/dash_board/call_female/search_call_date/search_call_page.dart';
 import 'package:base_flutter/ui/screen/home/dash_board/message/detail/message_detail_binding.dart';
 import 'package:base_flutter/ui/screen/home/dash_board/message/detail/message_detail_page.dart';
 import 'package:base_flutter/ui/screen/home/dash_board/message/message_binding.dart';
@@ -61,8 +61,9 @@ import 'package:base_flutter/ui/screen/home/dash_board/search/search_binding.dar
 import 'package:base_flutter/ui/screen/home/dash_board/search/search_page.dart';
 import 'package:base_flutter/ui/screen/search_detail/search_detail_binding.dart';
 import 'package:base_flutter/ui/screen/search_detail/search_detail_page.dart';
-import 'package:base_flutter/ui/screen/user_detail/female_detail_binding.dart';
-import 'package:base_flutter/ui/screen/user_detail/female_detail_page.dart';
+import 'package:base_flutter/ui/screen/user_detail/user_detail_binding.dart';
+import 'package:base_flutter/ui/screen/user_detail/user_detail_page.dart';
+import 'package:base_flutter/utils/global/global_middleware.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
@@ -78,31 +79,37 @@ class AppPages {
       name: Routes.home,
       page: () => const HomePage(),
       binding: HomeBinding(),
+      middlewares: [GlobalMiddleware()],
     ),
     GetPage(
       name: Routes.homeAdmin,
       page: () => const HomeAdminPage(),
       binding: HomeAdminBinding(),
+      middlewares: [GlobalMiddleware()],
     ),
     GetPage(
       name: Routes.term,
       page: () => const RightTermPage(label: 'term_service_label'),
       binding: RightTermBinding(),
+      middlewares: [GlobalMiddleware()],
     ),
     GetPage(
       name: Routes.law,
       page: () => const RightTermPage(label: 'law_label'),
       binding: RightTermBinding(),
+      middlewares: [GlobalMiddleware()],
     ),
     GetPage(
       name: Routes.privacyPolicy,
       page: () => const RightTermPage(label: 'privacy_policy_label'),
       binding: RightTermBinding(),
+      middlewares: [GlobalMiddleware()],
     ),
     GetPage(
       name: Routes.homeFemale,
       page: () => const HomePage(),
       binding: HomeBinding(),
+      middlewares: [GlobalMiddleware()],
     ),
     GetPage(
       name: Routes.error,
@@ -113,16 +120,25 @@ class AppPages {
       name: Routes.login,
       page: () => const LoginPage(),
       binding: LoginBinding(),
+      middlewares: [GlobalMiddleware()],
     ),
     GetPage(
-      name: Routes.femaleProfile,
-      page: () => const FemaleDetail(),
-      binding: FemaleDetailBinding(),
+      name: Routes.userDetail,
+      page: () => const UserDetail(),
+      binding: UserDetailBinding(),
+      middlewares: [GlobalMiddleware()],
+    ),
+    GetPage(
+      name: Routes.searchCall,
+      page: () => const SearchCallPage(),
+      binding: SearchCallBinding(),
+      middlewares: [GlobalMiddleware()],
     ),
     GetPage(
       name: Routes.messageDetail,
       page: () => const MessageDetailPage(),
       binding: MessageDetailBinding(),
+      middlewares: [GlobalMiddleware()],
     ),
   ];
 }
@@ -158,8 +174,8 @@ Route onGenerateRouteDashboardAdmin(RouteSettings settings) {
   if (settings.name == Routes.chatManager) {
     return _getPageRoute(
         name: Routes.chatManager,
-        child: const ChatManagerPage(),
-        bindings: ChatManagerBinding());
+        child: const MessagePage(),
+        bindings: MessageBinding());
   }
 
   if (settings.name == Routes.paymentManager) {

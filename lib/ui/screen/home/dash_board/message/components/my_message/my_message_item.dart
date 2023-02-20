@@ -16,15 +16,17 @@ class MyMessageItem extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return SizedBox(
-      width: Get.width * 0.7,
+    return Container(
+      constraints: BoxConstraints(
+        maxWidth: Get.width,
+      ),
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.end,
         mainAxisAlignment: MainAxisAlignment.end,
         children: [
           Text(
             formatDateTime(
-                date: model.createdTime?.toDate(),
+                date: model.createdTime,
                 formatString: DateTimeFormatString.hhmm),
             style: tNormalTextStyle.copyWith(fontSize: 8, color: kBorderColor),
           ),

@@ -20,7 +20,7 @@ abstract class Routes {
   static const searchDetail = '/search_detail';
   static const editProfile = '/editProfile';
   static const login = '/login';
-  static const femaleProfile = '/femaleProfile/';
+  static const userDetail = '/userDetail/';
   static const messageDetail = '/messageDetail/';
   static const pointHistory = '/pointHistory';
   static const pointHistoryFemale = '/pointHistoryFemale';
@@ -38,4 +38,5 @@ abstract class Routes {
   static const term = '/term';
   static const law = '/law';
   static const privacyPolicy = '/privacyPolicy';
+  static const searchCall = '/searchCall/';
 }

@@ -1,42 +1,42 @@
 import 'package:base_flutter/components/background.dart';
 import 'package:base_flutter/components/custom_button.dart';
 import 'package:base_flutter/components/custom_network_image.dart';
-import 'package:base_flutter/routes/app_pages.dart';
 import 'package:base_flutter/ui/responsive.dart';
 import 'package:base_flutter/utils/const.dart';
+import 'package:base_flutter/utils/constant.dart';
 import 'package:base_flutter/utils/global/globals_functions.dart';
 import 'package:base_flutter/utils/global/globals_variable.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'female_detail_controller.dart';
+import 'user_detail_controller.dart';
 
-class FemaleDetail extends GetView<FemaleDetailController> {
-  const FemaleDetail({Key? key}) : super(key: key);
+class UserDetail extends GetView<UserDetailController> {
+  const UserDetail({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return Background(
         child: Responsive(
-      mobile: FemaleDetailMobilePage(controller: controller),
-      desktop: FemaleDetailMobilePage(controller: controller),
+      mobile: UserDetailMobilePage(controller: controller),
+      desktop: UserDetailMobilePage(controller: controller),
     ));
   }
 }
 
-class FemaleDetailMobilePage extends StatelessWidget {
-  const FemaleDetailMobilePage({super.key, required this.controller});
+class UserDetailMobilePage extends StatelessWidget {
+  const UserDetailMobilePage({super.key, required this.controller});
 
-  final FemaleDetailController controller;
+  final UserDetailController controller;
 
   Widget _buildImageSelect() {
-    if (controller.model.value?.previewImages == null ||
-        controller.model.value!.previewImages!.isEmpty) {
+    if (controller.model.value?.previewImage == null ||
+        controller.model.value!.previewImage.isEmpty) {
       return Text(
         'preview_image_empty'.tr,
         style: tNormalTextStyle.copyWith(color: kTextColorSecond, fontSize: 18),
       );
     }
-    final list = controller.model.value!.previewImages!;
+    final list = controller.model.value!.previewImage;
 
     return SizedBox(
       width: double.infinity,
@@ -64,6 +64,8 @@ class FemaleDetailMobilePage extends StatelessWidget {
                     child: CustomNetworkImage(
                       url: list[i],
                       height: 80,
+                      width: 150,
+                      fit: BoxFit.fitWidth,
                       borderRadius: 4,
                     ),
                   ),
@@ -88,13 +90,17 @@ class FemaleDetailMobilePage extends StatelessWidget {
                     fontSize: 24),
                 children: [
                   TextSpan(
-                      text: '${controller.model.value?.age ?? 0}${'age'.tr} '),
-                  TextSpan(text: controller.model.value?.displayName ?? '')
+                      text:
+                          controller.model.value?.getAge() ?? 'not_entered'.tr),
+                  TextSpan(
+                      text: controller.model.value?.displayName ??
+                          'not_entered'.tr)
                 ]),
           ),
         ),
         Text(
-          '1${'hour'.tr}/${formatCurrency(controller.model.value?.point)}',
+          formatCurrency(controller.model.value?.pointPer30Minutes,
+              symbol: CurrencySymbol.pointPerMinutes),
           style: tNormalTextStyle.copyWith(
               color: kTextColorSecond,
               fontWeight: FontWeight.w500,
@@ -105,8 +111,8 @@ class FemaleDetailMobilePage extends StatelessWidget {
   }
 
   Widget _buildChipTag() {
-    if (controller.model.value?.tags == null ||
-        controller.model.value!.tags!.isEmpty) {
+    if (controller.model.value?.tagInformation == null ||
+        controller.model.value!.tagInformation.isEmpty) {
       return const SizedBox();
     }
 
@@ -116,7 +122,7 @@ class FemaleDetailMobilePage extends StatelessWidget {
           spacing: 8,
           runSpacing: 8,
           alignment: WrapAlignment.start,
-          children: controller.model.value!.tags!
+          children: controller.model.value!.tagInformation
               .map((e) => Chip(label: Text(e)))
               .toList()),
     );
@@ -136,7 +142,7 @@ class FemaleDetailMobilePage extends StatelessWidget {
         ),
         const SizedBox(height: 16),
         Text(
-          controller.model.value?.description ?? '',
+          controller.model.value?.description ?? 'not_entered'.tr,
           style: tNormalTextStyle.copyWith(
             color: getTextColorSecond(),
             fontSize: 14,
@@ -188,39 +194,37 @@ class FemaleDetailMobilePage extends StatelessWidget {
             content: '${controller.model.value?.height ?? 0}cm'),
         _buildItemInformation(
             label: 'address'.tr,
-            content: controller.model.value?.address ?? ''),
+            content: controller.model.value?.address ?? 'not_entered'.tr),
         _buildItemInformation(
             label: 'birth_place'.tr,
-            content: controller.model.value?.birthPlace ?? ''),
+            content: controller.model.value?.birthPlace ?? 'not_entered'.tr),
         _buildItemInformation(
             label: 'education'.tr,
-            content: controller.model.value?.education ?? ''),
+            content: controller.model.value?.education ?? 'not_entered'.tr),
         _buildItemInformation(
-            label: 'job'.tr, content: controller.model.value?.job ?? ''),
+            label: 'job'.tr,
+            content: controller.model.value?.job ?? 'not_entered'.tr),
         _buildItemInformation(
             label: 'sake'.tr,
-            content: controller.model.value?.canDrink == true
-                ? 'sake_can'.tr
-                : 'sake_cannot'.tr),
+            content:
+                controller.model.value?.getTextDrink() ?? 'not_entered'.tr),
         _buildItemInformation(
             label: 'smoke'.tr,
-            content: controller.model.value?.canSmoke == true
-                ? 'smoke_can'.tr
-                : 'smoke_cannot'.tr),
+            content:
+                controller.model.value?.getTextSmoke() ?? 'not_entered'.tr),
         _buildItemInformation(
             label: 'family'.tr,
-            content: controller.model.value?.siblings ?? ''),
+            content: controller.model.value?.familyStatus ?? 'not_entered'.tr),
         _buildItemInformation(
             label: 'living_family'.tr,
-            content: controller.model.value?.liveFamily == true
-                ? 'living_family_with'.tr
-                : 'living_family_alone'.tr),
+            content: controller.model.value?.getTextLiveFamily() ??
+                'not_entered'.tr),
         _buildItemInformation(
             label: 'hair_style'.tr,
-            content: controller.model.value?.hairStyle ?? ''),
+            content: controller.model.value?.hairStyle ?? 'not_entered'.tr),
         _buildItemInformation(
             label: 'hair_color'.tr,
-            content: controller.model.value?.hairColor ?? ''),
+            content: controller.model.value?.hairColor ?? 'not_entered'.tr),
       ],
     );
   }
@@ -234,17 +238,19 @@ class FemaleDetailMobilePage extends StatelessWidget {
       const SizedBox(height: 16),
       Padding(
         padding: const EdgeInsets.symmetric(horizontal: 16),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            _buildName(),
-            _buildChipTag(),
-            const SizedBox(height: 24),
-            _buildDescription(),
-            const SizedBox(height: 24),
-            _buildInformation(),
-          ],
-        ),
+        child: Obx(() {
+          return Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              _buildName(),
+              _buildChipTag(),
+              const SizedBox(height: 24),
+              _buildDescription(),
+              const SizedBox(height: 24),
+              _buildInformation(),
+            ],
+          );
+        }),
       )
     ];
     return Background(
@@ -278,22 +284,33 @@ class FemaleDetailMobilePage extends StatelessWidget {
               color: kTextColorSecond,
             ),
           ),
-          body: Stack(
-            children: [
-              ListView.builder(
-                itemCount: list.length,
-                itemBuilder: (BuildContext context, int index) {
-                  return list[index];
-                },
-              ),
-              Padding(
-                padding: const EdgeInsets.all(16.0),
-                child: InkWell(
-                    onTap: controller.onPressedBack,
-                    child: getSvgImage('ic_back_circle')),
-              ),
-            ],
-          )),
+          body: Obx(() {
+            if (controller.model.value == null) {
+              return const Center(
+                child: SizedBox(
+                  height: 32,
+                  width: 32,
+                  child: CircularProgressIndicator(),
+                ),
+              );
+            }
+            return Stack(
+              children: [
+                ListView.builder(
+                  itemCount: list.length,
+                  itemBuilder: (BuildContext context, int index) {
+                    return list[index];
+                  },
+                ),
+                Padding(
+                  padding: const EdgeInsets.all(16.0),
+                  child: InkWell(
+                      onTap: controller.onPressedBack,
+                      child: getSvgImage('ic_back_circle')),
+                ),
+              ],
+            );
+          })),
     );
   }
 }

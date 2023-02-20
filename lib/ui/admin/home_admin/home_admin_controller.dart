@@ -1,6 +1,5 @@
 import 'package:base_flutter/routes/app_pages.dart';
 import 'package:base_flutter/utils/constant.dart';
-import 'package:base_flutter/utils/global/globals_variable.dart';
 import 'package:get/get.dart';
 
 class HomeAdminController extends GetxController {

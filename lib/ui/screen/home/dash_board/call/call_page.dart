@@ -29,29 +29,36 @@ class CallMobilePage extends StatelessWidget {
   final CallController controller;
 
   Widget _buildSelectArea() {
-    return Column(
-      children: [
-        Row(crossAxisAlignment: CrossAxisAlignment.center, children: [
-          Expanded(
-              child: Text(
-            'area'.tr,
-            style: tNormalTextStyle.copyWith(
-                color: kTextColorSecond,
-                fontSize: 16,
-                fontWeight: FontWeight.w500),
-          )),
-          Text(
-            '大阪',
-            style: tNormalTextStyle.copyWith(
-                color: kTextColorPrimary,
-                fontSize: 16,
-                fontWeight: FontWeight.w500),
-          ),
-          getSvgImage('ic_arrow_down', color: kTextColorPrimary)
-        ]),
-        const SizedBox(height: kSmallPadding),
-        const Divider(),
-      ],
+    return InkWell(
+      onTap: controller.showSelectCity,
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Row(crossAxisAlignment: CrossAxisAlignment.center, children: [
+            Expanded(
+                child: Text(
+              'area'.tr,
+              style: tNormalTextStyle.copyWith(
+                  color: kTextColorSecond,
+                  fontSize: 16,
+                  fontWeight: FontWeight.w500),
+            )),
+            Obx(() {
+              return Text(
+                controller.ticket.value.cityName ?? 'unselected'.tr,
+                style: tNormalTextStyle.copyWith(
+                    color: kTextColorPrimary,
+                    fontSize: 16,
+                    fontWeight: FontWeight.w500),
+              );
+            }),
+            const SizedBox(width: 4),
+            getSvgImage('ic_arrow_down', color: kTextColorPrimary)
+          ]),
+          const SizedBox(height: kSmallPadding),
+          const Divider(),
+        ],
+      ),
     );
   }
 
@@ -63,10 +70,12 @@ class CallMobilePage extends StatelessWidget {
     return InkWell(
       onTap: onPressed,
       child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
         children: [
           const SizedBox(height: kSmallPadding),
           Row(
             crossAxisAlignment: CrossAxisAlignment.center,
+            mainAxisAlignment: MainAxisAlignment.center,
             children: [
               getSvgImage('ic_$label'),
               const SizedBox(width: kSmallPadding),
@@ -94,25 +103,39 @@ class CallMobilePage extends StatelessWidget {
   }
 
   Widget _buildListFilter() {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Text(
-          'call_cast'.tr,
-          style:
-              tNormalTextStyle.copyWith(color: kTextColorSecond, fontSize: 16),
-        ),
-        const SizedBox(height: kSmallPadding),
-        _buildItemFilter(
-            label: 'start_time', content: 'unselected'.tr, onPressed: () {}),
-        _buildItemFilter(
-            label: 'meeting_place', content: 'unselected'.tr, onPressed: () {}),
-        _buildItemFilter(
-            label: 'number_people', content: 'unselected'.tr, onPressed: () {}),
-        _buildItemFilter(
-            label: 'required_time', content: 'unselected'.tr, onPressed: () {}),
-      ],
-    );
+    return Obx(() {
+      return Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(
+            'call_cast'.tr,
+            style: tNormalTextStyle.copyWith(
+                color: kTextColorSecond, fontSize: 16),
+          ),
+          const SizedBox(height: kSmallPadding),
+          _buildItemFilter(
+              label: 'start_time',
+              content:
+                  controller.ticket.value.startTimeAfter?.tr ?? 'unselected'.tr,
+              onPressed: controller.selectListStartTime),
+          _buildItemFilter(
+              label: 'meeting_place',
+              content: controller.ticket.value.stateName ?? 'unselected'.tr,
+              onPressed: controller.showSelectState),
+          _buildItemFilter(
+              label: 'number_people',
+              content: controller.ticket.value.numberPeople != null
+                  ? '${controller.ticket.value.numberPeople}${'people'.tr}'
+                  : 'unselected'.tr,
+              onPressed: controller.showInputMaxNumber),
+          _buildItemFilter(
+              label: 'required_time',
+              content:
+                  controller.ticket.value.durationDate?.tr ?? 'unselected'.tr,
+              onPressed: controller.selectListDurationDate),
+        ],
+      );
+    });
   }
 
   Widget _buildListGirl() {
@@ -128,6 +151,7 @@ class CallMobilePage extends StatelessWidget {
             ),
           );
         }
+
         return ListView.builder(
           scrollDirection: Axis.horizontal,
           itemCount: controller.list.length,
@@ -136,7 +160,7 @@ class CallMobilePage extends StatelessWidget {
             return UserItem(
               model: element,
               onPressed: () {
-                controller.onSwitchFemaleDetail(element.age ?? 0);
+                controller.onSwitchFemaleDetail(element.id);
               },
             );
           },

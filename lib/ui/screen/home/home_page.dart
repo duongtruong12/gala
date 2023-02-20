@@ -15,10 +15,11 @@ class HomePage extends GetView<HomeController> {
   @override
   Widget build(BuildContext context) {
     return Background(
+        loadingWrap: false,
         child: Responsive(
-      mobile: MobileHomePage(controller: controller),
-      desktop: MobileHomePage(controller: controller),
-    ));
+          mobile: MobileHomePage(controller: controller),
+          desktop: MobileHomePage(controller: controller),
+        ));
   }
 }
 

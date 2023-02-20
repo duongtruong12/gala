@@ -46,12 +46,14 @@ class SearchMobilePage extends StatelessWidget {
                   crossAxisCount: 2,
                   crossAxisSpacing: 4,
                   mainAxisSpacing: 4,
+                  onScrollDown: controller.onScrollDown,
+                  onRefresh: controller.onRefresh,
                   childWidget: controller.list
                       .map((element) => ItemTarget(
                             model: element,
                             femaleGender: casterAccount.value,
                             onPressed: () {
-                              controller.onSwitchFemaleDetail(element.age ?? 0);
+                              controller.onSwitchFemaleDetail(element.id);
                             },
                           ))
                       .toList()),

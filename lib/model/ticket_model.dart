@@ -4,7 +4,9 @@
 
 import 'dart:convert';
 
-import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:base_flutter/utils/constant.dart';
+
+import 'json_parse/date_to_string.dart';
 
 Ticket ticketFromJson(String str) => Ticket.fromJson(json.decode(str));
 
@@ -15,53 +17,100 @@ class Ticket {
     this.id,
     this.createdUser,
     this.startTime,
-    this.area,
+    this.startTimeAfter,
+    this.cityId,
+    this.cityName,
+    this.stateId,
+    this.stateName,
     this.numberPeople,
     this.createdDate,
-    this.requiredTime,
+    this.durationDate,
     this.expectedPoint,
     this.extension,
-    this.peopleApply,
+    this.status,
+    required this.peopleApply,
+    required this.tagInformation,
+    required this.peopleApprove,
   });
 
   String? id;
   String? createdUser;
-  Timestamp? startTime;
-  String? area;
+  DateTime? startTime;
+  String? startTimeAfter;
+  String? status;
+  int? cityId;
+  String? cityName;
+  int? stateId;
+  String? stateName;
   int? numberPeople;
-  Timestamp? createdDate;
-  int? requiredTime;
+  DateTime? createdDate;
+  String? durationDate;
   int? expectedPoint;
   int? extension;
-  List? peopleApply;
+  List peopleApply;
+  List tagInformation;
+  List peopleApprove;
 
   factory Ticket.fromJson(Map<String, dynamic> json) => Ticket(
         id: json["id"],
-        createdUser: json["created_user"],
-        startTime: json["start_time"],
-        area: json["area"],
-        numberPeople: json["number_people"],
-        createdDate: json["created_date"],
-        requiredTime: json["required_time"],
-        expectedPoint: json["expected_point"],
+        createdUser: json["createdUser"],
+        startTime: fromJsonTimeStamp(json["startTime"]),
+        startTimeAfter: json["startTimeAfter"],
+        status: json["status"],
+        cityName: json["cityName"],
+        cityId: json["cityId"],
+        stateId: json["stateId"],
+        stateName: json["stateName"],
+        numberPeople: json["numberPeople"],
+        createdDate: fromJsonTimeStamp(json["createdDate"]),
+        durationDate: json["durationDate"],
+        expectedPoint: json["expectedPoint"],
         extension: json["extension"],
-        peopleApply: json["people_apply"] == null
+        peopleApply: json["peopleApply"] == null
             ? []
-            : List<dynamic>.from(json["people_apply"]!.map((x) => x)),
+            : List<dynamic>.from(json["peopleApply"]!.map((x) => x)),
+        peopleApprove: json["peopleApprove"] == null
+            ? []
+            : List<dynamic>.from(json["peopleApprove"]!.map((x) => x)),
+        tagInformation: json["tagInformation"] == null
+            ? []
+            : List<dynamic>.from(json["tagInformation"]!.map((x) => x)),
       );
 
   Map<String, dynamic> toJson() => {
         "id": id,
-        "created_user": createdUser,
-        "start_time": startTime,
-        "area": area,
-        "number_people": numberPeople,
-        "created_date": createdDate,
-        "required_time": requiredTime,
-        "expected_point": expectedPoint,
+        "createdUser": createdUser,
+        "status": status,
+        "startTime": startTime,
+        "startTimeAfter": startTimeAfter,
+        "cityId": cityId,
+        "cityName": cityName,
+        "stateId": stateId,
+        "stateName": stateName,
+        "numberPeople": numberPeople,
+        "createdDate": createdDate,
+        "durationDate": durationDate,
+        "expectedPoint": expectedPoint,
         "extension": extension,
-        "people_apply": peopleApply == null
-            ? []
-            : List<dynamic>.from(peopleApply!.map((x) => x)),
+        "peopleApply": List<dynamic>.from(peopleApply.map((x) => x)),
+        "peopleApprove": List<dynamic>.from(peopleApprove.map((x) => x)),
+        "tagInformation": List<dynamic>.from(tagInformation.map((x) => x)),
       };
+
+  int calculateTotalPrice() {
+    if (numberPeople != null && durationDate != null) {
+      int multi = 1;
+      if (durationDate == DurationDate.hour1.name) {
+        multi = 2;
+      } else if (durationDate == DurationDate.hour2.name) {
+        multi = 4;
+      } else if (durationDate == DurationDate.hour3.name) {
+        multi = 6;
+      } else {
+        multi = 8;
+      }
+      return (2500 * multi) * numberPeople!;
+    }
+    return 0;
+  }
 }

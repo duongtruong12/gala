@@ -1,102 +1,90 @@
+import 'dart:async';
+
 import 'package:base_flutter/model/message_group_model.dart';
 import 'package:base_flutter/routes/app_pages.dart';
-import 'package:base_flutter/utils/constant.dart';
+import 'package:base_flutter/utils/const.dart';
 import 'package:base_flutter/utils/global/globals_variable.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:flutter/scheduler.dart';
 import 'package:get/get.dart';
 
 class MessageController extends GetxController {
   static MessageController get to => Get.find();
 
   final list = <MessageGroupModel>[].obs;
+  final listBase = <MessageGroupModel>[];
+  StreamSubscription? streamSubscription;
+  int page = 1;
 
   @override
   void onInit() {
     super.onInit();
-    _installData();
+    SchedulerBinding.instance.addPostFrameCallback((_) => getData());
   }
 
-  void _installData() {
-    list.add(
-      MessageGroupModel(
-        id: '管理人',
-        title: '管理人',
-        avatar: '',
-        messageGroupType: MessageGroupType.admin.name,
-        createTime: Timestamp.fromMillisecondsSinceEpoch(
-            DateTime.now().millisecondsSinceEpoch),
-        userIds: ['管理人', '管理', '管'],
-        lastMessage: MessageModel(
-          content: 'メッセージが届いています',
-          userId: '管理人',
-          delete: false,
-          createdTime: Timestamp.fromMillisecondsSinceEpoch(
-              DateTime.now().millisecondsSinceEpoch),
-          type: SendMessageType.text.name,
-        ),
-      ),
-    );
-    list.add(
-      MessageGroupModel(
-        id: '管人',
-        title: '01/01(火) 20:00〜 @キャスト名',
-        messageGroupType: MessageGroupType.group.name,
-        avatar: listImage[r.nextInt(listImage.length)],
-        createTime: Timestamp.fromMillisecondsSinceEpoch(
-            DateTime.now().millisecondsSinceEpoch),
-        userIds: ['管理人', '管理', '管'],
-        lastMessage: MessageModel(
-          content: '01/01(火) 20:00〜 @キャスト名',
-          userId: '管理人',
-          delete: false,
-          createdTime: Timestamp.fromMillisecondsSinceEpoch(
-              DateTime.now().millisecondsSinceEpoch),
-          type: SendMessageType.text.name,
-        ),
-      ),
-    );
-    list.add(
-      MessageGroupModel(
-        id: '管理',
-        title: '01/01(火) 22:00〜 @キャスト名',
-        messageGroupType: MessageGroupType.group.name,
-        avatar: listImage[r.nextInt(listImage.length)],
-        createTime: Timestamp.fromMillisecondsSinceEpoch(
-            DateTime.now().millisecondsSinceEpoch),
-        userIds: ['管理人', '管理', '管'],
-        lastMessage: MessageModel(
-          content: '〇〇〇〇が合流しました',
-          userId: '管理人',
-          delete: false,
-          createdTime: Timestamp.fromMillisecondsSinceEpoch(
-              DateTime.now().millisecondsSinceEpoch),
-          type: SendMessageType.text.name,
-        ),
-      ),
-    );
-    list.add(
-      MessageGroupModel(
-        id: '管人',
-        title: '02/05(火) 20:00〜 @キャスト名',
-        messageGroupType: MessageGroupType.group.name,
-        avatar: listImage[r.nextInt(listImage.length)],
-        createTime: Timestamp.fromMillisecondsSinceEpoch(
-            DateTime.now().millisecondsSinceEpoch),
-        userIds: ['管理人', '管理', '管'],
-        lastMessage: MessageModel(
-          content: 'メッセージが届いています',
-          userId: '管理人',
-          delete: false,
-          createdTime: Timestamp.fromMillisecondsSinceEpoch(
-              DateTime.now().millisecondsSinceEpoch),
-          type: SendMessageType.text.name,
-        ),
-      ),
-    );
+  Future<void> onRefresh(int index) async {
+    page = 1;
+    await getData();
   }
 
-  void onSwitchMessageDetail(String? id) {
-    Get.toNamed(Routes.messageDetail,
+  Future<void> onScrollDown(int index) async {
+    page = index;
+    await getData();
+  }
+
+  bool checkEmpty() {
+    return list.length > page * kPagingSize;
+  }
+
+  Future<void> getData() async {
+    streamSubscription?.cancel();
+    streamSubscription = fireStoreProvider.listenerMessageGroup(
+        page: page,
+        valueChanged: (listDoc) {
+          list.clear();
+          listBase.clear();
+          if (listDoc.docs.isNotEmpty) {
+            for (var value in listDoc.docs) {
+              try {
+                final messageModel = MessageGroupModel.fromJson(value.data());
+                listBase.add(messageModel);
+              } catch (e) {
+                logger.e(e);
+              }
+            }
+            list.addAll(listBase);
+          }
+        });
+
+    list.refresh();
+  }
+
+  @override
+  void onClose() {
+    streamSubscription?.cancel();
+    super.onClose();
+  }
+
+  Future<void> onSwitchMessageDetail(String? id) async {
+    streamSubscription?.pause();
+    await Get.toNamed(Routes.messageDetail,
         arguments: true, parameters: {'id': id ?? ''});
+    streamSubscription?.resume();
+  }
+
+  void onChanged(String str) {
+    list.clear();
+    if (str.isEmpty) {
+      list.addAll(listBase);
+      return;
+    }
+    for (var element in listBase) {
+      if (element.title?.toLowerCase().contains(str.toLowerCase()) == true ||
+          element.lastMessage?.content
+                  ?.toLowerCase()
+                  .contains(str.toLowerCase()) ==
+              true) {
+        list.add(element);
+      }
+    }
   }
 }

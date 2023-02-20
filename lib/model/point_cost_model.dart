@@ -39,6 +39,6 @@ class PointCostModel {
         "point": point,
         "reason": reason,
         "status": status,
-        "createTime": createTime,
+        "createTime": createTime.toString(),
       };
 }

@@ -1,34 +1,28 @@
+import 'package:base_flutter/model/ticket_model.dart';
 import 'package:base_flutter/routes/app_pages.dart';
 import 'package:base_flutter/ui/screen/home/dash_board/call/call_controller.dart';
 import 'package:base_flutter/ui/screen/home/dash_board/call/select_mood/select_mood_controller.dart';
 import 'package:base_flutter/ui/screen/home/home_controller.dart';
 import 'package:base_flutter/utils/constant.dart';
+import 'package:base_flutter/utils/global/globals_functions.dart';
+import 'package:base_flutter/utils/global/globals_variable.dart';
 import 'package:get/get.dart';
 
 class ConfirmCallController extends GetxController {
   static ConfirmCallController get to => Get.find();
-  final selectedSituation = <String>[].obs;
-  final selectedCastType = <String>[].obs;
+  final ticket =
+      Ticket(peopleApply: [], tagInformation: [], peopleApprove: []).obs;
 
   @override
   void onInit() {
     super.onInit();
-    _installList();
+    getTicket();
   }
 
-  Future<void> _installList() async {
-    selectedSituation.addAll([
-      'プライベート',
-      '対話',
-      '飲める人',
-      'わいわい',
-    ]);
-    selectedCastType.addAll([
-      '可愛い系',
-      '綺麗系',
-      '清楚系',
-      'アイドル系',
-    ]);
+  Future<void> getTicket() async {
+    final controller = Get.find<CallController>();
+    ticket.value = controller.getTicket();
+    ticket.refresh();
   }
 
   void onPressedBack() {
@@ -40,6 +34,7 @@ class ConfirmCallController extends GetxController {
     controller.setEdit(true);
     await Get.toNamed(Routes.selectMood, id: RouteId.call, arguments: true);
     controller.setEdit(false);
+    getTicket();
   }
 
   Future<void> onSwitchReservation() async {
@@ -47,10 +42,23 @@ class ConfirmCallController extends GetxController {
     controller.setEdit(true);
     await Get.toNamed(Routes.call, id: RouteId.call, arguments: true);
     controller.setEdit(false);
+    getTicket();
   }
 
-  void onConfirm() {
-    final controller = Get.find<HomeController>();
-    controller.onTapItem(1);
+  Future<void> onConfirm() async {
+    await fireStoreProvider
+        .createTicket(ticket: ticket.value)
+        .then((value) async {
+      showInfo('created_ticket_successfully'.tr);
+      final controller = Get.find<CallController>();
+      controller.setTicket(
+          Ticket(peopleApply: [], tagInformation: [], peopleApprove: []));
+      Get.offNamedUntil(
+          Routes.call, (route) => route.settings.name == Routes.call,
+          id: RouteId.call);
+      await Future.delayed(const Duration(milliseconds: 100));
+      final homeController = Get.find<HomeController>();
+      homeController.onTapItem(1);
+    });
   }
 }

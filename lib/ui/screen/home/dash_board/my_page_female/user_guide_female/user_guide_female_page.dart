@@ -34,10 +34,7 @@ class UserGuideMobilePage extends StatelessWidget {
         itemCount: controller.list.length,
         itemBuilder: (BuildContext context, int index) {
           final e = controller.list[index];
-          return TicketView(
-            model: e,
-            chatGroup: controller.tabController.index == 1,
-          );
+          return TicketView(model: e);
         },
       );
     });

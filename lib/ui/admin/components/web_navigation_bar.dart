@@ -1,5 +1,4 @@
 import 'package:base_flutter/utils/const.dart';
-import 'package:base_flutter/utils/constant.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
@@ -49,20 +48,12 @@ class WebNavigator extends StatelessWidget {
             mainAxisSize: MainAxisSize.max,
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              _buildItem(
-                  label: 'caster_manager'.tr,
-                  index: RouteIdAdmin.casterManager),
-              _buildItem(
-                  label: 'guest_manager'.tr, index: RouteIdAdmin.guestManager),
-              _buildItem(
-                  label: 'chat_manager'.tr, index: RouteIdAdmin.chatManager),
-              _buildItem(
-                  label: 'payment_manager'.tr,
-                  index: RouteIdAdmin.paymentManager),
-              _buildItem(
-                  label: 'cast_payment_manager'.tr,
-                  index: RouteIdAdmin.castPaymentManager),
-              _buildItem(label: 'call_list'.tr, index: RouteIdAdmin.callList),
+              _buildItem(label: 'caster_manager'.tr, index: 0),
+              _buildItem(label: 'guest_manager'.tr, index: 1),
+              _buildItem(label: 'chat_manager'.tr, index: 2),
+              _buildItem(label: 'payment_manager'.tr, index: 3),
+              _buildItem(label: 'cast_payment_manager'.tr, index: 4),
+              _buildItem(label: 'call_list'.tr, index: 5),
             ],
           )),
     );

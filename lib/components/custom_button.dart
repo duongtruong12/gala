@@ -33,6 +33,7 @@ class CustomButton extends StatefulWidget {
   final Color? textColor;
   final Gradient gradient;
   final bool loginPage;
+
   @override
   CustomButtonState createState() => CustomButtonState();
 }
@@ -40,16 +41,20 @@ class CustomButton extends StatefulWidget {
 class CustomButtonState extends State<CustomButton> {
   bool isLoading = false;
 
-  @override
-  void initState() {
-    super.initState();
-  }
-
   Widget _buildButton() {
     pressed() async {
-      if (mounted) isLoading = true;
+      if (mounted) {
+        setState(() {
+          isLoading = true;
+        });
+      }
+
       await widget.onPressed();
-      if (mounted) isLoading = false;
+      if (mounted) {
+        setState(() {
+          isLoading = false;
+        });
+      }
     }
 
     final child = isLoading

@@ -1,12 +1,12 @@
 import 'package:base_flutter/components/custom_network_image.dart';
-import 'package:base_flutter/model/female_model.dart';
+import 'package:base_flutter/model/user_model.dart';
 import 'package:base_flutter/utils/const.dart';
+import 'package:base_flutter/utils/constant.dart';
 import 'package:base_flutter/utils/global/globals_functions.dart';
 import 'package:flutter/material.dart';
-import 'package:get/get.dart';
 
 class UserItem extends StatelessWidget {
-  final FemaleModel model;
+  final UserModel model;
   final VoidCallback onPressed;
 
   const UserItem({
@@ -56,7 +56,7 @@ class UserItem extends StatelessWidget {
                       mainAxisSize: MainAxisSize.min,
                       children: [
                         Text(
-                          '${model.age}${'age'.tr}  ${model.displayName}',
+                          '${model.getAge()}  ${model.displayName}',
                           style: tNormalTextStyle.copyWith(
                               fontSize: 11,
                               fontWeight: FontWeight.w500,
@@ -64,7 +64,8 @@ class UserItem extends StatelessWidget {
                         ),
                         const SizedBox(height: 4),
                         Text(
-                          '1${'hour'.tr}/${formatCurrency(model.point)}',
+                          formatCurrency(model.pointPer30Minutes,
+                              symbol: CurrencySymbol.pointPerMinutes),
                           style: tNormalTextStyle.copyWith(
                               fontSize: 10,
                               fontWeight: FontWeight.w500,

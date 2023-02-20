@@ -8,14 +8,23 @@ import 'package:get/get.dart';
 import 'package:syncfusion_flutter_datepicker/datepicker.dart';
 
 class FindDatePicker extends StatefulWidget {
-  const FindDatePicker({super.key});
+  const FindDatePicker({super.key, required this.valueSetter, this.date});
+
+  final ValueSetter<DateTime> valueSetter;
+  final DateTime? date;
 
   @override
   FindDatePickerState createState() => FindDatePickerState();
 }
 
 class FindDatePickerState extends State<FindDatePicker> {
-  DateTime hour = DateTime.now();
+  late DateTime date;
+
+  @override
+  void initState() {
+    super.initState();
+    date = widget.date ?? DateTime.now();
+  }
 
   Future<void> showTimerPicker() async {
     await showCupertinoModalPopup<void>(
@@ -29,14 +38,14 @@ class FindDatePickerState extends State<FindDatePicker> {
             color: Colors.white,
             padding: const EdgeInsets.only(top: 8.0),
             child: CupertinoDatePicker(
-              initialDateTime: hour,
+              initialDateTime: date,
               mode: CupertinoDatePickerMode.time,
               use24hFormat: true,
               onDateTimeChanged: (DateTime newTime) {
+                date = DateTime(date.year, date.month, date.day, newTime.hour,
+                    newTime.minute);
                 if (mounted) {
-                  setState(() {
-                    hour = newTime;
-                  });
+                  setState(() {});
                 }
               },
             ),
@@ -77,14 +86,17 @@ class FindDatePickerState extends State<FindDatePicker> {
           InkWell(
             onTap: showTimerPicker,
             child: Container(
-              padding: const EdgeInsets.all(kSmallPadding),
+              padding: const EdgeInsets.only(
+                  top: kSmallPadding,
+                  right: kSmallPadding,
+                  left: kSmallPadding),
               decoration: const BoxDecoration(
                   borderRadius:
                       BorderRadius.all(Radius.circular(kSmallPadding)),
                   color: kDividerColor),
               child: Text(
                 formatDateTime(
-                    date: hour, formatString: DateTimeFormatString.hhmm),
+                    date: date, formatString: DateTimeFormatString.hhmm),
                 style: tNormalTextStyle.copyWith(
                     fontSize: 20, fontWeight: FontWeight.w600),
               ),
@@ -105,10 +117,19 @@ class FindDatePickerState extends State<FindDatePicker> {
     return SfDateRangePicker(
         todayHighlightColor: kPrimaryColorFemale,
         view: DateRangePickerView.month,
+        initialSelectedDate: date,
         showNavigationArrow: true,
+        minDate: DateTime.now().add(const Duration(days: 1)),
+        onSelectionChanged: (dateRange) {
+          final DateTime? dateArg = dateRange.value;
+          if (dateArg != null) {
+            date = DateTime(dateArg.year, dateArg.month, dateArg.day, date.hour,
+                date.minute);
+          }
+        },
         headerStyle: DateRangePickerHeaderStyle(
             textStyle: tNormalTextStyle.copyWith(
-                fontSize: 18, fontWeight: FontWeight.w600)),
+                fontSize: 14, fontWeight: FontWeight.w600)),
         monthViewSettings: DateRangePickerMonthViewSettings(
             weekNumberStyle: DateRangePickerWeekNumberStyle(
                 textStyle: tNormalTextStyle.copyWith(color: kBorderColor)),
@@ -116,14 +137,14 @@ class FindDatePickerState extends State<FindDatePicker> {
               textStyle: tNormalTextStyle.copyWith(color: kBorderColor),
             )),
         monthCellStyle: DateRangePickerMonthCellStyle(
-          textStyle: tNormalTextStyle.copyWith(fontSize: 18),
-          todayTextStyle: tNormalTextStyle.copyWith(fontSize: 18),
+          textStyle: tNormalTextStyle.copyWith(fontSize: 14),
+          todayTextStyle: tNormalTextStyle.copyWith(fontSize: 14),
         ),
-        selectionTextStyle: tButtonWhiteTextStyle.copyWith(fontSize: 18),
+        selectionTextStyle: tButtonWhiteTextStyle.copyWith(fontSize: 14),
         yearCellStyle: DateRangePickerYearCellStyle(
-            textStyle: tNormalTextStyle.copyWith(fontSize: 18),
+            textStyle: tNormalTextStyle.copyWith(fontSize: 14),
             disabledDatesTextStyle: tNormalTextStyle,
-            todayTextStyle: tNormalTextStyle.copyWith(fontSize: 18),
+            todayTextStyle: tNormalTextStyle.copyWith(fontSize: 14),
             leadingDatesTextStyle: tNormalTextStyle),
         selectionMode: DateRangePickerSelectionMode.single);
   }
@@ -148,6 +169,7 @@ class FindDatePickerState extends State<FindDatePicker> {
             child: CustomButton(
                 onPressed: () async {
                   Get.back(closeOverlays: true);
+                  widget.valueSetter(date);
                 },
                 widget: Text(
                   'select'.tr,

@@ -1,12 +1,18 @@
+import 'dart:convert';
+
+import 'package:base_flutter/routes/app_pages.dart';
 import 'package:base_flutter/utils/const.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:crypto/crypto.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart';
+import 'package:get_storage/get_storage.dart';
 import 'package:intl/intl.dart';
 import 'package:lottie/lottie.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 import 'package:sprintf/sprintf.dart';
 import 'package:url_launcher/url_launcher.dart';
 
@@ -40,19 +46,24 @@ String obscureText(String str) {
   return secure;
 }
 
-showCustomDialog({required Widget widget}) {
+Future<void> showCustomDialog(
+    {required Widget widget, bool minWidth = false}) async {
   if (Get.context != null) {
-    showDialog(
+    await showDialog(
       context: Get.context!,
       barrierDismissible: false,
       builder: (BuildContext context) => WillPopScope(
         onWillPop: () {
           return Future.value(true);
         },
-        child: Stack(
-          alignment: Alignment.center,
-          children: [widget],
-        ),
+        child: minWidth
+            ? AlertDialog(
+                content: widget,
+              )
+            : Stack(
+                alignment: Alignment.center,
+                children: [widget],
+              ),
       ),
     );
   }
@@ -69,27 +80,6 @@ showError(String message) {
         duration: const Duration(seconds: 2),
       ),
     );
-  }
-}
-
-showCustomBottomSheet(Widget childWidget) {
-  if (Get.context != null) {
-    showModalBottomSheet<dynamic>(
-        context: Get.context!,
-        builder: (context) {
-          return Card(
-            elevation: 3.0,
-            margin: EdgeInsets.zero,
-            child: Container(
-              padding: const EdgeInsets.only(left: 16, right: 16.0),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.center,
-                mainAxisSize: MainAxisSize.min, // 1st use min not max
-                children: <Widget>[childWidget],
-              ),
-            ),
-          );
-        });
   }
 }
 
@@ -139,30 +129,6 @@ Widget getPngImage(String assetName,
   );
 }
 
-Widget buildEmptyList(String str) {
-  return Row(
-    mainAxisSize: MainAxisSize.max,
-    mainAxisAlignment: MainAxisAlignment.center,
-    children: [
-      Expanded(
-        child: Column(
-          children: [
-            SizedBox(height: setHeight(72)),
-            getSvgImage('ic_building_empty'),
-            SizedBox(height: setHeight(54)),
-            Text(
-              str,
-              maxLines: 2,
-              textAlign: TextAlign.center,
-              style: tNormalTextStyle.copyWith(color: kHintColor),
-            )
-          ],
-        ),
-      ),
-    ],
-  );
-}
-
 setHeight(num value) {
   return ScreenUtil().setHeight(value);
 }
@@ -173,6 +139,12 @@ setWidth(num value) {
 
 setSp(num value) {
   return ScreenUtil().setSp(value);
+}
+
+Future<void> logout() async {
+  FirebaseAuth.instance.signOut();
+  user.value = null;
+  Get.offAllNamed(Routes.login);
 }
 
 String formatDateTime({required DateTime? date, required String formatString}) {
@@ -211,12 +183,16 @@ String formatCurrency(num? number, {String symbol = CurrencySymbol.point}) {
               .replaceAll('.', ',');
       if (symbol == CurrencySymbol.japan) {
         return '$symbol$currency';
+      } else if (symbol == CurrencySymbol.pointPerMinutes) {
+        return '${'30${'minutes'.tr}/'}$currency${CurrencySymbol.point}';
       } else {
         return '$currency$symbol';
       }
     } else {
       if (symbol == CurrencySymbol.japan) {
         return '${symbol}0';
+      } else if (symbol == CurrencySymbol.pointPerMinutes) {
+        return '${'30${'minutes'.tr}/'}0${CurrencySymbol.point}';
       } else {
         return '0$symbol';
       }
@@ -281,20 +257,13 @@ Widget buildRowItem(Widget item1, Widget item2) {
   );
 }
 
-Future<bool> storeData({required String key, required dynamic value}) async {
-  final prefs = await SharedPreferences.getInstance();
-  if (value is bool) {
-    return await prefs.setBool(key, value);
-  } else if (value is String) {
-    return await prefs.setString(key, value);
-  } else if (value is int) {
-    return await prefs.setInt(key, value);
-  } else if (value is double) {
-    return await prefs.setDouble(key, value);
-  } else if (value is List<String>) {
-    return await prefs.setStringList(key, value);
-  }
-  return false;
+DateTime? dateTimeFromTimestamp(Timestamp? timestamp) {
+  return timestamp?.toDate();
+}
+
+Future<void> storeData({required String key, required dynamic value}) async {
+  final box = GetStorage();
+  await box.write(key, value);
 }
 
 Color getColorPrimary() {
@@ -306,7 +275,11 @@ Color getColorAppBar() {
 }
 
 int getRouteMyPage() {
-  return casterAccount.value ? RouteId.myPageFemale : RouteId.myPage;
+  return casterAccount.value ? RouteIdFemale.myPage : RouteId.myPage;
+}
+
+int getRouteSearch() {
+  return casterAccount.value ? RouteIdFemale.search : RouteId.search;
 }
 
 Color getTextColorButton() {
@@ -317,9 +290,9 @@ Color getTextColorSecond() {
   return casterAccount.value ? kTextColorDark : kTextColorSecond;
 }
 
-Future<bool> getBool({required String key}) async {
-  final prefs = await SharedPreferences.getInstance();
-  return prefs.getBool(key) ?? false;
+Future<dynamic> getData({required String key}) async {
+  final box = GetStorage();
+  return box.read(key);
 }
 
 Widget buildRichText(String text1, String text2, {bool isBold = false}) {
@@ -356,4 +329,16 @@ Widget buildEmptyText(String emptyText) {
     sprintf('error_empty_list'.tr, [emptyText]),
     style: tNormalTextStyle.copyWith(color: kHintColor),
   );
+}
+
+String generateMd5(String input) {
+  return md5.convert(utf8.encode(input)).toString();
+}
+
+String generateIdMessage(List<String> list) {
+  list.sort((a, b) {
+    return a.toLowerCase().compareTo(b.toLowerCase());
+  });
+  final input = list.join();
+  return md5.convert(utf8.encode(input)).toString();
 }

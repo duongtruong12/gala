@@ -53,10 +53,11 @@ class CustomNetworkImage extends StatelessWidget {
                               Icons.refresh,
                               color: getColorPrimary(),
                             ))
-                        : const Center(
+                        : Center(
                             child: Icon(
                               Icons.error_outline_rounded,
                               size: 32,
+                              color: getColorPrimary(),
                             ),
                           );
                   case LoadState.completed:

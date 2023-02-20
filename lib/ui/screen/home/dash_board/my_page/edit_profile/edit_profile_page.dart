@@ -1,11 +1,13 @@
 import 'package:base_flutter/components/background.dart';
 import 'package:base_flutter/components/custom_appbar.dart';
 import 'package:base_flutter/components/custom_circle_image.dart';
+import 'package:base_flutter/components/custom_network_image.dart';
 import 'package:base_flutter/components/custom_view.dart';
 import 'package:base_flutter/ui/responsive.dart';
 import 'package:base_flutter/utils/const.dart';
 import 'package:base_flutter/utils/constant.dart';
 import 'package:base_flutter/utils/global/globals_functions.dart';
+import 'package:base_flutter/utils/global/globals_variable.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'edit_profile_controller.dart';
@@ -33,33 +35,37 @@ class EditProfileMobilePage extends StatelessWidget {
     required String content,
     required VoidCallback onPressed,
   }) {
-    return Padding(
-      padding: const EdgeInsets.only(top: kDefaultPadding),
-      child: Row(
-        crossAxisAlignment: CrossAxisAlignment.center,
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          Expanded(
-              child: Text(
-            label,
-            style: tNormalTextStyle.copyWith(color: getTextColorSecond()),
-          )),
-          Text(
-            content,
-            style: tNormalTextStyle.copyWith(
-                color: getTextColorSecond(),
-                fontSize: 12,
-                fontWeight: FontWeight.w500),
-          ),
-          getSvgImage('ic_arrow_down', color: getColorPrimary())
-        ],
+    return InkWell(
+      onTap: onPressed,
+      child: Padding(
+        padding: const EdgeInsets.only(top: kDefaultPadding),
+        child: Row(
+          crossAxisAlignment: CrossAxisAlignment.center,
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Expanded(
+                child: Text(
+              label,
+              style: tNormalTextStyle.copyWith(color: getTextColorSecond()),
+            )),
+            Text(
+              content,
+              style: tNormalTextStyle.copyWith(
+                  color: getTextColorSecond(),
+                  fontSize: 12,
+                  fontWeight: FontWeight.w500),
+            ),
+            getSvgImage('ic_arrow_down', color: getColorPrimary())
+          ],
+        ),
       ),
     );
   }
 
   Widget buildFieldInput({
     required String label,
-    required String content,
+    required String? content,
+    Widget? widgetContent,
     required VoidCallback onPressed,
   }) {
     return InkWell(
@@ -80,13 +86,16 @@ class EditProfileMobilePage extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
               Expanded(
-                  child: Text(
-                content,
-                style: tNormalTextStyle.copyWith(
-                    fontWeight: FontWeight.w500,
-                    fontSize: 14,
-                    color: getTextColorSecond()),
-              )),
+                  child: widgetContent ??
+                      Text(
+                        content ?? '',
+                        maxLines: 3,
+                        overflow: TextOverflow.fade,
+                        style: tNormalTextStyle.copyWith(
+                            fontWeight: FontWeight.w500,
+                            fontSize: 14,
+                            color: getTextColorSecond()),
+                      )),
               getSvgImage('ic_arrow_down', color: getColorPrimary())
             ],
           )
@@ -114,8 +123,8 @@ class EditProfileMobilePage extends StatelessWidget {
                   padding: const EdgeInsets.only(right: kDefaultPadding),
                   child: CustomCircleImage(
                     radius: 99,
-                    image: Image.network(
-                      e.path,
+                    image: CustomNetworkImage(
+                      url: e,
                       fit: BoxFit.cover,
                       height: 44,
                       width: 44,
@@ -147,7 +156,7 @@ class EditProfileMobilePage extends StatelessWidget {
         )),
         Obx(() {
           return Switch(
-              value: controller.hideYourAge.value,
+              value: user.value?.hideAge ?? false,
               onChanged: controller.switchHideAge);
         })
       ],
@@ -155,53 +164,155 @@ class EditProfileMobilePage extends StatelessWidget {
   }
 
   Widget _buildInformation() {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        const SizedBox(height: kDefaultPadding),
-        Text(
-          'information'.tr,
-          style: tNormalTextStyle.copyWith(
-              color: getTextColorSecond(), fontSize: 16),
-        ),
-        _buildItemInformation(
-            label: 'height'.tr, content: 'unselected'.tr, onPressed: () {}),
-        const Divider(),
-        _buildItemInformation(
-            label: 'address'.tr, content: 'not_entered'.tr, onPressed: () {}),
-        const Divider(),
-        _buildItemInformation(
-            label: 'birth_place'.tr,
-            content: 'not_entered'.tr,
-            onPressed: () {}),
-        const Divider(),
-        _buildItemInformation(
-            label: 'education'.tr, content: 'not_entered'.tr, onPressed: () {}),
-        const Divider(),
-        _buildItemInformation(
-            label: 'annual_income'.tr,
-            content: 'not_entered'.tr,
-            onPressed: () {}),
-        const Divider(),
-        _buildItemInformation(
-            label: 'job'.tr, content: 'not_entered'.tr, onPressed: () {}),
-        const Divider(),
-        _buildItemInformation(
-            label: 'sake'.tr, content: 'not_entered'.tr, onPressed: () {}),
-        const Divider(),
-        _buildItemInformation(
-            label: 'smoke'.tr, content: 'not_entered'.tr, onPressed: () {}),
-        const Divider(),
-        _buildItemInformation(
-            label: 'family'.tr, content: 'not_entered'.tr, onPressed: () {}),
-        const Divider(),
-        _buildItemInformation(
-            label: 'living_family'.tr,
-            content: 'not_entered'.tr,
-            onPressed: () {}),
-        const Divider(),
-      ],
-    );
+    return Obx(() {
+      return Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          const SizedBox(height: kDefaultPadding),
+          Text(
+            'information'.tr,
+            style: tNormalTextStyle.copyWith(
+                color: getTextColorSecond(), fontSize: 16),
+          ),
+          _buildItemInformation(
+              label: 'height'.tr,
+              content: '${user.value?.height ?? 'unselected'.tr}',
+              onPressed: () {
+                controller.showInput(
+                  type: 'height',
+                  label: 'height'.tr,
+                  initText: '${user.value?.height ?? 0}',
+                  numeric: true,
+                );
+              }),
+          const Divider(),
+          _buildItemInformation(
+              label: 'address'.tr,
+              content: user.value?.address ?? 'not_entered'.tr,
+              onPressed: () {
+                controller.showInput(
+                    type: 'address',
+                    label: 'address'.tr,
+                    initText: user.value?.address);
+              }),
+          const Divider(),
+          _buildItemInformation(
+              label: 'birth_place'.tr,
+              content: user.value?.birthPlace ?? 'not_entered'.tr,
+              onPressed: () {
+                controller.showInput(
+                    type: 'birthPlace',
+                    label: 'birth_place'.tr,
+                    initText: user.value?.birthPlace);
+              }),
+          const Divider(),
+          _buildItemInformation(
+              label: 'education'.tr,
+              content: user.value?.education ?? 'not_entered'.tr,
+              onPressed: () {
+                controller.showInput(
+                    type: 'education',
+                    label: 'education'.tr,
+                    initText: user.value?.education);
+              }),
+          const Divider(),
+          _buildItemInformation(
+              label: 'annual_income'.tr,
+              content: user.value?.annualIncome != null
+                  ? formatCurrency(user.value?.annualIncome,
+                      symbol: CurrencySymbol.japan)
+                  : 'not_entered'.tr,
+              onPressed: () {
+                controller.showInput(
+                    type: 'annualIncome',
+                    label: 'annual_income'.tr,
+                    numeric: true,
+                    initText: '${user.value?.annualIncome ?? 0}');
+              }),
+          const Divider(),
+          _buildItemInformation(
+              label: 'job'.tr,
+              content: user.value?.job ?? 'not_entered'.tr,
+              onPressed: () {
+                controller.showInput(
+                    type: 'job', label: 'job'.tr, initText: user.value?.job);
+              }),
+          const Divider(),
+          _buildItemInformation(
+              label: 'sake'.tr,
+              content: user.value?.getTextDrink() ?? 'not_entered'.tr,
+              onPressed: () {
+                controller.showSelectLabel(
+                    type: 'isDrink',
+                    label: 'sake'.tr,
+                    map: {
+                      'sake_can'.tr: true,
+                      'sake_cannot'.tr: false,
+                    },
+                    initValue: user.value?.isDrink);
+              }),
+          const Divider(),
+          _buildItemInformation(
+              label: 'smoke'.tr,
+              content: user.value?.getTextSmoke() ?? 'not_entered'.tr,
+              onPressed: () {
+                controller.showSelectLabel(
+                    type: 'isSmoke',
+                    label: 'smoke'.tr,
+                    map: {
+                      'smoke_can'.tr: true,
+                      'smoke_cannot'.tr: false,
+                    },
+                    initValue: user.value?.isSmoke);
+              }),
+          const Divider(),
+          _buildItemInformation(
+              label: 'family'.tr,
+              content: user.value?.familyStatus ?? 'not_entered'.tr,
+              onPressed: () {
+                controller.showInput(
+                    type: 'familyStatus',
+                    label: 'family'.tr,
+                    initText: user.value?.familyStatus);
+              }),
+          const Divider(),
+          _buildItemInformation(
+              label: 'living_family'.tr,
+              content: user.value?.getTextLiveFamily() ?? 'not_entered'.tr,
+              onPressed: () {
+                controller.showSelectLabel(
+                    type: 'livingWithFamily',
+                    label: 'living_family'.tr,
+                    map: {
+                      'living_family_with'.tr: true,
+                      'living_family_alone'.tr: false,
+                    },
+                    initValue: user.value?.livingWithFamily);
+              }),
+          const Divider(),
+          _buildItemInformation(
+              label: 'hair_style'.tr,
+              content: user.value?.hairStyle ?? 'not_entered'.tr,
+              onPressed: () {
+                controller.showInput(
+                    type: 'hairStyle',
+                    label: 'hair_style'.tr,
+                    initText: user.value?.hairStyle);
+              }),
+          const Divider(),
+          _buildItemInformation(
+              label: 'hair_color'.tr,
+              content: user.value?.hairColor ?? 'not_entered'.tr,
+              onPressed: () {
+                controller.showInput(
+                    type: 'hairColor',
+                    label: 'hair_color'.tr,
+                    initText: user.value?.hairColor);
+              }),
+          const Divider(),
+        ],
+      );
+    });
   }
 
   Widget _buildChangePassword() {
@@ -255,28 +366,32 @@ class EditProfileMobilePage extends StatelessWidget {
       Obx(() {
         return buildFieldInput(
             label: 'nick_name'.tr,
-            content: controller.nickname.value.isEmpty
-                ? 'enter_nick_name'.tr
-                : controller.nickname.value,
+            content: user.value?.displayName?.isNotEmpty == true
+                ? user.value?.displayName
+                : 'enter_nick_name'.tr,
             onPressed: controller.showInputNickName);
       }),
       const Divider(),
       Obx(() {
         return buildFieldInput(
             label: 'birthday'.tr,
-            content: controller.dateTime.value == null
+            content: user.value?.birthday == null
                 ? 'not_entered'.tr
                 : formatDateTime(
-                    date: controller.dateTime.value,
+                    date: user.value?.birthday,
                     formatString: DateTimeFormatString.textBehind),
             onPressed: controller.showDateBottom);
       }),
       _hideAge(),
       const Divider(),
       Obx(() {
+        String str = 'please_select'.tr;
+        if (user.value?.cityName != null && user.value?.stateName != null) {
+          str = '${user.value?.cityName} ${user.value?.stateName}';
+        }
         return buildFieldInput(
           label: 'good_place'.tr,
-          content: controller.placeToPlay.value ?? 'please_select'.tr,
+          content: str,
           onPressed: controller.showSelectCity,
         );
       }),
@@ -284,11 +399,41 @@ class EditProfileMobilePage extends StatelessWidget {
       Obx(() {
         return buildFieldInput(
             label: 'description'.tr,
-            content: controller.description.value.isEmpty
-                ? 'not_entered'.tr
-                : controller.description.value,
+            content: user.value?.description?.isNotEmpty == true
+                ? user.value?.description
+                : 'not_entered'.tr,
             onPressed: controller.showInputDescription);
       }),
+      if (casterAccount.value) ...[
+        const Divider(),
+        Obx(() {
+          return buildFieldInput(
+              label: 'today_mood'.tr,
+              content: user.value?.tagInformation.isNotEmpty == true
+                  ? null
+                  : 'not_entered'.tr,
+              widgetContent: user.value?.tagInformation.isNotEmpty == true
+                  ? Wrap(
+                      spacing: kSmallPadding,
+                      runSpacing: kSmallPadding,
+                      children: user.value!.tagInformation
+                          .map((e) => Chip(
+                              backgroundColor: kPrimaryColorFemale,
+                              shape: const RoundedRectangleBorder(
+                                  side: BorderSide(color: kPrimaryColorFemale),
+                                  borderRadius:
+                                      BorderRadius.all(Radius.circular(4))),
+                              label: Text(
+                                e,
+                                style: tNormalTextStyle.copyWith(
+                                    color: Colors.white, fontSize: 12),
+                              )))
+                          .toList(),
+                    )
+                  : null,
+              onPressed: controller.showSelectTag);
+        }),
+      ],
       const Divider(),
       _buildInformation(),
       const SizedBox(height: kDefaultPadding),

@@ -6,6 +6,7 @@ import 'package:base_flutter/ui/responsive.dart';
 import 'package:base_flutter/ui/screen/home/dash_board/my_page_female/my_page_female_controller.dart';
 import 'package:base_flutter/utils/const.dart';
 import 'package:base_flutter/utils/global/globals_functions.dart';
+import 'package:base_flutter/utils/global/globals_variable.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
@@ -28,15 +29,25 @@ class MyPageFemaleMobilePage extends StatelessWidget {
   final MyPageFemaleController controller;
 
   Widget _buildRecordItem(
-      {required String label, required VoidCallback onCallBack}) {
+      {required String label,
+      required VoidCallback onCallBack,
+      bool logout = false}) {
     return InkWell(
       onTap: onCallBack,
       child: Row(
         mainAxisSize: MainAxisSize.max,
         children: [
-          getSvgImage('ic_$label'),
-          const SizedBox(width: kDefaultPadding),
-          Expanded(child: Text(label.tr, style: tNormalTextStyle)),
+          logout
+              ? const Icon(
+                  Icons.logout,
+                  color: kPrimaryColorFemale,
+                )
+              : getSvgImage('ic_$label'),
+          SizedBox(width: logout ? kSmallPadding : kDefaultPadding),
+          Expanded(
+              child: Text(label.tr,
+                  style: tNormalTextStyle.copyWith(
+                      color: logout ? kErrorColor : kTextColorDark))),
           const SizedBox(width: kDefaultPadding),
           getSvgImage('ic_arrow_right')
         ],
@@ -48,15 +59,25 @@ class MyPageFemaleMobilePage extends StatelessWidget {
   Widget build(BuildContext context) {
     final list = [
       const SizedBox(height: kDefaultPadding),
-      const SizedBox(
-          height: 78,
-          width: 78,
-          child: CustomCircleImage(
-              radius: 99,
-              image: CustomNetworkImage(
-                url: null,
-                fit: BoxFit.fitHeight,
-              ))),
+      Row(
+        crossAxisAlignment: CrossAxisAlignment.center,
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          SizedBox(
+              height: 78,
+              width: 78,
+              child: CustomCircleImage(
+                  radius: 99,
+                  image: Obx(() {
+                    return CustomNetworkImage(
+                      url: user.value?.avatar,
+                      fit: BoxFit.cover,
+                      height: 78,
+                      width: 78,
+                    );
+                  }))),
+        ],
+      ),
       const SizedBox(height: kSmallPadding),
       Center(
         child: Text(
@@ -101,6 +122,11 @@ class MyPageFemaleMobilePage extends StatelessWidget {
               const SizedBox(height: kDefaultPadding),
               _buildRecordItem(
                   label: 'help', onCallBack: controller.switchHelp),
+              const SizedBox(height: kDefaultPadding),
+              const Divider(color: kTextColorDark, height: 1),
+              const SizedBox(height: kDefaultPadding),
+              _buildRecordItem(
+                  label: 'logout', onCallBack: logout, logout: true),
               const SizedBox(height: kDefaultPadding),
             ],
           ),

@@ -1,6 +1,6 @@
 import 'dart:convert';
 
-import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:base_flutter/model/json_parse/date_to_string.dart';
 
 MessageGroupModel messageGroupModelFromJson(String str) =>
     MessageGroupModel.fromJson(json.decode(str));
@@ -13,7 +13,8 @@ class MessageGroupModel {
     this.id,
     this.title,
     this.avatar,
-    this.createTime,
+    this.createdTime,
+    this.lastUpdatedTime,
     this.messageGroupType,
     required this.userIds,
     this.lastMessage,
@@ -23,14 +24,17 @@ class MessageGroupModel {
   String? title;
   String? avatar;
   String? messageGroupType;
-  Timestamp? createTime;
+  DateTime? createdTime;
+  DateTime? lastUpdatedTime;
   List userIds;
   MessageModel? lastMessage;
 
   factory MessageGroupModel.fromJson(Map<String, dynamic> json) =>
       MessageGroupModel(
         id: json["id"],
-        createTime: json['createTime'],
+        title: json["title"],
+        createdTime: fromJsonDate(json["createdTime"]),
+        lastUpdatedTime: fromJsonDate(json["lastUpdatedTime"]),
         avatar: json['avatar'],
         messageGroupType: json['messageGroupType'],
         lastMessage: json['lastMessage'] != null
@@ -46,7 +50,8 @@ class MessageGroupModel {
         "title": title,
         "avatar": avatar,
         "messageGroupType": messageGroupType,
-        "createTime": createTime,
+        "createdTime": createdTime.toString(),
+        "lastUpdatedTime": lastUpdatedTime.toString(),
         "lastMessage": lastMessage?.toJson(),
         "userIds": List<dynamic>.from(userIds.map((x) => x)),
       };
@@ -59,6 +64,7 @@ String messageModelToJson(MessageModel data) => json.encode(data.toJson());
 
 class MessageModel {
   MessageModel({
+    this.id,
     this.content,
     this.userId,
     this.delete,
@@ -66,25 +72,28 @@ class MessageModel {
     this.type,
   });
 
+  String? id;
   String? content;
   String? userId;
   bool? delete;
-  Timestamp? createdTime;
+  DateTime? createdTime;
   String? type;
 
   factory MessageModel.fromJson(Map<String, dynamic> json) => MessageModel(
+        id: json["id"],
         content: json["content"],
         userId: json["userId"],
         delete: json["delete"],
-        createdTime: json["createdTime"],
+        createdTime: fromJsonDate(json["createdTime"]),
         type: json["type"],
       );
 
   Map<String, dynamic> toJson() => {
+        "id": id,
         "content": content,
         "userId": userId,
         "delete": delete,
-        "createdTime": createdTime,
+        "createdTime": createdTime.toString(),
         "type": type,
       };
 }

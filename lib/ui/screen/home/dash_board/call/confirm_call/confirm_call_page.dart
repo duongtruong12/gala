@@ -29,7 +29,7 @@ class ConfirmCallMobilePage extends StatelessWidget {
   final ConfirmCallController controller;
 
   Widget _buildReservationItem(
-      {required String label, required String content}) {
+      {required String label, required String? content}) {
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: kSmallPadding),
       child: Row(
@@ -51,7 +51,7 @@ class ConfirmCallMobilePage extends StatelessWidget {
             ),
           ),
           Text(
-            ': $content',
+            ': ${content ?? ''}',
             style: tButtonWhiteTextStyle.copyWith(
                 fontSize: 12, fontWeight: FontWeight.w500),
           )
@@ -87,10 +87,27 @@ class ConfirmCallMobilePage extends StatelessWidget {
               fontSize: 14, fontWeight: FontWeight.w500),
         ),
         const SizedBox(height: kSmallPadding),
-        _buildReservationItem(label: 'start_time', content: '今すぐ(30分後)'),
-        _buildReservationItem(label: 'required_time', content: '2時間'),
-        _buildReservationItem(label: 'meeting_place', content: '梅田'),
-        _buildReservationItem(label: 'number_people', content: '2人'),
+        Obx(() {
+          return _buildReservationItem(
+              label: 'start_time',
+              content: controller.ticket.value.startTimeAfter?.tr);
+        }),
+        Obx(() {
+          return _buildReservationItem(
+              label: 'required_time',
+              content: controller.ticket.value.durationDate?.tr);
+        }),
+        Obx(() {
+          return _buildReservationItem(
+              label: 'meeting_place',
+              content: controller.ticket.value.stateName);
+        }),
+        Obx(() {
+          return _buildReservationItem(
+              label: 'number_people',
+              content:
+                  '${controller.ticket.value.numberPeople ?? 0}${'people'.tr}');
+        }),
         const SizedBox(height: kSmallPadding),
         _buildEdit(
             label: 'edit_reservation_detail'.tr,
@@ -110,22 +127,22 @@ class ConfirmCallMobilePage extends StatelessWidget {
           style: tButtonWhiteTextStyle.copyWith(
               fontSize: 14, fontWeight: FontWeight.w500),
         ),
-        Padding(
-          padding: const EdgeInsets.symmetric(vertical: kDefaultPadding),
-          child: Wrap(
-            spacing: 8,
-            runSpacing: 8,
-            alignment: WrapAlignment.start,
-            children: [
-              ...controller.selectedCastType,
-              ...controller.selectedSituation,
-            ]
-                .map((e) => ChipItemSelect(
-                      text: e,
-                    ))
-                .toList(),
-          ),
-        ),
+        Obx(() {
+          return Padding(
+            padding: const EdgeInsets.symmetric(vertical: kDefaultPadding),
+            child: Wrap(
+              spacing: 8,
+              runSpacing: 8,
+              alignment: WrapAlignment.start,
+              children: controller.ticket.value.tagInformation
+                  .map((e) => ChipItemSelect(
+                        value: e,
+                        label: e,
+                      ))
+                  .toList(),
+            ),
+          );
+        }),
         _buildEdit(label: 'edit_tag'.tr, onTap: controller.onSwitchEditTag),
         const SizedBox(height: kSmallPadding),
         const Divider(),
@@ -144,11 +161,13 @@ class ConfirmCallMobilePage extends StatelessWidget {
               style: tButtonWhiteTextStyle.copyWith(
                   fontSize: 20, fontWeight: FontWeight.w500),
             )),
-            Text(
-              formatCurrency(12000),
-              style: tButtonWhiteTextStyle.copyWith(
-                  fontSize: 20, fontWeight: FontWeight.w500),
-            )
+            Obx(() {
+              return Text(
+                formatCurrency(controller.ticket.value.calculateTotalPrice()),
+                style: tButtonWhiteTextStyle.copyWith(
+                    fontSize: 20, fontWeight: FontWeight.w500),
+              );
+            })
           ],
         ),
         const SizedBox(height: kDefaultPadding),

@@ -79,24 +79,19 @@ class MessageMobilePage extends StatelessWidget {
     Widget item;
     if (i != 0 && i != controller.list.length - 1) {
       final previousModel = controller.list[i - 1];
-      if (model.createdTime!
-                  .toDate()
-                  .difference(previousModel.createdTime!.toDate())
-                  .inMinutes >
-              2 &&
-          previousModel.type != SendMessageType.join.name &&
-          previousModel.type != SendMessageType.create.name) {
+      if (model.createdTime!.difference(previousModel.createdTime!).inHours >
+          1) {
         dateWidget = Padding(
           padding: const EdgeInsets.only(top: kDefaultPadding),
           child: NotificationMessage(
               content: formatDateTime(
-                  date: model.createdTime?.toDate(),
+                  date: model.createdTime,
                   formatString: DateTimeFormatString.mmddeeee)),
         );
       }
     }
 
-    if (model.userId == 'me') {
+    if (model.userId == user.value?.id) {
       item = MyMessageItem(model: model);
     } else {
       item = MessageItem(model: model);
@@ -134,15 +129,21 @@ class MessageMobilePage extends StatelessWidget {
               children: [
                 _buildGroupUser(),
                 Expanded(
-                  child: ListView.separated(
-                    controller: controller.scrollController,
-                    padding: const EdgeInsets.symmetric(
-                        horizontal: kDefaultPadding, vertical: kSmallPadding),
-                    itemBuilder: _buildMessageList,
-                    itemCount: controller.list.length,
-                    separatorBuilder: (BuildContext context, int index) {
-                      return const SizedBox(height: kDefaultPadding);
+                  child: RefreshIndicator(
+                    onRefresh: () async {
+                      controller.onRefresh(1);
                     },
+                    child: ListView.separated(
+                      controller: controller.scrollController,
+                      physics: const AlwaysScrollableScrollPhysics(),
+                      padding: const EdgeInsets.symmetric(
+                          horizontal: kDefaultPadding, vertical: kSmallPadding),
+                      itemBuilder: _buildMessageList,
+                      itemCount: controller.list.length,
+                      separatorBuilder: (BuildContext context, int index) {
+                        return const SizedBox(height: kDefaultPadding);
+                      },
+                    ),
                   ),
                 )
               ],
@@ -157,17 +158,22 @@ class MessageMobilePage extends StatelessWidget {
         controller.onCallBack();
         return false;
       },
-      child: Scaffold(
-        appBar: appbarCustom(
-            title: Obx(() {
-              return Text(controller.model.value?.title ?? '');
-            }),
-            automaticallyImplyLeading: false,
-            leadingWidth: 100,
-            leading: backButtonText(callback: controller.onCallBack)),
-        body: _buildBody(),
-        bottomNavigationBar: FieldInput(
-          onInput: (String value) {},
+      child: Padding(
+        padding:
+            EdgeInsets.only(bottom: MediaQuery.of(context).viewInsets.bottom),
+        child: Scaffold(
+          resizeToAvoidBottomInset: false,
+          appBar: appbarCustom(
+              title: Obx(() {
+                return Text(controller.model.value?.title ?? '');
+              }),
+              automaticallyImplyLeading: false,
+              leadingWidth: 100,
+              leading: backButtonText(callback: controller.onCallBack)),
+          body: _buildBody(),
+          bottomNavigationBar: FieldInput(
+            onInput: controller.sendMessage,
+          ),
         ),
       ),
     );

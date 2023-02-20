@@ -3,6 +3,23 @@ import 'package:base_flutter/utils/global/globals_functions.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
+Widget textEmpty({String? label}) {
+  return Padding(
+    padding: const EdgeInsets.all(kDefaultPadding),
+    child: Row(
+      crossAxisAlignment: CrossAxisAlignment.center,
+      mainAxisAlignment: MainAxisAlignment.center,
+      mainAxisSize: MainAxisSize.max,
+      children: [
+        Text(
+          label ?? 'empty_list'.tr,
+          style: tNormalTextStyle.copyWith(color: getTextColorSecond()),
+        )
+      ],
+    ),
+  );
+}
+
 Widget backButtonText({required VoidCallback callback}) {
   return InkWell(
       onTap: callback,

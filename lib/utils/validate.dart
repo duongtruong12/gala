@@ -72,13 +72,13 @@ class Validate {
   }
 
   // validate password
-  static String? oldPasswordValidate(String? oldPassword, String password) {
-    final passwordString = oldPassword.toString();
+  static String? oldPasswordValidate(String? newPassword, String oldPassword) {
+    final passwordString = newPassword.toString();
     if (passwordString.isEmpty) {
       return "msg_pass_empty".tr;
     } else if (passwordString.length < 6) {
       return "msg_pass_minLength".tr;
-    } else if (oldPassword != password) {
+    } else if (generateMd5(passwordString) != oldPassword) {
       return "msg_old_pass_new_pass".tr;
     }
     return null;

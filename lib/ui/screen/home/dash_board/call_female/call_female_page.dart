@@ -1,5 +1,6 @@
 import 'package:base_flutter/components/background.dart';
 import 'package:base_flutter/components/custom_appbar.dart';
+import 'package:base_flutter/components/paging_list.dart';
 import 'package:base_flutter/components/tab_bar_custom.dart';
 import 'package:base_flutter/components/ticket_view.dart';
 import 'package:base_flutter/ui/responsive.dart';
@@ -28,15 +29,15 @@ class CallMobilePage extends StatelessWidget {
 
   final CallFemaleController controller;
 
-  Widget _buildListView() {
+  Widget _buildListView(bool future) {
     return Obx(() {
-      return ListView.builder(
+      final list = future ? controller.listFutureTicket : controller.list;
+      return Padding(
         padding: const EdgeInsets.all(kDefaultPadding),
-        itemCount: controller.list.length,
-        itemBuilder: (BuildContext context, int index) {
-          final e = controller.list[index];
-          return TicketView(model: e);
-        },
+        child: PagingListCustom(
+            onRefresh: controller.onRefresh,
+            onScrollDown: controller.onScrollDown,
+            childWidget: list.map((e) => TicketView(model: e)).toList()),
       );
     });
   }
@@ -69,8 +70,8 @@ class CallMobilePage extends StatelessWidget {
               child: TabBarView(
             controller: controller.tabController,
             children: [
-              _buildListView(),
-              _buildListView(),
+              _buildListView(false),
+              _buildListView(true),
             ],
           ))
         ],

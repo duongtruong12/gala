@@ -1,29 +1,35 @@
+import 'dart:async';
+
 import 'package:base_flutter/lang/locale_service.dart';
 import 'package:base_flutter/ui/screen/error/404_screen.dart';
 import 'package:base_flutter/ui/screen/error/404_screen_binding.dart';
 import 'package:base_flutter/utils/const.dart';
 import 'package:base_flutter/utils/global/globals_functions.dart';
 import 'package:base_flutter/utils/global/globals_variable.dart';
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:flutter_stripe/flutter_stripe.dart';
 import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
 import 'package:google_fonts/google_fonts.dart';
 
+import 'firebase_options.dart';
 import 'routes/app_pages.dart';
 import 'ui/login/login_binding.dart';
-import 'utils/connect_internet_check.dart';
 import 'utils/constant.dart';
-
-var connectivity = ConnectivityChangeNotifier();
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  await GetStorage.init();
   GoogleFonts.notoSansJavanese();
-  casterAccount.value = await getBool(key: SharedPrefKey.femaleGender);
+  Stripe.publishableKey = stripePublishableKey;
+  await Firebase.initializeApp(
+    options: DefaultFirebaseOptions.currentPlatform,
+  );
+  await GetStorage.init();
+  casterAccount.value = await getData(key: SharedPrefKey.femaleGender) ?? false;
   runApp(const MyApp());
 }
 
