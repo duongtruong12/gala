@@ -3,18 +3,22 @@ import 'package:base_flutter/components/custom_appbar.dart';
 import 'package:base_flutter/components/custom_circle_image.dart';
 import 'package:base_flutter/components/custom_network_image.dart';
 import 'package:base_flutter/components/custom_view.dart';
+import 'package:base_flutter/model/user_model.dart';
 import 'package:base_flutter/ui/responsive.dart';
 import 'package:base_flutter/ui/screen/home/dash_board/message/components/my_message/my_message_item.dart';
 import 'package:base_flutter/ui/screen/home/dash_board/message/components/notification_message.dart';
 import 'package:base_flutter/ui/screen/home/dash_board/message/components/other_message/message_item.dart';
+import 'package:base_flutter/ui/screen/home/dash_board/message/components/ticket_create_message.dart';
 import 'package:base_flutter/ui/screen/home/dash_board/message/detail/components/field_input.dart';
 import 'package:base_flutter/utils/const.dart';
 import 'package:base_flutter/utils/constant.dart';
 import 'package:base_flutter/utils/global/globals_functions.dart';
 import 'package:base_flutter/utils/global/globals_variable.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import '../components/notification_border_message.dart';
+import 'components/expanded_view.dart';
 import 'message_detail_controller.dart';
 
 class MessageDetailPage extends GetView<MessageDetailController> {
@@ -41,35 +45,66 @@ class MessageMobilePage extends StatelessWidget {
         MessageGroupType.admin.name) {
       return const SizedBox();
     }
-    return Container(
-      color: casterAccount.value ? const Color(0xFFE6E6E6) : kPrimaryColor,
-      padding: const EdgeInsets.symmetric(
-          horizontal: kDefaultPadding, vertical: kSmallPadding),
-      height: 48,
-      alignment: Alignment.centerLeft,
-      child: Row(
-        crossAxisAlignment: CrossAxisAlignment.center,
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          Expanded(
-            child: ListView.builder(
-              scrollDirection: Axis.horizontal,
-              itemCount: controller.model.value?.userIds.length,
-              itemBuilder: (BuildContext context, int index) {
-                return const CustomCircleImage(
-                    radius: 99,
-                    image: CustomNetworkImage(
-                      url: null,
-                      fit: BoxFit.fitHeight,
-                      height: 48,
-                      width: 48,
-                    ));
-              },
-            ),
+    return Column(
+      children: [
+        Container(
+          color: casterAccount.value ? const Color(0xFFE6E6E6) : kPrimaryColor,
+          padding: const EdgeInsets.symmetric(vertical: kSmallPadding),
+          height: 48,
+          alignment: Alignment.centerLeft,
+          child: Row(
+            crossAxisAlignment: CrossAxisAlignment.center,
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Expanded(
+                child: ListView.builder(
+                  scrollDirection: Axis.horizontal,
+                  itemCount: controller.model.value?.userIds.length,
+                  itemBuilder: (BuildContext context, int index) {
+                    return FutureBuilder<UserModel?>(
+                        future: fireStoreProvider.getUserDetail(
+                            id: controller.model.value?.userIds[index],
+                            source: Source.cache),
+                        builder: (context, data) {
+                          final userData = data.data;
+                          return InkWell(
+                            onTap: () {
+                              controller.onSwitchUserDetail(
+                                  controller.model.value?.userIds[index]);
+                            },
+                            child: Container(
+                              margin:
+                                  const EdgeInsets.only(left: kDefaultPadding),
+                              height: 32,
+                              width: 32,
+                              child: CustomCircleImage(
+                                  radius: 99,
+                                  image: CustomNetworkImage(
+                                    url: userData?.avatar,
+                                    fit: BoxFit.cover,
+                                  )),
+                            ),
+                          );
+                        });
+                  },
+                ),
+              ),
+              InkWell(
+                  onTap: controller.switchExpanded,
+                  child: getSvgImage('ic_arrow_down')),
+              const SizedBox(width: kDefaultPadding),
+            ],
           ),
-          getSvgImage('ic_arrow_down'),
-        ],
-      ),
+        ),
+        Obx(() {
+          return ExpandedView(
+            ticketId: controller.model.value?.ticketId,
+            expanded: controller.expanded.value,
+            list: controller.mapCountTime.values.toList(),
+            onPressed: controller.countTicketTime,
+          );
+        }),
+      ],
     );
   }
 
@@ -107,6 +142,24 @@ class MessageMobilePage extends StatelessWidget {
       item = NotificationBorderMessage(content: model.content);
     }
 
+    if (model.type == SendMessageType.pointCost.name) {
+      if (user.value?.typeAccount == TypeAccount.guest.name) {
+        item = NotificationBorderMessage(content: model.content);
+      } else {
+        return const SizedBox();
+      }
+    }
+
+    if (model.type == SendMessageType.createTicket.name) {
+      item = TicketCreatedMessage(
+        ticketId: model.ticketId,
+        content: model.content,
+        onSwitchDetail: () async {
+          controller.switchDetailTicket(model.ticketId);
+        },
+      );
+    }
+
     return Column(
       crossAxisAlignment: model.userId == 'me'
           ? CrossAxisAlignment.end
@@ -114,15 +167,16 @@ class MessageMobilePage extends StatelessWidget {
       mainAxisAlignment: model.userId == 'me'
           ? MainAxisAlignment.end
           : MainAxisAlignment.start,
-      children: [
-        dateWidget,
-        item,
-      ],
+      children: [dateWidget, item, const SizedBox(height: kSmallPadding)],
     );
   }
 
   Widget _buildBody() {
     return Obx(() {
+      if (controller.model.value?.userIds.contains(user.value?.id) != true) {
+        return textEmpty(label: 'message_permission'.tr);
+      }
+
       return controller.list.isEmpty
           ? const Center(child: CircularProgressIndicator())
           : Column(
@@ -133,16 +187,13 @@ class MessageMobilePage extends StatelessWidget {
                     onRefresh: () async {
                       controller.onRefresh(1);
                     },
-                    child: ListView.separated(
+                    child: ListView.builder(
                       controller: controller.scrollController,
                       physics: const AlwaysScrollableScrollPhysics(),
                       padding: const EdgeInsets.symmetric(
                           horizontal: kDefaultPadding, vertical: kSmallPadding),
                       itemBuilder: _buildMessageList,
                       itemCount: controller.list.length,
-                      separatorBuilder: (BuildContext context, int index) {
-                        return const SizedBox(height: kDefaultPadding);
-                      },
                     ),
                   ),
                 )
@@ -171,9 +222,17 @@ class MessageMobilePage extends StatelessWidget {
               leadingWidth: 100,
               leading: backButtonText(callback: controller.onCallBack)),
           body: _buildBody(),
-          bottomNavigationBar: FieldInput(
-            onInput: controller.sendMessage,
-          ),
+          bottomNavigationBar: Obx(() {
+            return (controller.model.value?.userIds.contains(user.value?.id) ==
+                            true &&
+                        !controller.messageGroupEnd()) ||
+                    controller.model.value?.messageGroupType ==
+                        MessageGroupType.admin.name
+                ? FieldInput(
+                    onInput: controller.sendMessage,
+                  )
+                : const SizedBox();
+          }),
         ),
       ),
     );

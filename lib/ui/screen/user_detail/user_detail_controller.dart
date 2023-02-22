@@ -1,5 +1,6 @@
 import 'package:base_flutter/model/user_model.dart';
 import 'package:base_flutter/routes/app_pages.dart';
+import 'package:base_flutter/utils/constant.dart';
 import 'package:base_flutter/utils/global/globals_variable.dart';
 import 'package:get/get.dart';
 
@@ -29,7 +30,11 @@ class UserDetailController extends GetxController {
     if (canPop == true) {
       Get.back();
     } else {
-      Get.offAndToNamed(Routes.home);
+      if (user.value?.typeAccount == TypeAccount.admin.name) {
+        Get.offAndToNamed(Routes.homeAdmin);
+      } else {
+        Get.offAndToNamed(Routes.home);
+      }
     }
   }
 }

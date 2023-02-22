@@ -79,6 +79,7 @@ class CallListWebPage extends StatelessWidget {
                   list: controller.list.toList(),
                   onScrollDown: controller.onScrollDown,
                   isEmpty: controller.checkEmpty(),
+                  onTapTicket: controller.switchTicket,
                 );
               }),
             ),

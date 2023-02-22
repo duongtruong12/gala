@@ -37,7 +37,12 @@ class CallMobilePage extends StatelessWidget {
         child: PagingListCustom(
             onRefresh: controller.onRefresh,
             onScrollDown: controller.onScrollDown,
-            childWidget: list.map((e) => TicketView(model: e)).toList()),
+            childWidget: list
+                .map((e) => TicketView(
+                      model: e,
+                      onSwitchChatDetail: controller.switchChatDetail,
+                    ))
+                .toList()),
       );
     });
   }

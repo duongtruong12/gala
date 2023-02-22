@@ -8,6 +8,7 @@ import 'package:base_flutter/utils/const.dart';
 import 'package:base_flutter/utils/constant.dart';
 import 'package:base_flutter/utils/global/globals_functions.dart';
 import 'package:base_flutter/utils/global/globals_variable.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
@@ -15,12 +16,15 @@ class TicketView extends StatelessWidget {
   const TicketView({
     super.key,
     required this.model,
+    this.onSwitchChatDetail,
   });
 
   final Ticket model;
+  final VoidCallback? onSwitchChatDetail;
 
   Widget _buildItemIcon({required String content, required String icon}) {
     return Row(
+      crossAxisAlignment: CrossAxisAlignment.center,
       children: [
         getSvgImage(icon),
         const SizedBox(width: 4),
@@ -36,15 +40,8 @@ class TicketView extends StatelessWidget {
     String text = 'apply'.tr;
     Color color = kPrimaryColorFemale;
 
-    if ((user.value?.applyTickets.isNotEmpty == true &&
-        user.value?.applyTickets.contains(model.id) == true)) {
+    if (user.value?.applyTickets.contains(model.id) == true) {
       text = 'already_apply'.tr;
-      color = kGrayColorFemale;
-    }
-
-    if ((user.value?.applyTickets.isNotEmpty == true &&
-        user.value?.applyTickets.contains(model.id) == false)) {
-      text = 'already_apply_another_ticket'.tr;
       color = kGrayColorFemale;
     }
 
@@ -57,15 +54,18 @@ class TicketView extends StatelessWidget {
     return CustomButton(
         onPressed: () async {
           if (model.status == TicketStatus.created.name &&
-              user.value?.applyTickets.contains(model.id) != true) {
+              user.value?.applyTickets.contains(model.id) == false) {
             await fireStoreProvider.applyTicket(model);
           }
-          if ((user.value?.applyTickets.isNotEmpty == true &&
-              user.value?.applyTickets.contains(model.id) == true)) {
-            final messageGroupId =
-                generateIdMessage(['admin', user.value!.id!]);
-            await Get.toNamed(Routes.messageDetail,
-                arguments: true, parameters: {'id': messageGroupId});
+          if (user.value?.applyTickets.contains(model.id) == true) {
+            if (onSwitchChatDetail != null) {
+              onSwitchChatDetail!();
+            } else {
+              final messageGroupId =
+                  generateIdMessage(['admin', user.value!.id!]);
+              await Get.toNamed(Routes.messageDetail,
+                  arguments: true, parameters: {'id': messageGroupId});
+            }
           }
         },
         color: color,
@@ -85,11 +85,6 @@ class TicketView extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.start,
             mainAxisSize: MainAxisSize.min,
             children: [
-              // Text(
-              //   '${model.cityName} ${model.stateName} ${formatDateTime(date: model.startTime, formatString: DateTimeFormatString.hhmm)}~',
-              //   style: tNormalTextStyle.copyWith(
-              //       fontWeight: FontWeight.w500, fontSize: 16),
-              // ),
               RichText(
                 text: TextSpan(
                   children: [
@@ -121,7 +116,8 @@ class TicketView extends StatelessWidget {
           ),
         ),
         FutureBuilder<UserModel?>(
-            future: fireStoreProvider.getUserDetail(id: model.createdUser),
+            future: fireStoreProvider.getUserDetail(
+                id: model.createdUser, source: Source.cache),
             builder:
                 (BuildContext context, AsyncSnapshot<UserModel?> snapshot) {
               final avatar = snapshot.data?.avatar;

@@ -48,12 +48,14 @@ class CustomButtonState extends State<CustomButton> {
           isLoading = true;
         });
       }
-
-      await widget.onPressed();
-      if (mounted) {
-        setState(() {
-          isLoading = false;
-        });
+      try {
+        await widget.onPressed();
+      } finally {
+        if (mounted) {
+          setState(() {
+            isLoading = false;
+          });
+        }
       }
     }
 

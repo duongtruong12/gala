@@ -39,4 +39,5 @@ abstract class Routes {
   static const law = '/law';
   static const privacyPolicy = '/privacyPolicy';
   static const searchCall = '/searchCall/';
+  static const ticketDetail = '/ticketDetail/';
 }

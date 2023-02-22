@@ -4,7 +4,7 @@
 
 import 'dart:convert';
 
-import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:base_flutter/model/json_parse/date_to_string.dart';
 
 PointCostModel pointCostModelFromJson(String str) =>
     PointCostModel.fromJson(json.decode(str));
@@ -24,14 +24,14 @@ class PointCostModel {
   String? status;
   int? point;
   String? reason;
-  Timestamp? createTime;
+  DateTime? createTime;
 
   factory PointCostModel.fromJson(Map<String, dynamic> json) => PointCostModel(
         id: json["id"],
         point: json["point"],
         reason: json["reason"],
         status: json["status"],
-        createTime: json["createTime"],
+        createTime: fromJsonTimeStamp(json["createTime"]),
       );
 
   Map<String, dynamic> toJson() => {
@@ -39,6 +39,6 @@ class PointCostModel {
         "point": point,
         "reason": reason,
         "status": status,
-        "createTime": createTime.toString(),
+        "createTime": createTime,
       };
 }

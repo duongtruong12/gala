@@ -8,17 +8,23 @@ import 'package:base_flutter/utils/const.dart';
 import 'package:base_flutter/utils/constant.dart';
 import 'package:base_flutter/utils/global/globals_functions.dart';
 import 'package:base_flutter/utils/global/globals_variable.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:data_table_2/data_table_2.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
 class DataTableTicket extends StatefulWidget {
   const DataTableTicket(
-      {super.key, required this.list, this.onScrollDown, this.isEmpty = false});
+      {super.key,
+      required this.list,
+      required this.onTapTicket,
+      this.onScrollDown,
+      this.isEmpty = false});
 
   final List<Ticket> list;
   final bool isEmpty;
   final ValueChanged<int>? onScrollDown;
+  final ValueSetter<Ticket> onTapTicket;
 
   @override
   _DataTableTicket createState() => _DataTableTicket();
@@ -111,8 +117,8 @@ class _DataTableTicket extends State<DataTableTicket> {
             (model) => DataRow(
               cells: [
                 DataCell(FutureBuilder<UserModel?>(
-                    future:
-                        fireStoreProvider.getUserDetail(id: model.createdUser),
+                    future: fireStoreProvider.getUserDetail(
+                        id: model.createdUser, source: Source.cache),
                     builder: (BuildContext context,
                         AsyncSnapshot<UserModel?> snapshot) {
                       return Text(
@@ -154,7 +160,9 @@ class _DataTableTicket extends State<DataTableTicket> {
                   Padding(
                     padding: const EdgeInsets.all(kSmallPadding),
                     child: CustomButton(
-                      onPressed: () async {},
+                      onPressed: () async {
+                        widget.onTapTicket(model);
+                      },
                       borderColor: kTextColorDark,
                       color: Colors.white,
                       borderRadius: kDefaultPadding,

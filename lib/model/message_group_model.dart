@@ -12,6 +12,7 @@ class MessageGroupModel {
   MessageGroupModel({
     this.id,
     this.title,
+    this.ticketId,
     this.avatar,
     this.createdTime,
     this.lastUpdatedTime,
@@ -22,6 +23,7 @@ class MessageGroupModel {
 
   String? id;
   String? title;
+  String? ticketId;
   String? avatar;
   String? messageGroupType;
   DateTime? createdTime;
@@ -33,6 +35,7 @@ class MessageGroupModel {
       MessageGroupModel(
         id: json["id"],
         title: json["title"],
+        ticketId: json["ticketId"],
         createdTime: fromJsonDate(json["createdTime"]),
         lastUpdatedTime: fromJsonDate(json["lastUpdatedTime"]),
         avatar: json['avatar'],
@@ -48,6 +51,7 @@ class MessageGroupModel {
   Map<String, dynamic> toJson() => {
         "id": id,
         "title": title,
+        "ticketId": ticketId,
         "avatar": avatar,
         "messageGroupType": messageGroupType,
         "createdTime": createdTime.toString(),
@@ -67,6 +71,7 @@ class MessageModel {
     this.id,
     this.content,
     this.userId,
+    this.ticketId,
     this.delete,
     this.createdTime,
     this.type,
@@ -75,6 +80,7 @@ class MessageModel {
   String? id;
   String? content;
   String? userId;
+  String? ticketId;
   bool? delete;
   DateTime? createdTime;
   String? type;
@@ -83,6 +89,7 @@ class MessageModel {
         id: json["id"],
         content: json["content"],
         userId: json["userId"],
+        ticketId: json["ticketId"],
         delete: json["delete"],
         createdTime: fromJsonDate(json["createdTime"]),
         type: json["type"],
@@ -92,8 +99,42 @@ class MessageModel {
         "id": id,
         "content": content,
         "userId": userId,
+        "ticketId": ticketId,
         "delete": delete,
         "createdTime": createdTime.toString(),
         "type": type,
+      };
+}
+
+CountTimeModel countTimeModelFromJson(String str) =>
+    CountTimeModel.fromJson(json.decode(str));
+
+String countTimeModelToJson(CountTimeModel data) => json.encode(data.toJson());
+
+class CountTimeModel {
+  CountTimeModel({
+    this.id,
+    this.startDate,
+    this.endDate,
+    this.point,
+  });
+
+  String? id;
+  DateTime? startDate;
+  DateTime? endDate;
+  int? point;
+
+  factory CountTimeModel.fromJson(Map<String, dynamic> json) => CountTimeModel(
+        id: json["id"],
+        startDate: fromJsonTimeStamp(json["startDate"]),
+        endDate: fromJsonTimeStamp(json["endDate"]),
+        point: json["point"],
+      );
+
+  Map<String, dynamic> toJson() => {
+        "id": id,
+        "startDate": startDate,
+        "endDate": endDate,
+        "point": point,
       };
 }

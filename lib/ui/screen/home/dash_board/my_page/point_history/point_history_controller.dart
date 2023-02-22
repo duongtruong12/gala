@@ -1,8 +1,6 @@
 import 'package:base_flutter/model/point_cost_model.dart';
 import 'package:base_flutter/model/purchase_model.dart';
-import 'package:base_flutter/utils/constant.dart';
 import 'package:base_flutter/utils/global/globals_functions.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:get/get.dart';
 
 class PointHistoryController extends GetxController {
@@ -21,24 +19,6 @@ class PointHistoryController extends GetxController {
   Future<void> _installList() async {
     loading.value = true;
     await Future.delayed(const Duration(seconds: 1));
-    list.add(PointCostModel(
-        id: '1',
-        point: -1000,
-        reason: PointReason.pay.name,
-        createTime: Timestamp.fromMillisecondsSinceEpoch(
-            DateTime.now().millisecondsSinceEpoch)));
-    list.add(PointCostModel(
-        id: '2',
-        point: -3000,
-        reason: PointReason.gift.name,
-        createTime: Timestamp.fromMillisecondsSinceEpoch(
-            DateTime.now().millisecondsSinceEpoch)));
-    list.add(PointCostModel(
-        id: '1',
-        point: 10000,
-        reason: PointReason.buy.name,
-        createTime: Timestamp.fromMillisecondsSinceEpoch(
-            DateTime.now().millisecondsSinceEpoch)));
     listPurchase.add(PurchaseModel(id: '1000', point: 1000, cost: 1200));
     listPurchase.add(PurchaseModel(id: '3000', point: 3000, cost: 3600));
     listPurchase.add(PurchaseModel(id: '5000', point: 5000, cost: 6000));

@@ -23,6 +23,7 @@ class UserModel {
     this.avatar,
     required this.previewImage,
     required this.applyTickets,
+    required this.approveTickets,
     required this.tagInformation,
     this.typeAccount,
     this.createdDate,
@@ -57,6 +58,7 @@ class UserModel {
   String? avatar;
   List<dynamic> previewImage;
   List<dynamic> applyTickets;
+  List<dynamic> approveTickets;
   String? typeAccount;
   int? currentPoint;
   int? pointPer30Minutes;
@@ -140,6 +142,9 @@ class UserModel {
         applyTickets: json["applyTickets"] == null
             ? []
             : List<dynamic>.from(json["applyTickets"]!.map((x) => x)),
+        approveTickets: json["approveTickets"] == null
+            ? []
+            : List<dynamic>.from(json["approveTickets"]!.map((x) => x)),
         typeAccount: json["typeAccount"],
         createdDate: fromJsonDate(json["createdDate"]),
         birthday: fromJsonDate(json["birthday"]),
@@ -179,6 +184,7 @@ class UserModel {
         "email": email,
         "avatar": avatar,
         "previewImage": List<dynamic>.from(previewImage.map((x) => x)),
+        "approveTickets": List<dynamic>.from(approveTickets.map((x) => x)),
         "typeAccount": typeAccount,
         "createdDate": createdDate.toString(),
         "birthday": birthday.toString(),

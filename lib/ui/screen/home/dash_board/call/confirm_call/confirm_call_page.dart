@@ -50,10 +50,13 @@ class ConfirmCallMobilePage extends StatelessWidget {
               ],
             ),
           ),
-          Text(
-            ': ${content ?? ''}',
-            style: tButtonWhiteTextStyle.copyWith(
-                fontSize: 12, fontWeight: FontWeight.w500),
+          Padding(
+            padding: const EdgeInsets.only(top: 4),
+            child: Text(
+              ': ${content ?? ''}',
+              style: tButtonWhiteTextStyle.copyWith(
+                  fontSize: 12, fontWeight: FontWeight.w500),
+            ),
           )
         ],
       ),

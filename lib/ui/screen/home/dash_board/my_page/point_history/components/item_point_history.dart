@@ -37,7 +37,7 @@ class ItemPointHistory extends StatelessWidget {
                   children: [
                     Text(
                       formatDateTime(
-                          date: model.createTime?.toDate(),
+                          date: model.createTime,
                           formatString: DateTimeFormatString.textBehindHour),
                       style: tNormalTextStyle.copyWith(
                           color: getTextColorSecond(), fontSize: 12),

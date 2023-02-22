@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:base_flutter/model/ticket_model.dart';
+import 'package:base_flutter/routes/app_pages.dart';
 import 'package:base_flutter/utils/const.dart';
 import 'package:base_flutter/utils/constant.dart';
 import 'package:base_flutter/utils/global/globals_variable.dart';
@@ -44,8 +45,8 @@ class CallListController extends GetxController {
   Future<void> getData() async {
     streamSubscription?.cancel();
     streamSubscription = fireStoreProvider.listenerListTicker(
-        futureData: true,
         dateTime: DateTime.now(),
+        queryAll: true,
         status: currentStatus.value,
         valueChanged: (listDoc) {
           list.clear();
@@ -79,5 +80,12 @@ class CallListController extends GetxController {
     currentStatus.value = str ?? TicketStatus.created.name;
     page = 1;
     await getData();
+  }
+
+  Future<void> switchTicket(Ticket model) async {
+    streamSubscription?.pause();
+    await Get.toNamed(Routes.ticketDetail,
+        parameters: {'id': '${model.id}'}, arguments: true);
+    streamSubscription?.resume();
   }
 }

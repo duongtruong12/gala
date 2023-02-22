@@ -5,6 +5,7 @@
 import 'dart:convert';
 
 import 'package:base_flutter/utils/constant.dart';
+import 'package:base_flutter/utils/global/globals_functions.dart';
 
 import 'json_parse/date_to_string.dart';
 
@@ -50,6 +51,10 @@ class Ticket {
   List peopleApply;
   List tagInformation;
   List peopleApprove;
+
+  String getTicketName() {
+    return '$cityName $stateName ${formatDateTime(date: startTime, formatString: DateTimeFormatString.hhmm)}~';
+  }
 
   factory Ticket.fromJson(Map<String, dynamic> json) => Ticket(
         id: json["id"],
@@ -111,6 +116,10 @@ class Ticket {
       }
       return (2500 * multi) * numberPeople!;
     }
-    return 0;
+    return 2500;
+  }
+
+  int calculateEachPrice() {
+    return (calculateTotalPrice() / (numberPeople ?? 1)).round();
   }
 }

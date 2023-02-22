@@ -123,6 +123,7 @@ class RegisterUserDialogState extends State<RegisterUserDialog> {
                       currentPoint: 0,
                       createdDate: DateTime.now(),
                       applyTickets: [],
+                      approveTickets: [],
                     ));
                   }
                 },

@@ -50,7 +50,17 @@ class RouteIdFemale {
   static const myPage = 7;
 }
 
-enum SendMessageType { text, image, video, join, create, leave, disband }
+enum SendMessageType {
+  text,
+  image,
+  video,
+  join,
+  create,
+  pointCost,
+  createTicket,
+  leave,
+  disband
+}
 
 enum MessageGroupType { admin, group }
 

@@ -30,7 +30,7 @@ class SearchCallController extends GetxController {
         getData();
       });
     } else {
-      Get.offAllNamed(Routes.error);
+      Get.offAllNamed(Routes.home);
     }
   }
 

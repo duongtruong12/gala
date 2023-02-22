@@ -6,6 +6,7 @@ import 'package:base_flutter/utils/const.dart';
 import 'package:base_flutter/utils/constant.dart';
 import 'package:base_flutter/utils/global/globals_functions.dart';
 import 'package:base_flutter/utils/global/globals_variable.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
@@ -27,7 +28,8 @@ class MessageGroupItem extends StatelessWidget {
     if (index == -1) {
       return null;
     }
-    return await fireStoreProvider.getUserDetail(id: model.userIds[index]);
+    return await fireStoreProvider.getUserDetail(
+        id: model.userIds[index], source: Source.cache);
   }
 
   Future<UserModel?> getUserLastMessage() async {
@@ -41,9 +43,11 @@ class MessageGroupItem extends StatelessWidget {
           previewImage: [],
           tagInformation: [],
           displayName: 'you'.tr,
-          applyTickets: []);
+          applyTickets: [],
+          approveTickets: []);
     }
-    return await fireStoreProvider.getUserDetail(id: model.lastMessage?.userId);
+    return await fireStoreProvider.getUserDetail(
+        id: model.lastMessage?.userId, source: Source.cache);
   }
 
   @override
@@ -99,12 +103,25 @@ class MessageGroupItem extends StatelessWidget {
                   ],
                 )),
                 const SizedBox(width: kDefaultPadding),
-                Text(
-                  formatDateTime(
-                      date: model.lastUpdatedTime,
-                      formatString: DateTimeFormatString.yyyyMMddhhMM),
-                  style: tNormalTextStyle.copyWith(
-                      fontSize: 8, color: getTextColorSecond()),
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.end,
+                  children: [
+                    Text(
+                      formatDateTime(
+                          date: model.lastUpdatedTime,
+                          formatString: DateTimeFormatString.yyyyMMddhhMM),
+                      style: tNormalTextStyle.copyWith(
+                          fontSize: 8, color: getTextColorSecond()),
+                    ),
+                    const SizedBox(height: kSmallPadding),
+                    Text(
+                      snapshot.data?.typeAccount == TypeAccount.guest.name
+                          ? 'guest'.tr
+                          : 'caster'.tr,
+                      style: tNormalTextStyle.copyWith(
+                          fontSize: 8, color: getTextColorSecond()),
+                    )
+                  ],
                 )
               ],
             ),

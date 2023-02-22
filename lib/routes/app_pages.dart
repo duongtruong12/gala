@@ -1,5 +1,7 @@
 import 'package:base_flutter/ui/admin/dash_board/call_list/call_list_binding.dart';
 import 'package:base_flutter/ui/admin/dash_board/call_list/call_list_page.dart';
+import 'package:base_flutter/ui/admin/dash_board/call_list/ticket_detail/ticket_detail_binding.dart';
+import 'package:base_flutter/ui/admin/dash_board/call_list/ticket_detail/ticket_detail_page.dart';
 import 'package:base_flutter/ui/admin/dash_board/cast_payment_manager/cast_payment_manager_binding.dart';
 import 'package:base_flutter/ui/admin/dash_board/cast_payment_manager/cast_payment_manager_page.dart';
 import 'package:base_flutter/ui/admin/dash_board/caster_manager/caster_manager_binding.dart';
@@ -132,6 +134,12 @@ class AppPages {
       name: Routes.searchCall,
       page: () => const SearchCallPage(),
       binding: SearchCallBinding(),
+      middlewares: [GlobalMiddleware()],
+    ),
+    GetPage(
+      name: Routes.ticketDetail,
+      page: () => const TicketDetailPage(),
+      binding: TicketDetailBinding(),
       middlewares: [GlobalMiddleware()],
     ),
     GetPage(

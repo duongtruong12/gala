@@ -138,4 +138,14 @@ class CallFemaleController extends GetxController
       ),
     );
   }
+
+  Future<void> switchChatDetail() async {
+    streamSubscriptionFuture?.pause();
+    streamSubscription?.pause();
+    final messageGroupId = generateIdMessage(['admin', user.value!.id!]);
+    await Get.toNamed(Routes.messageDetail,
+        arguments: true, parameters: {'id': messageGroupId});
+    streamSubscriptionFuture?.resume();
+    streamSubscription?.resume();
+  }
 }
