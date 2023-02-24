@@ -69,7 +69,7 @@ class UserGuideMobilePage extends StatelessWidget {
         mainAxisAlignment: MainAxisAlignment.start,
         children: [
           CustomButton(
-            onPressed: () async {},
+            onPressed: controller.onSwitchMessageDetail,
             height: 60,
             widget: Text(
               'faq'.tr,

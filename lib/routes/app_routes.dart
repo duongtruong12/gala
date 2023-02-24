@@ -35,6 +35,7 @@ abstract class Routes {
   static const selectMood = '/selectMood';
   static const firstTimeUser = '/firstTimeUser';
   static const confirmCall = '/confirmCall';
+  static const purchasePoint = '/purchasePoint';
   static const term = '/term';
   static const law = '/law';
   static const privacyPolicy = '/privacyPolicy';

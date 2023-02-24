@@ -3,6 +3,7 @@ import 'package:base_flutter/components/custom_appbar.dart';
 import 'package:base_flutter/components/custom_view.dart';
 import 'package:base_flutter/components/tab_bar_custom.dart';
 import 'package:base_flutter/components/ticket_view.dart';
+import 'package:base_flutter/model/ticket_model.dart';
 import 'package:base_flutter/ui/responsive.dart';
 import 'package:base_flutter/utils/const.dart';
 import 'package:flutter/material.dart';
@@ -28,12 +29,27 @@ class UserGuideMobilePage extends StatelessWidget {
 
   final UserGuideFemaleController controller;
 
-  Widget _buildListView() {
+  Widget _buildListView(TicketPage page) {
     return Obx(() {
+      late List<Ticket> list;
+      switch (page) {
+        case TicketPage.apply:
+          list = controller.listApplyTicket;
+          break;
+        case TicketPage.current:
+          list = controller.listCurrentTicket;
+          break;
+        case TicketPage.past:
+          list = controller.listPastTicket;
+          break;
+      }
+      if (list.isEmpty) {
+        return textEmpty();
+      }
       return ListView.builder(
-        itemCount: controller.list.length,
+        itemCount: list.length,
         itemBuilder: (BuildContext context, int index) {
-          final e = controller.list[index];
+          final e = list[index];
           return TicketView(model: e);
         },
       );
@@ -80,9 +96,9 @@ class UserGuideMobilePage extends StatelessWidget {
               child: TabBarView(
             controller: controller.tabController,
             children: [
-              _buildListView(),
-              _buildListView(),
-              _buildListView(),
+              _buildListView(TicketPage.apply),
+              _buildListView(TicketPage.current),
+              _buildListView(TicketPage.past),
             ],
           )),
         ],

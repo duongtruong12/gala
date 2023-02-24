@@ -65,7 +65,11 @@ class CallFemaleController extends GetxController
   }
 
   bool checkEmpty() {
-    return list.length > (todayTab() ? page : futurePage) * kPagingSize;
+    if (todayTab()) {
+      return list.length > page * kPagingSize;
+    } else {
+      return listFutureTicket.length > futurePage * kPagingSize;
+    }
   }
 
   Future<void> getData(bool futureData) async {
@@ -137,15 +141,5 @@ class CallFemaleController extends GetxController
         },
       ),
     );
-  }
-
-  Future<void> switchChatDetail() async {
-    streamSubscriptionFuture?.pause();
-    streamSubscription?.pause();
-    final messageGroupId = generateIdMessage(['admin', user.value!.id!]);
-    await Get.toNamed(Routes.messageDetail,
-        arguments: true, parameters: {'id': messageGroupId});
-    streamSubscriptionFuture?.resume();
-    streamSubscription?.resume();
   }
 }

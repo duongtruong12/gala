@@ -13,6 +13,7 @@ final loading = RxBool(false);
 final user = Rxn<UserModel>();
 final casterAccount = RxBool(false);
 final fireStoreProvider = FireStoreProvider();
+final apiProvider = ApiProvider();
 final picker = ImagePicker();
 final logger = Logger(
     printer:

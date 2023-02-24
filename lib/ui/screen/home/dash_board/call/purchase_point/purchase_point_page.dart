@@ -4,33 +4,32 @@ import 'package:base_flutter/components/custom_view.dart';
 import 'package:base_flutter/components/paging_list.dart';
 import 'package:base_flutter/model/purchase_model.dart';
 import 'package:base_flutter/ui/responsive.dart';
+import 'package:base_flutter/ui/screen/home/dash_board/my_page/point_history/components/point_widget.dart';
 import 'package:base_flutter/utils/const.dart';
 import 'package:base_flutter/utils/constant.dart';
 import 'package:base_flutter/utils/global/globals_functions.dart';
 import 'package:base_flutter/utils/global/globals_variable.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'components/item_point_history.dart';
-import 'components/point_widget.dart';
-import 'point_history_controller.dart';
+import 'purchase_point_controller.dart';
 
-class PointHistory extends GetView<PointHistoryController> {
-  const PointHistory({Key? key}) : super(key: key);
+class PurchasePointPage extends GetView<PurchasePointController> {
+  const PurchasePointPage({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return Background(
         child: Responsive(
-      mobile: PointHistoryMobilePage(controller: controller),
-      desktop: PointHistoryMobilePage(controller: controller),
+      mobile: PurchasePointMobilePage(controller: controller),
+      desktop: PurchasePointMobilePage(controller: controller),
     ));
   }
 }
 
-class PointHistoryMobilePage extends StatelessWidget {
-  const PointHistoryMobilePage({super.key, required this.controller});
+class PurchasePointMobilePage extends StatelessWidget {
+  const PurchasePointMobilePage({super.key, required this.controller});
 
-  final PointHistoryController controller;
+  final PurchasePointController controller;
 
   Widget _buildItemPurchase(PurchaseModel model) {
     return InkWell(
@@ -77,27 +76,6 @@ class PointHistoryMobilePage extends StatelessWidget {
     );
   }
 
-  Widget _buildListPurchase() {
-    return PagingListCustom(
-        childWidget: controller.listPurchase
-            .map((element) => _buildItemPurchase(element))
-            .toList());
-  }
-
-  Widget _buildList() {
-    if (controller.list.isEmpty) {
-      return textEmpty();
-    }
-    return PagingListCustom(
-      onScrollDown: controller.onScrollDown,
-      onRefresh: controller.onRefresh,
-      isEmpty: controller.isEmpty.value,
-      childWidget: controller.list
-          .map((element) => ItemPointHistory(model: element))
-          .toList(),
-    );
-  }
-
   Widget _buildBody() {
     return Padding(
       padding: const EdgeInsets.all(kDefaultPadding),
@@ -107,15 +85,15 @@ class PointHistoryMobilePage extends StatelessWidget {
           Obx(() {
             return PointWidget(
               point: user.value?.currentPoint,
-              onPressed:
-                  controller.purchase.value ? null : controller.switchPurchase,
+              onPressed: null,
             );
           }),
           const SizedBox(height: kDefaultPadding),
           Expanded(child: Obx(() {
-            return controller.purchase.value
-                ? _buildListPurchase()
-                : _buildList();
+            return PagingListCustom(
+                childWidget: controller.listPurchase
+                    .map((element) => _buildItemPurchase(element))
+                    .toList());
           })),
         ],
       ),

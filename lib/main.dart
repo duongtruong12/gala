@@ -23,8 +23,10 @@ import 'utils/constant.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
+  Stripe.publishableKey =
+      'pk_test_51McKsOIx8zBC2fSm1X8BLS7ftrvvXcAEWHM5DFiozymIY2HntE8pxgiywAjuLRbyhiXpg7uGAMhXxuxBnYpsx2Lq00TQ6dxLuO';
+  await Stripe.instance.applySettings();
   GoogleFonts.notoSansJavanese();
-  Stripe.publishableKey = stripePublishableKey;
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
   );

@@ -46,6 +46,53 @@ class TicketCreatedMessage extends StatelessWidget {
             id: ticketId, source: Source.cache),
         builder: (BuildContext context, AsyncSnapshot<Ticket?> snapshot) {
           final ticket = snapshot.data;
+          Widget item = const Center(
+            child: SizedBox(
+              height: 32,
+              width: 32,
+              child: CircularProgressIndicator(),
+            ),
+          );
+          if (snapshot.connectionState == ConnectionState.done) {
+            if (ticket != null) {
+              item = Column(
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  Text(
+                    content ?? '',
+                    textAlign: TextAlign.center,
+                    style: tButtonWhiteTextStyle.copyWith(
+                        fontSize: 14, fontWeight: FontWeight.w600),
+                  ),
+                  const SizedBox(height: kSmallPadding),
+                  _buildItemIcon(
+                      content: ticket.durationDate?.tr ?? '',
+                      icon: 'ic_start_time'),
+                  const SizedBox(width: kDefaultPadding),
+                  _buildItemIcon(
+                      content: '${ticket.numberPeople}${'number_people'.tr}',
+                      icon: 'ic_number_people'),
+                  const SizedBox(width: kDefaultPadding),
+                  _buildItemIcon(
+                      content: formatDateTime(
+                          date: ticket.startTime,
+                          formatString: DateTimeFormatString.yyyyMMddhhMM),
+                      icon: 'ic_start_time'),
+                  const SizedBox(width: kDefaultPadding),
+                  if (user.value?.typeAccount == TypeAccount.admin.name)
+                    CustomButton(
+                        onPressed: onSwitchDetail,
+                        color: kPrimaryColor,
+                        widget: Text(
+                          'detail'.tr,
+                          style: tButtonWhiteTextStyle,
+                        ))
+                ],
+              );
+            } else {
+              return const SizedBox();
+            }
+          }
           return Row(
             crossAxisAlignment: CrossAxisAlignment.center,
             mainAxisAlignment: MainAxisAlignment.center,
@@ -56,50 +103,7 @@ class TicketCreatedMessage extends StatelessWidget {
                 alignment: Alignment.center,
                 width: Get.width * 0.7,
                 padding: const EdgeInsets.all(kDefaultPadding),
-                child: ticket == null
-                    ? const Center(
-                        child: SizedBox(
-                          height: 32,
-                          width: 32,
-                          child: CircularProgressIndicator(),
-                        ),
-                      )
-                    : Column(
-                        crossAxisAlignment: CrossAxisAlignment.center,
-                        children: [
-                          Text(
-                            content ?? '',
-                            textAlign: TextAlign.center,
-                            style: tButtonWhiteTextStyle.copyWith(
-                                fontSize: 14, fontWeight: FontWeight.w600),
-                          ),
-                          const SizedBox(height: kSmallPadding),
-                          _buildItemIcon(
-                              content: ticket.durationDate?.tr ?? '',
-                              icon: 'ic_start_time'),
-                          const SizedBox(width: kDefaultPadding),
-                          _buildItemIcon(
-                              content:
-                                  '${ticket.numberPeople}${'number_people'.tr}',
-                              icon: 'ic_number_people'),
-                          const SizedBox(width: kDefaultPadding),
-                          _buildItemIcon(
-                              content: formatDateTime(
-                                  date: ticket.startTime,
-                                  formatString:
-                                      DateTimeFormatString.yyyyMMddhhMM),
-                              icon: 'ic_start_time'),
-                          const SizedBox(width: kDefaultPadding),
-                          if (user.value?.typeAccount == TypeAccount.admin.name)
-                            CustomButton(
-                                onPressed: onSwitchDetail,
-                                color: kPrimaryColor,
-                                widget: Text(
-                                  'detail'.tr,
-                                  style: tButtonWhiteTextStyle,
-                                ))
-                        ],
-                      ),
+                child: item,
               ),
             ],
           );

@@ -3,6 +3,7 @@ import 'package:base_flutter/components/custom_circle_image.dart';
 import 'package:base_flutter/components/custom_network_image.dart';
 import 'package:base_flutter/components/custom_view.dart';
 import 'package:base_flutter/model/user_model.dart';
+import 'package:base_flutter/routes/app_pages.dart';
 import 'package:base_flutter/utils/const.dart';
 import 'package:base_flutter/utils/constant.dart';
 import 'package:base_flutter/utils/global/globals_functions.dart';
@@ -249,7 +250,10 @@ class _DataTableUser extends State<DataTableUser> {
                   Padding(
                     padding: const EdgeInsets.all(kSmallPadding),
                     child: CustomButton(
-                      onPressed: () async {},
+                      onPressed: () async {
+                        Get.toNamed(Routes.userDetail,
+                            parameters: {'id': '${model.id}'}, arguments: true);
+                      },
                       borderColor: kTextColorDark,
                       color: Colors.white,
                       borderRadius: kDefaultPadding,

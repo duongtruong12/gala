@@ -12,27 +12,39 @@ String paymentModelToJson(PaymentModel data) => json.encode(data.toJson());
 class PaymentModel {
   PaymentModel({
     this.id,
-    this.cardExpiredDate,
-    this.cardNumber,
-    this.cardCVV,
+    this.brand,
+    this.expiryYear,
+    this.postalCode,
+    this.expiryMonth,
+    this.number,
+    this.cvc,
   });
 
   String? id;
-  String? cardNumber;
-  String? cardExpiredDate;
-  String? cardCVV;
+  String? brand;
+  String? number;
+  String? postalCode;
+  int? expiryMonth;
+  int? expiryYear;
+  String? cvc;
 
   factory PaymentModel.fromJson(Map<String, dynamic> json) => PaymentModel(
         id: json["id"],
-        cardNumber: json["cardNumber"],
-        cardExpiredDate: json["cardExpiredDate"],
-        cardCVV: json["cardCVV"],
+        brand: json["brand"],
+        number: json["number"],
+        postalCode: json["postalCode"],
+        expiryMonth: json["expiryMonth"],
+        expiryYear: json["expiryYear"],
+        cvc: json["cvc"],
       );
 
   Map<String, dynamic> toJson() => {
         "id": id,
-        "cardCVV": cardCVV,
-        "cardExpiredDate": cardExpiredDate,
-        "cardNumber": cardNumber,
+        "brand": brand,
+        "cvc": cvc,
+        "number": number,
+        "postalCode": postalCode,
+        "expiryMonth": expiryMonth,
+        "expiryYear": expiryYear,
       };
 }

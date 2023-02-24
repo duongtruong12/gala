@@ -91,7 +91,7 @@ class MyPageMobilePage extends StatelessWidget {
       const SizedBox(height: 4),
       Center(
         child: Text(
-          formatCurrency(10000),
+          formatCurrency(user.value?.currentPoint),
           style: tNormalTextStyle.copyWith(color: kTextColorPrimary),
         ),
       ),
@@ -111,12 +111,6 @@ class MyPageMobilePage extends StatelessWidget {
             _buildRecordItem(
                 label: 'point_history',
                 onCallBack: controller.switchPointHistory),
-            const SizedBox(height: kDefaultPadding),
-            const Divider(color: kTextColorDark, height: 1),
-            const SizedBox(height: kDefaultPadding),
-            _buildRecordItem(
-                label: 'payment_information',
-                onCallBack: controller.switchPaymentInformation),
             const SizedBox(height: kDefaultPadding),
             const Divider(color: kTextColorDark, height: 1),
             const SizedBox(height: kDefaultPadding),

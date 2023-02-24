@@ -22,6 +22,8 @@ import 'package:base_flutter/ui/screen/home/dash_board/call/confirm_call/confirm
 import 'package:base_flutter/ui/screen/home/dash_board/call/confirm_call/confirm_call_page.dart';
 import 'package:base_flutter/ui/screen/home/dash_board/call/first_time_user/first_time_user_binding.dart';
 import 'package:base_flutter/ui/screen/home/dash_board/call/first_time_user/first_time_user_page.dart';
+import 'package:base_flutter/ui/screen/home/dash_board/call/purchase_point/purchase_point_binding.dart';
+import 'package:base_flutter/ui/screen/home/dash_board/call/purchase_point/purchase_point_page.dart';
 import 'package:base_flutter/ui/screen/home/dash_board/call/select_mood/select_mood_binding.dart';
 import 'package:base_flutter/ui/screen/home/dash_board/call/select_mood/select_mood_page.dart';
 import 'package:base_flutter/ui/screen/home/dash_board/call_female/call_female_binding.dart';
@@ -38,8 +40,6 @@ import 'package:base_flutter/ui/screen/home/dash_board/my_page/help/help_binding
 import 'package:base_flutter/ui/screen/home/dash_board/my_page/help/help_page.dart';
 import 'package:base_flutter/ui/screen/home/dash_board/my_page/my_page.dart';
 import 'package:base_flutter/ui/screen/home/dash_board/my_page/my_page_binding.dart';
-import 'package:base_flutter/ui/screen/home/dash_board/my_page/payment_information/payment_information_binding.dart';
-import 'package:base_flutter/ui/screen/home/dash_board/my_page/payment_information/payment_information_page.dart';
 import 'package:base_flutter/ui/screen/home/dash_board/my_page/point_history/point_history_binding.dart';
 import 'package:base_flutter/ui/screen/home/dash_board/my_page/point_history/point_history_page.dart';
 import 'package:base_flutter/ui/screen/home/dash_board/my_page/user_guide/user_guide_binding.dart';
@@ -280,13 +280,6 @@ Route onGenerateRouteDashboard(RouteSettings settings) {
         bindings: SearchBinding());
   }
 
-  if (settings.name == Routes.paymentInformation) {
-    return _getPageRoute(
-        name: Routes.paymentInformation,
-        child: const PaymentInformation(),
-        bindings: PaymentInformationBinding());
-  }
-
   if (settings.name == Routes.saleProceed) {
     return _getPageRoute(
         name: Routes.saleProceed,
@@ -355,6 +348,13 @@ Route onGenerateRouteDashboard(RouteSettings settings) {
         name: Routes.confirmCall,
         child: const ConfirmCall(),
         bindings: ConfirmCallBinding());
+  }
+
+  if (settings.name == Routes.purchasePoint) {
+    return _getPageRoute(
+        name: Routes.purchasePoint,
+        child: const PurchasePointPage(),
+        bindings: PurchasePointBinding());
   }
 
   if (settings.name == Routes.pointHistory) {

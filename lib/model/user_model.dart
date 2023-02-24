@@ -122,6 +122,10 @@ class UserModel {
   }
 
   String getAge() {
+    if (hideAge == true) {
+      return 'hidden'.tr;
+    }
+
     if (birthday != null) {
       final different =
           (DateTime.now().difference(birthday!).inDays / 365).round();

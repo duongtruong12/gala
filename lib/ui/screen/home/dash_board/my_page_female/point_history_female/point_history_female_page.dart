@@ -31,6 +31,9 @@ class PointHistoryFemaleMobilePage extends StatelessWidget {
 
   Widget _buildList() {
     return PagingListCustom(
+      onScrollDown: controller.onScrollDown,
+      onRefresh: controller.onRefresh,
+      isEmpty: controller.isEmpty.value,
       childWidget: controller.list
           .map((element) => ItemPointHistory(model: element))
           .toList(),
@@ -49,14 +52,10 @@ class PointHistoryFemaleMobilePage extends StatelessWidget {
           ),
           const SizedBox(height: kDefaultPadding),
           Expanded(child: Obx(() {
-            return controller.loading.value
-                ? const Center(
-                    child: SizedBox(
-                        height: 24,
-                        width: 24,
-                        child: CircularProgressIndicator()),
-                  )
-                : _buildList();
+            if (controller.list.isEmpty) {
+              return textEmpty();
+            }
+            return _buildList();
           })),
         ],
       ),

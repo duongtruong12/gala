@@ -5,6 +5,7 @@ import 'package:base_flutter/model/city_model.dart';
 import 'package:base_flutter/model/message_group_model.dart';
 import 'package:base_flutter/model/ticket_model.dart';
 import 'package:base_flutter/model/user_model.dart';
+import 'package:base_flutter/ui/screen/home/dash_board/my_page_female/user_guide_female/user_guide_female_controller.dart';
 import 'package:base_flutter/utils/const.dart';
 import 'package:base_flutter/utils/constant.dart';
 import 'package:base_flutter/utils/global/globals_functions.dart';
@@ -284,6 +285,7 @@ class FireStoreProvider {
   Future<List<DocumentSnapshot<Map<String, dynamic>>>> getListUser({
     DocumentSnapshot? lastDocument,
     TypeAccount? sort,
+    bool sortPeopleApprove = false,
   }) async {
     loading.value = true;
     final list = <DocumentSnapshot<Map<String, dynamic>>>[];
@@ -295,11 +297,18 @@ class FireStoreProvider {
         list.addAll(querySnapshot.docs);
       }
 
-      final query = fireStore
+      var query = fireStore
           .collection(FirebaseCollectionName.users)
           .where('typeAccount', isEqualTo: sort?.name)
           .orderBy('createdDate', descending: true)
           .limit(kPagingSize);
+      if (sortPeopleApprove) {
+        query = fireStore
+            .collection(FirebaseCollectionName.users)
+            .where('typeAccount', isEqualTo: sort?.name)
+            .orderBy('createdDate', descending: true)
+            .where('approveTickets', isEqualTo: []).limit(kPagingSize);
+      }
       if (lastDocument != null) {
         await query.startAfterDocument(lastDocument).get().then(_parseList);
       } else {
@@ -342,6 +351,7 @@ class FireStoreProvider {
       ticket.id = ticketId;
       ticket.createdUser = user.value?.id;
       ticket.createdDate = now.toDate();
+      ticket.status = TicketStatus.created.name;
       ticket.expectedPoint = ticket.calculateTotalPrice();
       if (ticket.startTimeAfter != StartTimeAfter.customMinutes.name) {
         if (ticket.startTimeAfter == StartTimeAfter.minutes30.name) {
@@ -594,6 +604,52 @@ class FireStoreProvider {
     }
 
     return ticket;
+  }
+
+  StreamSubscription? listenerHistoryTicker(
+      {required ValueSetter<QuerySnapshot<Map<String, dynamic>>> valueChanged,
+      required TicketPage ticketPage,
+      required int page}) {
+    StreamSubscription? streamSubscription;
+    try {
+      if (ticketPage == TicketPage.apply) {
+        streamSubscription = fireStore
+            .collection(FirebaseCollectionName.ticket)
+            .where('peopleApply', arrayContains: user.value?.id)
+            .where('status', isEqualTo: TicketStatus.created.name)
+            .limit(page * kPagingSize)
+            .snapshots()
+            .listen((event) async {
+          valueChanged(event);
+        });
+      } else if (ticketPage == TicketPage.current) {
+        streamSubscription = fireStore
+            .collection(FirebaseCollectionName.ticket)
+            .where('peopleApprove', arrayContains: user.value?.id)
+            .where('status', isEqualTo: TicketStatus.done.name)
+            .limit(page * kPagingSize)
+            .snapshots()
+            .listen((event) async {
+          valueChanged(event);
+        });
+      } else {
+        streamSubscription = fireStore
+            .collection(FirebaseCollectionName.ticket)
+            .where('peopleApprove', arrayContains: user.value?.id)
+            .where('status', whereIn: [
+              TicketStatus.cancelled.name,
+              TicketStatus.finish.name
+            ])
+            .limit(page * kPagingSize)
+            .snapshots()
+            .listen((event) async {
+              valueChanged(event);
+            });
+      }
+    } on FirebaseException catch (e) {
+      throw FireStoreException(e.code, e.message, e.stackTrace);
+    }
+    return streamSubscription;
   }
 
   StreamSubscription? listenerListTicker(
@@ -1068,11 +1124,91 @@ class FireStoreProvider {
         'status': TicketStatus.finish.name,
       });
 
+      for (var element in ticket!.peopleApprove) {
+        batch.update(
+            fireStore.collection(FirebaseCollectionName.users).doc(element), {
+          'approveTickets': FieldValue.arrayRemove([ticket.id]),
+        });
+      }
+
       await batch.commit();
     } on FirebaseException catch (e) {
       throw FireStoreException(e.code, e.message, e.stackTrace);
     } finally {
       loading.value = false;
+    }
+  }
+
+  //Point history
+  Future<List<DocumentSnapshot<Map<String, dynamic>>>> getPointHistory(
+      {DocumentSnapshot? lastDocument}) async {
+    loading.value = true;
+    final list = <DocumentSnapshot<Map<String, dynamic>>>[];
+    try {
+      _parseList(QuerySnapshot<Map<String, dynamic>> querySnapshot) {
+        if (querySnapshot.docs.isEmpty) {
+          return;
+        }
+        list.addAll(querySnapshot.docs);
+      }
+
+      final query = fireStore
+          .collection(FirebaseCollectionName.pointsHistory)
+          .doc(user.value?.id)
+          .collection(FirebaseCollectionName.collectionPointsHistory);
+      if (lastDocument != null) {
+        await query
+            .orderBy('createTime', descending: true)
+            .limit(kPagingSize)
+            .startAfterDocument(lastDocument)
+            .get()
+            .then(_parseList);
+      } else {
+        await query
+            .orderBy('createTime', descending: true)
+            .limit(kPagingSize)
+            .get()
+            .then(_parseList);
+      }
+    } on FirebaseException catch (e) {
+      throw FireStoreException(e.code, e.message, e.stackTrace);
+    } finally {
+      loading.value = false;
+    }
+    return list;
+  }
+
+  //Add payment info
+  Future<void> addPoint({required int? point}) async {
+    try {
+      final batch = fireStore.batch();
+      final now = Timestamp.now();
+      final id = generateMd5('${now.millisecondsSinceEpoch}');
+
+      batch.update(
+          fireStore
+              .collection(FirebaseCollectionName.users)
+              .doc(user.value?.id),
+          {'currentPoint': FieldValue.increment(point ?? 0)});
+
+      batch.set(
+          fireStore
+              .collection(FirebaseCollectionName.pointsHistory)
+              .doc(user.value?.id)
+              .collection(FirebaseCollectionName.collectionPointsHistory)
+              .doc(id),
+          PointCostModel(
+            id: id,
+            point: point,
+            createTime: now.toDate(),
+            reason: PointReason.buy.name,
+            status: TransferStatus.received.name,
+          ).toJson(),
+          SetOptions(merge: true));
+
+      await batch.commit();
+    } on FirebaseException catch (e) {
+      throw FireStoreException(e.code, e.message, e.stackTrace);
     }
   }
 }

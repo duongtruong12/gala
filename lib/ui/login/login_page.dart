@@ -59,6 +59,9 @@ class LoginMobilePage extends StatelessWidget {
       controller: controller.passController,
       validator: Validate.passwordValidate,
       obscureText: true,
+      onFieldSubmitted: (value) {
+        controller.onLogin();
+      },
       decoration: InputDecoration(
           hintText: 'password'.tr,
           contentPadding:

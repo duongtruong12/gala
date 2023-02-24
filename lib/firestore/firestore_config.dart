@@ -8,4 +8,5 @@ class FirebaseCollectionName {
   static const city = 'city';
   static const state = 'state';
   static const ticket = 'ticket';
+  static const paymentInfo = 'paymentInfo';
 }

@@ -1,3 +1,4 @@
+import 'package:base_flutter/components/custom_view.dart';
 import 'package:base_flutter/model/ticket_model.dart';
 import 'package:base_flutter/routes/app_pages.dart';
 import 'package:base_flutter/ui/screen/home/dash_board/call/call_controller.dart';
@@ -46,6 +47,14 @@ class ConfirmCallController extends GetxController {
   }
 
   Future<void> onConfirm() async {
+    if (ticket.value.calculateTotalPrice() > (user.value?.currentPoint ?? 0)) {
+      showConfirmDialog(
+          content: 'not_enough_point'.tr,
+          onPressedConfirm: () {
+            Get.toNamed(Routes.purchasePoint, id: RouteId.call);
+          });
+      return;
+    }
     await fireStoreProvider
         .createTicket(ticket: ticket.value)
         .then((value) async {

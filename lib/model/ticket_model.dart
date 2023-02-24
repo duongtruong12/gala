@@ -53,7 +53,7 @@ class Ticket {
   List peopleApprove;
 
   String getTicketName() {
-    return '$cityName $stateName ${formatDateTime(date: startTime, formatString: DateTimeFormatString.hhmm)}~';
+    return '$cityName $stateName ${formatDateTime(date: startTime, formatString: DateTimeFormatString.textBehindHour)}~';
   }
 
   factory Ticket.fromJson(Map<String, dynamic> json) => Ticket(

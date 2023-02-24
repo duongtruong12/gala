@@ -1,3 +1,4 @@
+import 'package:base_flutter/components/custom_view.dart';
 import 'package:base_flutter/model/ticket_model.dart';
 import 'package:base_flutter/routes/app_pages.dart';
 import 'package:base_flutter/utils/constant.dart';
@@ -48,23 +49,31 @@ class TicketDetailController extends GetxController {
 
   Future<void> cancelTicket() async {
     if (model.value == null) return;
-    await fireStoreProvider.cancelTicket(ticket: model.value!);
-    model.value?.status = TicketStatus.cancelled.name;
-    model.value?.peopleApprove.clear();
-    model.refresh();
-    showInfo('ticket_has_cancelled_successfully'.tr);
+    showConfirmDialog(
+        content: 'confirm_cancel_ticket'.tr,
+        onPressedConfirm: () async {
+          await fireStoreProvider.cancelTicket(ticket: model.value!);
+          model.value?.status = TicketStatus.cancelled.name;
+          model.value?.peopleApprove.clear();
+          model.refresh();
+          showInfo('ticket_has_cancelled_successfully'.tr);
+        });
   }
 
   Future<void> createTicket() async {
     if (model.value == null ||
         model.value?.peopleApprove.length != model.value?.numberPeople) return;
-    await fireStoreProvider
-        .createMessageGroupTicket(ticket: model.value!)
-        .then((value) {
-      model.value?.status = TicketStatus.done.name;
-      model.refresh();
-      showInfo('ticket_has_cancelled_successfully'.tr);
-    });
+    showConfirmDialog(
+        content: 'confirm_approve_ticket'.tr,
+        onPressedConfirm: () async {
+          await fireStoreProvider
+              .createMessageGroupTicket(ticket: model.value!)
+              .then((value) {
+            model.value?.status = TicketStatus.done.name;
+            model.refresh();
+            showInfo('ticket_has_cancelled_successfully'.tr);
+          });
+        });
   }
 
   Future<void> onSwitchMessageDetail(String? id) async {

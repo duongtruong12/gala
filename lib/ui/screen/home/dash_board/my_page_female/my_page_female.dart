@@ -88,6 +88,13 @@ class MyPageFemaleMobilePage extends StatelessWidget {
               fontSize: 18),
         ),
       ),
+      const SizedBox(height: 4),
+      Center(
+        child: Text(
+          formatCurrency(user.value?.currentPoint),
+          style: tNormalTextStyle.copyWith(color: kTextColorPrimary),
+        ),
+      ),
       const SizedBox(height: kDefaultPadding),
       Card(
         color: kTextColorSecond,

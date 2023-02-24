@@ -37,7 +37,7 @@ class PointWidget extends StatelessWidget {
             RichText(
                 text: TextSpan(children: [
               TextSpan(
-                  text: '10000',
+                  text: formatCurrency(point, symbol: ''),
                   style: tNormalTextStyle.copyWith(
                       color: getColorPrimary(),
                       fontSize: 32,

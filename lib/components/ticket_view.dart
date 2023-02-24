@@ -16,11 +16,9 @@ class TicketView extends StatelessWidget {
   const TicketView({
     super.key,
     required this.model,
-    this.onSwitchChatDetail,
   });
 
   final Ticket model;
-  final VoidCallback? onSwitchChatDetail;
 
   Widget _buildItemIcon({required String content, required String icon}) {
     return Row(
@@ -40,32 +38,41 @@ class TicketView extends StatelessWidget {
     String text = 'apply'.tr;
     Color color = kPrimaryColorFemale;
 
-    if (user.value?.applyTickets.contains(model.id) == true) {
+    if (model.peopleApply.contains(user.value?.id) == true) {
       text = 'already_apply'.tr;
       color = kGrayColorFemale;
     }
 
-    if (model.status == TicketStatus.done.name &&
-        user.value?.applyTickets.contains(model.id) == true) {
+    if ((model.status == TicketStatus.done.name ||
+            model.status == TicketStatus.finish.name) &&
+        (model.peopleApply.contains(user.value?.id) == true ||
+            model.peopleApprove.contains(user.value?.id) == true)) {
       text = 'chat_group'.tr;
-      color = kPrimaryColorFemale;
+      color = kColorWaiting;
     }
 
     return CustomButton(
         onPressed: () async {
           if (model.status == TicketStatus.created.name &&
-              user.value?.applyTickets.contains(model.id) == false) {
+              model.peopleApply.contains(user.value?.id) == false) {
             await fireStoreProvider.applyTicket(model);
           }
-          if (user.value?.applyTickets.contains(model.id) == true) {
-            if (onSwitchChatDetail != null) {
-              onSwitchChatDetail!();
+
+          if (model.peopleApply.contains(user.value?.id) == true ||
+              model.peopleApprove.contains(user.value?.id) == true) {
+            late String messageGroupId;
+            if (model.status == TicketStatus.created.name) {
+              messageGroupId = generateIdMessage(['admin', user.value!.id!]);
             } else {
-              final messageGroupId =
-                  generateIdMessage(['admin', user.value!.id!]);
-              await Get.toNamed(Routes.messageDetail,
-                  arguments: true, parameters: {'id': messageGroupId});
+              final listUser = <String>[
+                ...model.peopleApprove,
+                model.createdUser!
+              ];
+              messageGroupId = generateIdMessage([...listUser, model.id!]);
             }
+
+            await Get.toNamed(Routes.messageDetail,
+                arguments: true, parameters: {'id': messageGroupId});
           }
         },
         color: color,

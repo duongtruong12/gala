@@ -1,5 +1,7 @@
 import 'package:base_flutter/model/faq_model.dart';
+import 'package:base_flutter/routes/app_pages.dart';
 import 'package:base_flutter/utils/global/globals_functions.dart';
+import 'package:base_flutter/utils/global/globals_variable.dart';
 import 'package:get/get.dart';
 
 class UserGuideController extends GetxController {
@@ -30,5 +32,11 @@ class UserGuideController extends GetxController {
 
   void onPressedBack() {
     Get.back(id: getRouteMyPage());
+  }
+
+  Future<void> onSwitchMessageDetail() async {
+    final messageGroupId = generateIdMessage(['admin', user.value?.id ?? '']);
+    Get.toNamed(Routes.messageDetail,
+        arguments: true, parameters: {'id': messageGroupId});
   }
 }

@@ -1,56 +1,39 @@
-import 'package:dio/dio.dart';
+import 'dart:convert';
 import 'package:get/get.dart';
 
 import '../../utils/global/globals_functions.dart';
-import '../../utils/global/globals_variable.dart';
-
-final interceptor = InterceptorsWrapper(
-  onRequest: (options, handler) {
-    // options.headers['Authorization'] =
-    //     'Bearer ' + (global_variable.idToken ?? '');
-    loading.value = true;
-    return handler.next(options);
-  },
-  onResponse: (options, handler) {
-    loading.value = false;
-    if (options.requestOptions.baseUrl == ApiProvider.url) {
-      if (options.data['status'] == 'failed') {
-        final message = options.data['message'];
-        if (message != null && message['data'] != null) {
-          final data = message['data'];
-          if (data != null && data['message'] != null) {
-            showError('${data['message']}');
-          } else {
-            showError('error_message'.tr);
-          }
-        } else {
-          showError('error_message'.tr);
-        }
-      } else {
-        return handler.next(options);
-      }
-    } else {
-      return handler.next(options);
-    }
-  },
-  onError: (e, handler) {
-    showError('error_message'.tr);
-    loading.value = false;
-    return handler.next(e);
-  },
-);
+import 'api_config.dart';
+import 'package:http/http.dart' as http;
 
 class ApiProvider {
-  static String url = 'http://113.160.132.252:8888/';
-  static BaseOptions baseOptions = BaseOptions(baseUrl: url);
+  final client = http.Client();
 
-  final Dio _dio = Dio(baseOptions)..interceptors.add(interceptor);
+  static String url = 'https://asia-northeast1-claha-pato.cloudfunctions.net/';
 
   Future<dynamic> _post(String path, {data}) async {
-    return (await _dio.post(path, data: data)).data;
+    try {
+      var response = await client.post(
+          Uri.parse(
+            '$url${ApiConfig.api[path]}',
+          ),
+          headers: {"Content-Type": "application/json"},
+          body: data);
+      if (response.statusCode == 200) {
+        var decodedResponse = jsonDecode(response.body) as Map;
+        return decodedResponse;
+      }
+    } catch (e) {
+      showError('error_default'.tr);
+    } finally {
+      client.close();
+    }
   }
 
-  Future<dynamic> _get(String path, {queryParameters}) async {
-    return (await _dio.get(path, queryParameters: queryParameters)).data;
+  // Future<dynamic> _get(String path, {queryParameters}) async {
+  //   return (await _dio.get(path, queryParameters: queryParameters)).data;
+  // }
+
+  Future<dynamic> stripePayment(data) {
+    return _post('stripePayment', data: data);
   }
 }

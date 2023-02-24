@@ -44,7 +44,9 @@ class SelectUserDialogState extends State<SelectUserDialog> {
 
   Future<void> getData() async {
     final listDoc = await fireStoreProvider.getListUser(
-        lastDocument: lastDoc, sort: TypeAccount.caster);
+        lastDocument: lastDoc,
+        sort: TypeAccount.caster,
+        sortPeopleApprove: true);
     if (listDoc.isNotEmpty) {
       lastDoc = listDoc.last;
       for (var value in listDoc) {
@@ -84,13 +86,13 @@ class SelectUserDialogState extends State<SelectUserDialog> {
             Checkbox(
                 value: mapSelect[userData.id] == true,
                 onChanged: (value) {
-                  if (widget.maxUser == null ||
-                      widget.maxUser == mapSelect.length) {
-                    return;
-                  }
                   if (mapSelect[userData.id] == true) {
                     mapSelect.remove(userData.id);
                   } else {
+                    if (widget.maxUser == null ||
+                        widget.maxUser == mapSelect.length) {
+                      return;
+                    }
                     mapSelect.putIfAbsent(userData.id, () => true);
                   }
                   if (mounted) setState(() {});
@@ -164,7 +166,7 @@ class SelectUserDialogState extends State<SelectUserDialog> {
   @override
   Widget build(BuildContext context) {
     return SizedBox(
-      width: Get.width / 2,
+      width: Get.width * 0.7,
       child: Padding(
         padding: const EdgeInsets.all(kDefaultPadding),
         child: Column(
@@ -193,11 +195,16 @@ class SelectUserDialogState extends State<SelectUserDialog> {
                             list.map((e) => _buildItemUser(e)).toList(),
                       )),
             CustomButton(
+                color: kPrimaryColor,
+                borderColor: kPrimaryColor,
                 onPressed: () async {
                   Get.back(closeOverlays: true);
                   widget.setter(mapSelect.keys.toList());
                 },
-                widget: Text('confirm'.tr))
+                widget: Text(
+                  'confirm'.tr,
+                  style: tButtonWhiteTextStyle.copyWith(color: kTextColorDark),
+                ))
           ],
         ),
       ),
