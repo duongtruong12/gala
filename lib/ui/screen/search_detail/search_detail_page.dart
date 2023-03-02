@@ -1,7 +1,10 @@
 import 'package:base_flutter/components/background.dart';
 import 'package:base_flutter/components/custom_appbar.dart';
 import 'package:base_flutter/components/custom_button.dart';
+import 'package:base_flutter/components/custom_view.dart';
+import 'package:base_flutter/components/paging_grid.dart';
 import 'package:base_flutter/ui/responsive.dart';
+import 'package:base_flutter/ui/screen/home/dash_board/search/components/item_target.dart';
 import 'package:base_flutter/utils/const.dart';
 import 'package:base_flutter/utils/global/globals_functions.dart';
 import 'package:base_flutter/utils/global/globals_variable.dart';
@@ -16,43 +19,46 @@ class SearchDetail extends GetView<SearchDetailController> {
   Widget build(BuildContext context) {
     return Background(
         child: Responsive(
-      mobile: SearchDetailMobilePage(
-          controller: controller, femaleGender: casterAccount.value),
-      desktop: SearchDetailMobilePage(
-          controller: controller, femaleGender: casterAccount.value),
+      mobile: SearchDetailMobilePage(controller: controller),
+      desktop: SearchDetailMobilePage(controller: controller),
     ));
   }
 }
 
 class SearchDetailMobilePage extends StatelessWidget {
-  const SearchDetailMobilePage(
-      {super.key, required this.controller, this.femaleGender = false});
+  const SearchDetailMobilePage({super.key, required this.controller});
 
   final SearchDetailController controller;
-  final bool femaleGender;
 
-  Widget _buildSelectSearch(String search) {
-    return Row(
-      mainAxisSize: MainAxisSize.max,
-      children: [
-        Expanded(
-          child: Text(
-            search.tr,
-            style: tNormalTextStyle.copyWith(
-                fontWeight: FontWeight.w500, color: getTextColorSecond()),
-          ),
-        ),
-        Row(
+  Widget _buildItemInformation({
+    required String label,
+    required String? content,
+    required VoidCallback onPressed,
+  }) {
+    return InkWell(
+      onTap: onPressed,
+      child: Padding(
+        padding: const EdgeInsets.only(top: kDefaultPadding),
+        child: Row(
+          crossAxisAlignment: CrossAxisAlignment.center,
+          mainAxisAlignment: MainAxisAlignment.center,
           children: [
+            Expanded(
+                child: Text(
+              label,
+              style: tNormalTextStyle.copyWith(color: getTextColorSecond()),
+            )),
             Text(
-              'unselected'.tr,
-              style: tNormalTextStyle.copyWith(color: getColorPrimary()),
+              content ?? 'not_entered'.tr,
+              style: tNormalTextStyle.copyWith(
+                  color: getTextColorSecond(),
+                  fontSize: 12,
+                  fontWeight: FontWeight.w500),
             ),
-            const SizedBox(width: 4),
-            Icon(Icons.keyboard_arrow_down_rounded, color: getColorPrimary())
+            getSvgImage('ic_arrow_down', color: getColorPrimary())
           ],
-        )
-      ],
+        ),
+      ),
     );
   }
 
@@ -67,38 +73,76 @@ class SearchDetailMobilePage extends StatelessWidget {
         ),
       ),
       const SizedBox(height: 16),
-      _buildSelectSearch('address'.tr),
+      Obx(() {
+        return _buildItemInformation(
+            label: 'address'.tr,
+            content: controller.address.value,
+            onPressed: () {
+              controller.showInput(
+                  type: 'address',
+                  label: 'address'.tr,
+                  initText: controller.address.value);
+            });
+      }),
       const SizedBox(height: 16),
       const Divider(),
       const SizedBox(height: 16),
-      _buildSelectSearch('birth_place'.tr),
+      Obx(() {
+        return _buildItemInformation(
+            label: 'birth_place'.tr,
+            content: controller.birthPlace.value,
+            onPressed: () {
+              controller.showInput(
+                  type: 'birthPlace',
+                  label: 'birth_place'.tr,
+                  initText: controller.birthPlace.value);
+            });
+      }),
       const SizedBox(height: 16),
       const Divider(),
       const SizedBox(height: 16),
-      _buildSelectSearch('age_drop_down'.tr),
+      Obx(() {
+        return _buildItemInformation(
+            label: 'age_drop_down'.tr,
+            content:
+                controller.age.value != null ? '${controller.age.value}' : null,
+            onPressed: () {
+              controller.showInput(
+                numeric: true,
+                type: 'age',
+                label: 'age_drop_down'.tr,
+                initText: controller.age.value != null
+                    ? '${controller.age.value}'
+                    : null,
+              );
+            });
+      }),
       const SizedBox(height: 16),
       const Divider(),
       const SizedBox(height: 16),
-      _buildSelectSearch('height'.tr),
+      Obx(() {
+        return _buildItemInformation(
+            label: 'height'.tr,
+            content: controller.height.value != null
+                ? '${controller.height.value}'
+                : null,
+            onPressed: () {
+              controller.showInput(
+                numeric: true,
+                type: 'height',
+                label: 'height'.tr,
+                initText: controller.height.value != null
+                    ? '${controller.height.value}'
+                    : null,
+              );
+            });
+      }),
       const SizedBox(height: 16),
       const Divider(),
       const SizedBox(height: 24),
-      Text(
-        'tag'.tr,
-        style: tNormalTextStyle.copyWith(
-          color: getColorPrimary(),
-          fontSize: 16,
-        ),
-      ),
-      const SizedBox(height: 16),
-      Text(
-        'tag_content'.tr,
-        style: tNormalTextStyle.copyWith(color: getTextColorSecond()),
-      ),
-      const SizedBox(height: 32),
       CustomButton(
         onPressed: () async {
-          Get.back(id: getRouteSearch());
+          controller.onRefresh(1);
         },
         widget: Text(
           'search_condition'.tr,
@@ -106,13 +150,39 @@ class SearchDetailMobilePage extends StatelessWidget {
         ),
       )
     ];
-    return ListView.builder(
-      padding: const EdgeInsets.all(16),
-      itemCount: list.length,
-      itemBuilder: (BuildContext context, int index) {
-        return list[index];
-      },
-    );
+
+    return Obx(() {
+      if (controller.searchState.value) {
+        if (controller.list.isEmpty) {
+          return textEmpty();
+        }
+        return Padding(
+          padding: const EdgeInsets.all(kDefaultPadding),
+          child: PagingGridCustom(
+              crossAxisCount: 2,
+              crossAxisSpacing: 4,
+              mainAxisSpacing: 4,
+              onScrollDown: controller.onScrollDown,
+              onRefresh: controller.onRefresh,
+              childWidget: controller.list
+                  .map((element) => ItemTarget(
+                        model: element,
+                        femaleGender: casterAccount.value,
+                        onPressed: () {
+                          controller.onSwitchUserDetail(element.id);
+                        },
+                      ))
+                  .toList()),
+        );
+      }
+      return ListView.builder(
+        padding: const EdgeInsets.all(16),
+        itemCount: list.length,
+        itemBuilder: (BuildContext context, int index) {
+          return list[index];
+        },
+      );
+    });
   }
 
   @override
@@ -121,27 +191,12 @@ class SearchDetailMobilePage extends StatelessWidget {
       appBar: appbarCustom(
         title: Text('search'.tr),
         leading: InkWell(
-          onTap: () {
-            Get.back(id: getRouteSearch());
-          },
+          onTap: controller.onPressedBack,
           child: const Icon(
             Icons.close_rounded,
             size: 24,
           ),
         ),
-        actions: [
-          Center(
-            child: Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 16),
-              child: Text(
-                'save'.tr,
-                style: tNormalTextStyle.copyWith(
-                    fontSize: 12,
-                    color: femaleGender ? kTextColorSecond : kTextColorPrimary),
-              ),
-            ),
-          ),
-        ],
       ),
       body: _buildBody(),
     );

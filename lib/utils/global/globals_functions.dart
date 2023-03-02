@@ -19,6 +19,23 @@ import 'package:url_launcher/url_launcher.dart';
 import '../constant.dart';
 import 'globals_variable.dart';
 
+//ignore: avoid_web_libraries_in_flutter
+import 'dart:html';
+
+updateIcon(String assetIcon) {
+  LinkElement link = (document.querySelector("link[rel*='icon']") ??
+      document.createElement('link')) as LinkElement;
+  link.type = 'image/x-icon';
+  link.rel = 'shortcut icon';
+  link.href = assetIcon;
+}
+
+changeAppName({required String label}) {
+  if (Get.context == null) return;
+  SystemChrome.setApplicationSwitcherDescription(ApplicationSwitcherDescription(
+      label: label, primaryColor: Theme.of(Get.context!).primaryColor.value));
+}
+
 showInfo(String message) {
   if (Get.context != null) {
     ScaffoldMessenger.of(Get.context!).showSnackBar(

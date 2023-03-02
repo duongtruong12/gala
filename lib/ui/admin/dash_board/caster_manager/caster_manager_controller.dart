@@ -60,7 +60,8 @@ class CasterManagerController extends GetxController {
                   displayName: value.displayName,
                   realName: value.realName,
                   typeAccount: TypeAccount.caster,
-                  id: user.uid);
+                  id: user.uid,
+                  userId: value.userId);
               if (success) {
                 value.id = user.uid;
                 list.add(value);

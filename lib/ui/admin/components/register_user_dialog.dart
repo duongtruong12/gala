@@ -3,6 +3,7 @@ import 'package:base_flutter/model/user_model.dart';
 import 'package:base_flutter/utils/const.dart';
 import 'package:base_flutter/utils/constant.dart';
 import 'package:base_flutter/utils/global/globals_functions.dart';
+import 'package:base_flutter/utils/global/globals_variable.dart';
 import 'package:base_flutter/utils/validate.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -23,10 +24,12 @@ class RegisterUserDialog extends StatefulWidget {
 
 class RegisterUserDialogState extends State<RegisterUserDialog> {
   final _formKey = GlobalKey<FormState>();
+  final _userIdController = TextEditingController();
   final _realNameController = TextEditingController();
   final _emailController = TextEditingController();
   final _passwordController = TextEditingController();
   final _displayNameController = TextEditingController();
+  String? errorUserId;
 
   Widget _buildAppBar() {
     return Stack(
@@ -50,6 +53,7 @@ class RegisterUserDialogState extends State<RegisterUserDialog> {
     required TextEditingController controller,
     required String? Function(String?)? validator,
     required String label,
+    String? error,
   }) {
     return TextFormField(
       controller: controller,
@@ -58,6 +62,7 @@ class RegisterUserDialogState extends State<RegisterUserDialog> {
       validator: validator,
       decoration: InputDecoration(
           labelText: label,
+          errorText: error,
           labelStyle: tNormalTextStyle.copyWith(
               fontSize: 12, fontWeight: FontWeight.w500),
           enabledBorder: defaultBorder.copyWith(
@@ -86,6 +91,23 @@ class RegisterUserDialogState extends State<RegisterUserDialog> {
             _buildAppBar(),
             const SizedBox(height: kDefaultPadding * 2),
             _buildTextFormField(
+              controller: _userIdController,
+              label: 'user_id'.tr,
+              validator: Validate.validateUserId,
+            ),
+            if (errorUserId != null)
+              Column(
+                children: [
+                  const SizedBox(height: 4),
+                  Text(
+                    errorUserId ?? '',
+                    style: tNormalTextStyle.copyWith(
+                        color: Colors.red, fontSize: 10),
+                  ),
+                ],
+              ),
+            const SizedBox(height: kDefaultPadding),
+            _buildTextFormField(
               controller: _displayNameController,
               label: 'nick_name'.tr,
               validator: _validatorNickName,
@@ -111,8 +133,19 @@ class RegisterUserDialogState extends State<RegisterUserDialog> {
             const SizedBox(height: kDefaultPadding),
             CustomButton(
                 onPressed: () async {
+                  errorUserId = null;
+                  if (mounted) {
+                    setState(() {});
+                  }
                   if (_formKey.currentState?.validate() == true) {
+                    if (!await fireStoreProvider
+                        .checkUserId(_userIdController.text.trim())) {
+                      errorUserId = 'user_id_exist'.tr;
+                      if (mounted) setState(() {});
+                      return;
+                    }
                     widget.setter(UserModel(
+                      userId: _userIdController.text.trim(),
                       email: _emailController.text.trim(),
                       password: _passwordController.text.trim(),
                       displayName: _displayNameController.text.trim(),

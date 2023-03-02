@@ -29,8 +29,6 @@ class FieldInput extends StatelessWidget {
       color: casterAccount.value ? kPrimaryBackgroundColorFemale : kMenuBk,
       child: Row(
         children: [
-          getSvgImage('ic_add_input'),
-          const SizedBox(width: kDefaultPadding),
           Expanded(
             child: TextField(
               controller: controller,

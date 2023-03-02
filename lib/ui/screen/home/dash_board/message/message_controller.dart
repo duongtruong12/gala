@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:base_flutter/model/message_group_model.dart';
 import 'package:base_flutter/routes/app_pages.dart';
 import 'package:base_flutter/utils/const.dart';
+import 'package:base_flutter/utils/global/globals_functions.dart';
 import 'package:base_flutter/utils/global/globals_variable.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:get/get.dart';
@@ -53,6 +54,14 @@ class MessageController extends GetxController {
             }
             list.addAll(listBase);
           }
+          unread.value = checkListNotSeen();
+          if (unread.value > 0) {
+            changeAppName(label: 'Claha (${unread.value})');
+            updateIcon('assets/favicon_red.png');
+          } else {
+            changeAppName(label: 'Claha');
+            updateIcon('assets/favicon.png');
+          }
         });
 
     list.refresh();
@@ -64,11 +73,15 @@ class MessageController extends GetxController {
     super.onClose();
   }
 
+  int checkListNotSeen() {
+    return listBase.where((element) => element.userNotSeen() == true).length;
+  }
+
   Future<void> onSwitchMessageDetail(String? id) async {
-    streamSubscription?.pause();
+    // streamSubscription?.pause();
     await Get.toNamed(Routes.messageDetail,
         arguments: true, parameters: {'id': id ?? ''});
-    streamSubscription?.resume();
+    // streamSubscription?.resume();
   }
 
   void onChanged(String str) {

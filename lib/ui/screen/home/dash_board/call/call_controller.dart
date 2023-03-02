@@ -86,7 +86,7 @@ class CallController extends GetxController {
           return CustomInput(
             numeric: true,
             myValueSetter: (str) async {
-              ticket.value.numberPeople = int.parse(str);
+              ticket.value.numberPeople = int.parse(str!);
               ticket.refresh();
             },
             validate: (str) {
@@ -156,6 +156,7 @@ class CallController extends GetxController {
                     valueSetter: (DateTime value) {
                       date = value;
                     },
+                    label: 'add_payment_title'.tr,
                   ),
                 );
                 if (date != null) {

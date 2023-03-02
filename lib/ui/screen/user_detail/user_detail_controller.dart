@@ -9,6 +9,7 @@ class UserDetailController extends GetxController {
   Rxn<UserModel> model = Rxn<UserModel>();
   bool? canPop;
   final currentSelect = 0.obs;
+  final setFavorite = false.obs;
 
   @override
   void onInit() async {
@@ -36,5 +37,9 @@ class UserDetailController extends GetxController {
         Get.offAndToNamed(Routes.home);
       }
     }
+  }
+
+  Future<void> onTapFavorite() async {
+    setFavorite.value = !setFavorite.value;
   }
 }

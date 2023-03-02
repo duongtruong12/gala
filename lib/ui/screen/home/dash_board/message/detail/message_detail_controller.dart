@@ -130,6 +130,7 @@ class MessageDetailController extends GetxController {
             scrollDown = false;
             return;
           }
+          fireStoreProvider.uploadSeenMessage(messageGroup: model.value?.id);
           await Future.delayed(const Duration(milliseconds: 100));
           scrollController.jumpTo(scrollController.position.maxScrollExtent);
         }
@@ -155,10 +156,9 @@ class MessageDetailController extends GetxController {
     if (model.value?.id == null || str.isEmpty) {
       return;
     }
+
     await fireStoreProvider.sendMessage(
-        content: str,
-        messageGroupId: model.value!.id!,
-        type: SendMessageType.text);
+        content: str, model: model.value, type: SendMessageType.text);
   }
 
   void addScrollListener() {
@@ -200,11 +200,11 @@ class MessageDetailController extends GetxController {
   }
 
   Future<void> countTicketTime() async {
-    final model = mapCountTime[user.value?.id];
-    if (model == null) {
+    final countModel = mapCountTime[user.value?.id];
+    if (countModel == null) {
       return;
     }
-    if (model.startDate == null) {
+    if (countModel.startDate == null) {
       await fireStoreProvider.startCountTimeTicket(messageGroupId: id);
     } else {
       if (ticket == null || mapCountTime[user.value?.id] == null) return;
@@ -217,7 +217,9 @@ class MessageDetailController extends GetxController {
         mapCountTime[user.value?.id]?.endDate = DateTime.now();
         if (messageGroupEnd() && ticket?.status == TicketStatus.done.name) {
           await fireStoreProvider.closeTicket(
-              messageGroupId: id, ticket: ticket);
+              messageGroupId: id,
+              ticket: ticket,
+              userIds: model.value?.userIds ?? []);
         }
       });
     }

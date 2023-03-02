@@ -15,6 +15,7 @@ final casterAccount = RxBool(false);
 final fireStoreProvider = FireStoreProvider();
 final apiProvider = ApiProvider();
 final picker = ImagePicker();
+final unread = 0.obs;
 final logger = Logger(
     printer:
         PrettyPrinter(methodCount: 1, printTime: false, printEmojis: true));

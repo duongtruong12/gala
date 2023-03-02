@@ -1,9 +1,39 @@
 import 'package:base_flutter/components/custom_button.dart';
 import 'package:base_flutter/utils/const.dart';
+import 'package:base_flutter/utils/constant.dart';
 import 'package:base_flutter/utils/global/globals_functions.dart';
 import 'package:base_flutter/utils/global/globals_variable.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+
+Widget getTransferRequestStatus({required String? status}) {
+  Color getColorByStatus(String? status) {
+    if (TransferStatus.waiting.name == status) {
+      return kColorWaiting;
+    } else if (TransferStatus.received.name == status) {
+      return const Color(0xFF07C6D6);
+    } else if (TransferStatus.alreadyTransfer.name == status) {
+      return const Color(0xFF0FB783);
+    } else {
+      return const Color(0xFFF85959);
+    }
+  }
+
+  return Container(
+    decoration: BoxDecoration(
+        color: getColorByStatus(status),
+        borderRadius: const BorderRadius.all(Radius.circular(22))),
+    padding: const EdgeInsets.symmetric(vertical: 4, horizontal: kSmallPadding),
+    child: FittedBox(
+      fit: BoxFit.scaleDown,
+      child: Text(
+        'transfer_status_$status'.tr,
+        maxLines: 1,
+        style: tButtonWhiteTextStyle.copyWith(fontSize: 14),
+      ),
+    ),
+  );
+}
 
 Widget textEmpty({String? label}) {
   return Padding(

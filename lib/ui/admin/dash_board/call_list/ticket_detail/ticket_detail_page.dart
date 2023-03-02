@@ -234,7 +234,7 @@ class TicketDetailWebPage extends StatelessWidget {
                     return UserItem(
                       model: userData,
                       onPressed: () {
-                        controller.onSwitchFemaleDetail(e);
+                        controller.onSwitchMessageDetail(e);
                       },
                     );
                   });
@@ -311,7 +311,7 @@ class TicketDetailWebPage extends StatelessWidget {
                               return UserItem(
                                 model: userData,
                                 onPressed: () {
-                                  controller.onSwitchFemaleDetail(element);
+                                  controller.onSwitchMessageDetail(element);
                                 },
                               );
                             });

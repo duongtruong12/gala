@@ -1,7 +1,6 @@
 import 'package:base_flutter/model/user_model.dart';
 import 'package:base_flutter/routes/app_pages.dart';
 import 'package:base_flutter/utils/constant.dart';
-import 'package:base_flutter/utils/global/globals_functions.dart';
 import 'package:base_flutter/utils/global/globals_variable.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/scheduler.dart';
@@ -53,7 +52,7 @@ class SearchController extends GetxController {
   }
 
   void onSwitchSearchDetail() {
-    Get.toNamed(Routes.searchDetail, id: getRouteSearch());
+    Get.toNamed(Routes.searchDetail, arguments: true);
   }
 
   void onSwitchFemaleDetail(String? id) {

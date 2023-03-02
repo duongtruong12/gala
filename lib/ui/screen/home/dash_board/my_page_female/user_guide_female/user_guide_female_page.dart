@@ -110,7 +110,7 @@ class UserGuideMobilePage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: appbarCustom(
-          title: Text('user_guide'.tr),
+          title: Text('user_guide_female'.tr),
           leadingWidth: 100,
           leading: backButtonText(callback: controller.onPressedBack)),
       body: _buildBody(),

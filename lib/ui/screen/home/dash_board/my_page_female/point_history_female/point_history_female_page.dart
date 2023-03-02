@@ -6,6 +6,7 @@ import 'package:base_flutter/ui/responsive.dart';
 import 'package:base_flutter/ui/screen/home/dash_board/my_page/point_history/components/item_point_history.dart';
 import 'package:base_flutter/ui/screen/home/dash_board/my_page/point_history/components/point_widget.dart';
 import 'package:base_flutter/utils/const.dart';
+import 'package:base_flutter/utils/global/globals_variable.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
@@ -46,10 +47,12 @@ class PointHistoryFemaleMobilePage extends StatelessWidget {
       child: Column(
         children: [
           const SizedBox(height: kDefaultPadding),
-          const PointWidget(
-            point: 10000,
-            onPressed: null,
-          ),
+          Obx(() {
+            return PointWidget(
+              point: user.value?.currentPoint,
+              onPressed: null,
+            );
+          }),
           const SizedBox(height: kDefaultPadding),
           Expanded(child: Obx(() {
             if (controller.list.isEmpty) {

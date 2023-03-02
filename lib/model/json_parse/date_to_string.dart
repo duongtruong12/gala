@@ -5,6 +5,9 @@ DateTime? fromJsonDate(dynamic str) {
 }
 
 DateTime? fromJsonTimeStamp(dynamic str) {
+  if (str == 'null') {
+    return null;
+  }
   if (str is Timestamp) {
     return str.toDate();
   }

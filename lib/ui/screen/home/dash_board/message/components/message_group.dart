@@ -55,6 +55,19 @@ class MessageGroupItem extends StatelessWidget {
     return FutureBuilder<UserModel?>(
         future: getUserModel(),
         builder: (BuildContext context, AsyncSnapshot<UserModel?> snapshot) {
+          FontWeight font = FontWeight.bold;
+          Color color = getTextColorSecond();
+          //check if user read it
+          if (model.seenMessage[user.value?.id] != null &&
+              model.lastUpdatedTime != null &&
+              model.seenMessage[user.value?.id]
+                      ?.toDate()
+                      .isAfter(model.lastUpdatedTime!) ==
+                  true) {
+            font = FontWeight.w500;
+            color = kBorderColor;
+          }
+
           return Padding(
             padding: const EdgeInsets.symmetric(vertical: 8),
             child: Row(
@@ -79,7 +92,7 @@ class MessageGroupItem extends StatelessWidget {
                       snapshot.data?.displayName ?? model.title ?? '',
                       style: tNormalTextStyle.copyWith(
                           color: getTextColorSecond(),
-                          fontWeight: FontWeight.w500,
+                          fontWeight: font,
                           fontSize: 16),
                     ),
                     const SizedBox(height: kSmallPadding),
@@ -97,7 +110,7 @@ class MessageGroupItem extends StatelessWidget {
                             content,
                             maxLines: 2,
                             style: tNormalTextStyle.copyWith(
-                                color: kBorderColor, fontSize: 12),
+                                color: color, fontSize: 12, fontWeight: font),
                           );
                         })
                   ],
@@ -111,16 +124,21 @@ class MessageGroupItem extends StatelessWidget {
                           date: model.lastUpdatedTime,
                           formatString: DateTimeFormatString.yyyyMMddhhMM),
                       style: tNormalTextStyle.copyWith(
-                          fontSize: 8, color: getTextColorSecond()),
+                          fontWeight: font,
+                          fontSize: 8,
+                          color: getTextColorSecond()),
                     ),
                     const SizedBox(height: kSmallPadding),
-                    Text(
-                      snapshot.data?.typeAccount == TypeAccount.guest.name
-                          ? 'guest'.tr
-                          : 'caster'.tr,
-                      style: tNormalTextStyle.copyWith(
-                          fontSize: 8, color: getTextColorSecond()),
-                    )
+                    if (user.value?.typeAccount == TypeAccount.admin.name)
+                      Text(
+                        snapshot.data?.typeAccount == TypeAccount.guest.name
+                            ? 'guest'.tr
+                            : 'caster'.tr,
+                        style: tNormalTextStyle.copyWith(
+                            fontWeight: font,
+                            fontSize: 8,
+                            color: getTextColorSecond()),
+                      )
                   ],
                 )
               ],

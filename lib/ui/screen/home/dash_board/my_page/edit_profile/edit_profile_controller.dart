@@ -90,8 +90,7 @@ class EditProfileController extends GetxController {
         builder: (BuildContext context) {
           return CustomInputDate(
             myValueSetter: (date) async {
-              await fireStoreProvider
-                  .updateUser(data: {'birthday': date.toString()});
+              await fireStoreProvider.updateUser(data: {'birthday': date});
             },
             initDate: user.value?.birthday,
             label: 'select_date'.tr,
@@ -189,7 +188,7 @@ class EditProfileController extends GetxController {
             numeric: numeric,
             myValueSetter: (str) async {
               await fireStoreProvider
-                  .updateUser(data: {type: numeric ? int.parse(str) : str});
+                  .updateUser(data: {type: numeric ? int.parse(str!) : str});
             },
             validate: (str) {
               return numeric ? Validate.numberValidate(str, label) : null;

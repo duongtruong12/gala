@@ -31,6 +31,7 @@ class ItemTarget extends StatelessWidget {
                 child: CustomNetworkImage(
                   url: model.avatar,
                   borderRadius: 0,
+                  fit: BoxFit.fitHeight,
                 ),
               ),
             ),

@@ -5,7 +5,6 @@ import 'package:base_flutter/ui/responsive.dart';
 import 'package:base_flutter/utils/const.dart';
 import 'package:base_flutter/utils/constant.dart';
 import 'package:base_flutter/utils/global/globals_functions.dart';
-import 'package:base_flutter/utils/global/globals_variable.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'user_detail_controller.dart';
@@ -31,9 +30,11 @@ class UserDetailMobilePage extends StatelessWidget {
   Widget _buildImageSelect() {
     if (controller.model.value?.previewImage == null ||
         controller.model.value!.previewImage.isEmpty) {
-      return Text(
-        'preview_image_empty'.tr,
-        style: tNormalTextStyle.copyWith(color: kTextColorSecond, fontSize: 18),
+      return const CustomNetworkImage(
+        url: null,
+        height: 360,
+        borderRadius: 0,
+        fit: BoxFit.fitHeight,
       );
     }
     final list = controller.model.value!.previewImage;
@@ -259,30 +260,37 @@ class UserDetailMobilePage extends StatelessWidget {
           bottomNavigationBar: Container(
             padding:
                 EdgeInsets.symmetric(vertical: 16, horizontal: Get.width / 4),
-            child: CustomButton(
-              onPressed: () async {},
-              height: 43,
-              width: 223,
-              borderRadius: 99,
-              borderColor:
-                  casterAccount.value ? kTextColorDark : Colors.transparent,
-              widget: Row(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  Icon(
-                    Icons.favorite_rounded,
-                    color: getColorPrimary(),
-                  ),
-                  const SizedBox(width: 4),
-                  Text(
-                    'favorite'.tr,
-                    style: tButtonWhiteTextStyle.copyWith(
-                        color: getColorPrimary()),
-                  )
-                ],
-              ),
-              color: kTextColorSecond,
-            ),
+            child: Obx(() {
+              return CustomButton(
+                onPressed: controller.onTapFavorite,
+                height: 43,
+                width: 223,
+                borderRadius: 99,
+                borderColor: getColorPrimary(),
+                color: controller.setFavorite.value
+                    ? getColorPrimary()
+                    : Colors.transparent,
+                widget: Row(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Icon(
+                      controller.setFavorite.value
+                          ? Icons.favorite_rounded
+                          : Icons.favorite_border_rounded,
+                      color: controller.setFavorite.value
+                          ? Colors.white
+                          : getColorPrimary(),
+                    ),
+                    const SizedBox(width: 4),
+                    Text(
+                      'favorite'.tr,
+                      style:
+                          tButtonWhiteTextStyle.copyWith(color: Colors.white),
+                    )
+                  ],
+                ),
+              );
+            }),
           ),
           body: Obx(() {
             if (controller.model.value == null) {

@@ -1,6 +1,41 @@
+const admin = require('firebase-admin');
 const functions = require("firebase-functions");
 const stripe = require("stripe")("sk_test_51McKsOIx8zBC2fSmofXLDyeplkqahxIVSDvxnOPMmODotm0gMnR7QkchaonOgucWPjovZwZfmzQIjl83RuOWqVWA00And2NmwO");
 const cors = require('cors')({origin: true});
+
+admin.initializeApp();
+exports.notificationListener = functions.region('asia-northeast1').firestore.document("/notification/{messageGroupId}/itemsNotification/{itemId}")
+    .onCreate(async (snapshot) => {
+        sendNotification(snapshot.data());
+    });
+
+function sendNotification(item) {
+    const title = item["title"];
+    const body = item["body"];
+    const list = item["listToken"];
+
+    list.forEach(sendNotificationThroughToken);
+
+    async function sendNotificationThroughToken(token) {
+        const message = {
+            notification: {
+                title: title,
+                body: body,
+            },
+            token: token,
+        };
+
+        admin
+            .messaging()
+            .send(message)
+            .then((_) => {
+                console.log("Send Notification to token: ", token);
+            })
+            .catch((error) => {
+                console.log("Error Send Notification:", error);
+            });
+    }
+}
 
 exports.stripePaymentIntentRequest = functions.region('asia-northeast1').https.onRequest(async (req, res) => {
     return cors(req, res, async () => {

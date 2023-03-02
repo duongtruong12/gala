@@ -139,6 +139,7 @@ class CallFemaleController extends GetxController
               parameters: {'date': '${value.millisecondsSinceEpoch}'},
               arguments: true);
         },
+        label: 'add_payment_title'.tr,
       ),
     );
   }

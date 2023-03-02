@@ -19,8 +19,7 @@ class SentMessage extends StatelessWidget {
       clipper: ChatBubbleClipper8(
           type: BubbleType.receiverBubble, radius: kSmallPadding),
       alignment: Alignment.centerRight,
-      padding: const EdgeInsets.only(
-          left: kSmallPadding, right: kSmallPadding, top: kSmallPadding),
+      padding: const EdgeInsets.all(kSmallPadding),
       backGroundColor: kTextColorSecond,
       child: Container(
         constraints: BoxConstraints(

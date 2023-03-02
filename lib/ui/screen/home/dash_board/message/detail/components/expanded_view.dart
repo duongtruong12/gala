@@ -49,15 +49,12 @@ class ExpandedView extends StatelessWidget {
               ],
             ),
           ),
-          Padding(
-            padding: const EdgeInsets.only(top: kSmallPadding),
-            child: Text(
-              ': ${content ?? ''}',
-              style: tButtonWhiteTextStyle.copyWith(
-                  fontWeight: FontWeight.w500,
-                  fontSize: 12,
-                  color: getTextColorSecond()),
-            ),
+          Text(
+            ': ${content ?? ''}',
+            style: tButtonWhiteTextStyle.copyWith(
+                fontWeight: FontWeight.w500,
+                fontSize: 12,
+                color: getTextColorSecond()),
           )
         ],
       ),

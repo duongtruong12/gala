@@ -90,6 +90,12 @@ class AppPages {
       middlewares: [GlobalMiddleware()],
     ),
     GetPage(
+      name: Routes.searchDetail,
+      page: () => const SearchDetail(),
+      binding: SearchDetailBinding(),
+      middlewares: [GlobalMiddleware()],
+    ),
+    GetPage(
       name: Routes.term,
       page: () => const RightTermPage(label: 'term_service_label'),
       binding: RightTermBinding(),
@@ -257,13 +263,6 @@ Route onGenerateRouteDashboard(RouteSettings settings) {
         name: Routes.call,
         child: const CallFemalePage(),
         bindings: CallFemaleBinding());
-  }
-
-  if (settings.name == Routes.searchDetail) {
-    return _getPageRoute(
-        name: Routes.searchDetail,
-        child: const SearchDetail(),
-        bindings: SearchDetailBinding());
   }
 
   if (settings.name == Routes.editProfile) {

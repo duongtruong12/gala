@@ -173,31 +173,6 @@ class TicketView extends StatelessWidget {
                 fontSize: 24,
               ),
             ),
-            const SizedBox(height: kSmallPadding),
-            Row(
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: [
-                Chip(
-                  label: Text(
-                    'extension_point'.tr,
-                    style: tButtonWhiteTextStyle.copyWith(fontSize: 9),
-                  ),
-                  shape: const RoundedRectangleBorder(
-                      borderRadius: BorderRadius.all(Radius.circular(99))),
-                  padding: const EdgeInsets.all(2),
-                ),
-                const SizedBox(width: kSmallPadding),
-                Text(
-                  '+${formatCurrency(model.extension)}',
-                  style: tNormalTextStyle.copyWith(
-                      color: kPrimaryColorFemale, fontWeight: FontWeight.w500),
-                ),
-                Text(
-                  '  / 1${'hour'.tr}',
-                  style: tNormalTextStyle.copyWith(fontSize: 10),
-                )
-              ],
-            ),
           ],
         )),
         Expanded(

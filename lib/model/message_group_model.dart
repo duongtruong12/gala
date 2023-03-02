@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'package:base_flutter/model/json_parse/date_to_string.dart';
+import 'package:base_flutter/utils/global/globals_variable.dart';
 
 MessageGroupModel messageGroupModelFromJson(String str) =>
     MessageGroupModel.fromJson(json.decode(str));
@@ -18,6 +19,7 @@ class MessageGroupModel {
     this.lastUpdatedTime,
     this.messageGroupType,
     required this.userIds,
+    required this.seenMessage,
     this.lastMessage,
   });
 
@@ -30,6 +32,7 @@ class MessageGroupModel {
   DateTime? lastUpdatedTime;
   List userIds;
   MessageModel? lastMessage;
+  Map seenMessage;
 
   factory MessageGroupModel.fromJson(Map<String, dynamic> json) =>
       MessageGroupModel(
@@ -46,6 +49,7 @@ class MessageGroupModel {
         userIds: json["userIds"] == null
             ? []
             : List.from(json["userIds"].map((x) => x)),
+        seenMessage: json["seenMessage"] ?? {},
       );
 
   Map<String, dynamic> toJson() => {
@@ -57,8 +61,14 @@ class MessageGroupModel {
         "createdTime": createdTime.toString(),
         "lastUpdatedTime": lastUpdatedTime.toString(),
         "lastMessage": lastMessage?.toJson(),
+        "seenMessage": seenMessage,
         "userIds": List<dynamic>.from(userIds.map((x) => x)),
       };
+
+  bool userNotSeen() {
+    return seenMessage[user.value?.id] == null ||
+        seenMessage[user.value?.id]?.toDate().isAfter(lastUpdatedTime!) != true;
+  }
 }
 
 MessageModel messageModelFromJson(String str) =>

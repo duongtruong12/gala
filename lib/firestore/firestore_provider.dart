@@ -3,15 +3,22 @@ import 'dart:async';
 import 'package:base_flutter/firestore/firestore_exception.dart';
 import 'package:base_flutter/model/city_model.dart';
 import 'package:base_flutter/model/message_group_model.dart';
+import 'package:base_flutter/model/notification_model.dart';
 import 'package:base_flutter/model/ticket_model.dart';
+import 'package:base_flutter/model/transfer_information_model.dart';
+import 'package:base_flutter/model/transfer_request_model.dart';
 import 'package:base_flutter/model/user_model.dart';
 import 'package:base_flutter/ui/screen/home/dash_board/my_page_female/user_guide_female/user_guide_female_controller.dart';
 import 'package:base_flutter/utils/const.dart';
 import 'package:base_flutter/utils/constant.dart';
 import 'package:base_flutter/utils/global/globals_functions.dart';
 import 'package:base_flutter/utils/global/globals_variable.dart';
+import 'package:base_flutter/utils/validate.dart';
+import 'package:cherry_toast/cherry_toast.dart';
+import 'package:cherry_toast/resources/arrays.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -25,6 +32,47 @@ class FireStoreProvider {
   final auth = FirebaseAuth.instance;
   final fireStore = FirebaseFirestore.instance;
   final storageRef = FirebaseStorage.instance.ref();
+  final messaging = FirebaseMessaging.instance;
+
+  Future<void> installNotification() async {
+    NotificationSettings settings = await messaging.requestPermission(
+      alert: true,
+      announcement: false,
+      badge: true,
+      carPlay: false,
+      criticalAlert: false,
+      provisional: false,
+      sound: true,
+    );
+    if (settings.authorizationStatus != AuthorizationStatus.authorized) {
+      return;
+    }
+    final token = await messaging.getToken();
+    if (token == null) {
+      return;
+    }
+    await fireStoreProvider.updateUser(data: {'notificationToken': token});
+  }
+
+  StreamSubscription listenNotification() {
+    return FirebaseMessaging.onMessage.listen((event) {
+      if (Get.context == null ||
+          event.notification?.title == null ||
+          event.notification?.body == null) {
+        return;
+      }
+      CherryToast(
+        title: Text(event.notification?.title ?? ''),
+        description: Text(event.notification?.body ?? ''),
+        toastPosition: Position.top,
+        layout: ToastLayout.rtl,
+        animationType: AnimationType.fromTop,
+        icon: Icons.message_rounded,
+        iconColor: getColorPrimary(),
+        themeColor: getColorPrimary(),
+      ).show(Get.context!);
+    });
+  }
 
   //User
   Future<User?> createUser(
@@ -43,6 +91,83 @@ class FireStoreProvider {
       loading.value = false;
     }
     return user;
+  }
+
+  Future<void> forgotPassword(String email) async {
+    loading.value = true;
+    try {
+      await auth.sendPasswordResetEmail(email: email);
+    } on FirebaseException catch (e) {
+      throw FireStoreException(e.code, e.message, e.stackTrace);
+    } finally {
+      loading.value = false;
+    }
+  }
+
+  Future<List> getListToken(List userId) async {
+    final listToken = [];
+    void parseList(QuerySnapshot<Map<String, dynamic>> doc) {
+      if (doc.docs.isNotEmpty) {
+        for (var element in doc.docs) {
+          if (element.id != user.value?.id) {
+            final model = UserModel.fromJson(element.data());
+            listToken.add(model.notificationToken);
+          }
+        }
+      }
+    }
+
+    try {
+      final doc = await fireStore
+          .collection(FirebaseCollectionName.users)
+          .where('id', whereIn: userId)
+          .get();
+      parseList(doc);
+    } on FirebaseException catch (e) {
+      if (e.code == 'unavailable') {
+        final doc = await fireStore
+            .collection(FirebaseCollectionName.users)
+            .where('id', whereIn: userId)
+            .get();
+        parseList(doc);
+      } else {
+        throw FireStoreException(e.code, e.message, e.stackTrace);
+      }
+    }
+    return listToken;
+  }
+
+  Future<List> getListTokenAdmin() async {
+    final listToken = [];
+    void parseList(QuerySnapshot<Map<String, dynamic>> doc) {
+      if (doc.docs.isNotEmpty) {
+        for (var element in doc.docs) {
+          if (element.id != user.value?.id) {
+            final model = UserModel.fromJson(element.data());
+            listToken.add(model.notificationToken);
+          }
+        }
+      }
+    }
+
+    try {
+      final doc = await fireStore
+          .collection(FirebaseCollectionName.users)
+          .where('typeAccount', isEqualTo: 'admin')
+          .get(const GetOptions(source: Source.cache));
+      parseList(doc);
+    } on FirebaseException catch (e) {
+      if (e.code == 'unavailable') {
+        final doc = await fireStore
+            .collection(FirebaseCollectionName.users)
+            .where('typeAccount', isEqualTo: 'admin')
+            .get();
+        parseList(doc);
+      } else {
+        throw FireStoreException(e.code, e.message, e.stackTrace);
+      }
+    }
+    return listToken;
   }
 
   Future<UserModel?> getUserDetail(
@@ -98,7 +223,8 @@ class FireStoreProvider {
         if (event.data() != null) {
           user.value = UserModel.fromJson(event.data()!);
           await storeData(
-              key: SharedPrefKey.user, value: userModelToJson(user.value!));
+              key: SharedPrefKey.user,
+              value: userModelToJsonSaveValue(user.value!));
           user.refresh();
         }
       });
@@ -108,10 +234,30 @@ class FireStoreProvider {
     return streamSubscription;
   }
 
+  Future<bool> checkUserId(String? userId) async {
+    loading.value = true;
+    try {
+      final query = await fireStore
+          .collection(FirebaseCollectionName.users)
+          .where('userId', isEqualTo: userId)
+          .get();
+      if (query.docs.isEmpty) {
+        return true;
+      } else {
+        return false;
+      }
+    } on FirebaseException catch (e) {
+      throw FireStoreException(e.code, e.message, e.stackTrace);
+    } finally {
+      loading.value = false;
+    }
+  }
+
   Future<bool> createUserFireStore(
       {required String? email,
       required String? displayName,
       required String? realName,
+      required String? userId,
       required TypeAccount typeAccount,
       required String id}) async {
     loading.value = true;
@@ -123,6 +269,7 @@ class FireStoreProvider {
           fireStore.collection(FirebaseCollectionName.users).doc(id);
       final userModel = UserModel(
         id: id,
+        userId: userId,
         email: email,
         realName: realName,
         displayName: displayName,
@@ -156,6 +303,7 @@ class FireStoreProvider {
         userIds: [user.value?.id, id],
         lastUpdatedTime: now.toDate(),
         lastMessage: lastMessage,
+        seenMessage: {user.value?.id: now},
       );
       final messageGroupReference = fireStore
           .collection(FirebaseCollectionName.messageGroup)
@@ -255,8 +403,26 @@ class FireStoreProvider {
       {required String email, required String password}) async {
     loading.value = true;
     try {
+      String str = email;
+      final isEmail = Validate.emailValidate(email) == null;
+      if (!isEmail) {
+        final doc = await fireStore
+            .collection(FirebaseCollectionName.users)
+            .where('userId', isEqualTo: str)
+            .get();
+
+        if (doc.docs.isEmpty) {
+          showError('user-not-found'.tr);
+          return;
+        } else {
+          final userModel = UserModel.fromJson(doc.docs.first.data());
+          str = userModel.email ?? '';
+        }
+      }
+
       final userCredential = await auth.signInWithEmailAndPassword(
-          email: email, password: generateMd5(password));
+          email: str, password: generateMd5(password));
+
       if (userCredential.user == null) {
         showError('error_default'.tr);
         return;
@@ -274,7 +440,8 @@ class FireStoreProvider {
       await storeData(
           key: SharedPrefKey.password, value: generateMd5(password));
       await storeData(
-          key: SharedPrefKey.user, value: userModelToJson(user.value!));
+          key: SharedPrefKey.user,
+          value: userModelToJsonSaveValue(user.value!));
     } on FirebaseException catch (e) {
       throw FireStoreException(e.code, e.message, e.stackTrace);
     } finally {
@@ -309,6 +476,54 @@ class FireStoreProvider {
             .orderBy('createdDate', descending: true)
             .where('approveTickets', isEqualTo: []).limit(kPagingSize);
       }
+      if (lastDocument != null) {
+        await query.startAfterDocument(lastDocument).get().then(_parseList);
+      } else {
+        await query.get().then(_parseList);
+      }
+    } on FirebaseException catch (e) {
+      throw FireStoreException(e.code, e.message, e.stackTrace);
+    } finally {
+      loading.value = false;
+    }
+    return list;
+  }
+
+  Future<List<DocumentSnapshot<Map<String, dynamic>>>> searchListUser({
+    DocumentSnapshot? lastDocument,
+    String? address,
+    String? birthPlace,
+    int? height,
+    int? age,
+    TypeAccount? sort,
+  }) async {
+    loading.value = true;
+    final list = <DocumentSnapshot<Map<String, dynamic>>>[];
+    try {
+      _parseList(QuerySnapshot<Map<String, dynamic>> querySnapshot) {
+        if (querySnapshot.docs.isEmpty) {
+          return;
+        }
+        list.addAll(querySnapshot.docs);
+      }
+
+      final now = Timestamp.now();
+      Timestamp? minDate, maxDate;
+      if (age != null) {
+        minDate = Timestamp.fromDate(
+            DateTime(now.toDate().year - age, 1, 1, 0, 0, 0));
+        maxDate = Timestamp.fromDate(
+            DateTime(now.toDate().year - age, 12, 31, 23, 59, 59));
+      }
+
+      var query = fireStore
+          .collection(FirebaseCollectionName.users)
+          .where('typeAccount', isEqualTo: sort?.name)
+          .where('address', isEqualTo: address)
+          .where('height', isEqualTo: height)
+          .where('birthPlace', isEqualTo: birthPlace)
+          .where('birthday', isLessThan: maxDate, isGreaterThan: minDate)
+          .limit(kPagingSize);
       if (lastDocument != null) {
         await query.startAfterDocument(lastDocument).get().then(_parseList);
       } else {
@@ -395,6 +610,21 @@ class FireStoreProvider {
               .collection(FirebaseCollectionName.messagesCollection)
               .doc(messageId),
           lastMessage.toJson(),
+          SetOptions(merge: true));
+      final listToken = await getListTokenAdmin();
+      batch.set(
+          fireStore
+              .collection(FirebaseCollectionName.notification)
+              .doc(messageGroupId)
+              .collection(FirebaseCollectionName.itemsNotification)
+              .doc(messageId),
+          NotificationModel(
+            id: messageId,
+            title: ticket.getTicketName(),
+            body: 'created_ticket_successfully'.tr,
+            createdDate: now.toDate(),
+            listToken: listToken,
+          ).toJson(),
           SetOptions(merge: true));
 
       batch.set(
@@ -502,7 +732,11 @@ class FireStoreProvider {
       final batch = fireStore.batch();
       final now = Timestamp.now();
       ticket.status = TicketStatus.done.name;
-      final listUser = <String>[...ticket.peopleApprove, ticket.createdUser!];
+      final listUser = <String>[
+        ...ticket.peopleApprove,
+        ticket.createdUser!,
+        user.value!.id!
+      ];
       final messageGroupId = generateIdMessage([...listUser, ticket.id!]);
       final messageId = generateMd5('${now.millisecondsSinceEpoch}');
       final messageGroupReference = fireStore
@@ -557,9 +791,25 @@ class FireStoreProvider {
         userIds: listUser,
         lastUpdatedTime: now.toDate(),
         lastMessage: lastMessage,
+        seenMessage: {ticket.createdUser: now},
       );
 
       batch.set(messageGroupReference, model.toJson(), SetOptions(merge: true));
+      final listToken = await getListToken(listUser);
+      batch.set(
+          fireStore
+              .collection(FirebaseCollectionName.notification)
+              .doc(messageGroupId)
+              .collection(FirebaseCollectionName.itemsNotification)
+              .doc(messageId),
+          NotificationModel(
+            id: messageId,
+            title: ticket.getTicketName(),
+            body: 'created_ticket_successfully'.tr,
+            createdDate: now.toDate(),
+            listToken: listToken,
+          ).toJson(),
+          SetOptions(merge: true));
 
       batch.set(
           messageGroupReference
@@ -677,10 +927,13 @@ class FireStoreProvider {
                       : maxDate,
               isGreaterThan: queryAll ? null : minDate);
 
-      if (user.value?.typeAccount != TypeAccount.admin.name) {
-        query.where('stateId', isEqualTo: user.value?.stateId).where(
-            'tagInformation',
-            arrayContainsAny: user.value?.tagInformation);
+      if (user.value?.typeAccount != TypeAccount.admin.name &&
+          user.value?.stateId != null) {
+        query.where('stateId', isEqualTo: user.value?.stateId);
+        if (user.value?.tagInformation.isNotEmpty == true) {
+          query.where('tagInformation',
+              arrayContainsAny: user.value?.tagInformation);
+        }
       }
 
       streamSubscription =
@@ -789,9 +1042,21 @@ class FireStoreProvider {
     return streamSubscription;
   }
 
+  Future<void> uploadSeenMessage({required String? messageGroup}) async {
+    try {
+      await fireStore
+          .collection(FirebaseCollectionName.messageGroup)
+          .doc(messageGroup)
+          .update(
+              {'seenMessage.${user.value?.id}': FieldValue.serverTimestamp()});
+    } on FirebaseException catch (e) {
+      throw FireStoreException(e.code, e.message, e.stackTrace);
+    }
+  }
+
   Future<void> sendMessage(
       {required String content,
-      required String messageGroupId,
+      required MessageGroupModel? model,
       required SendMessageType type}) async {
     try {
       final batch = fireStore.batch();
@@ -809,7 +1074,7 @@ class FireStoreProvider {
 
       final messageGroupReference = fireStore
           .collection(FirebaseCollectionName.messageGroup)
-          .doc(messageGroupId);
+          .doc(model?.id);
 
       batch.update(messageGroupReference, {
         'lastMessage': lastMessage.toJson(),
@@ -821,6 +1086,23 @@ class FireStoreProvider {
               .collection(FirebaseCollectionName.messagesCollection)
               .doc(messageId),
           lastMessage.toJson(),
+          SetOptions(merge: true));
+
+      final listToken = await getListToken(model?.userIds ?? []);
+
+      batch.set(
+          fireStore
+              .collection(FirebaseCollectionName.notification)
+              .doc(model?.id)
+              .collection(FirebaseCollectionName.itemsNotification)
+              .doc(messageId),
+          NotificationModel(
+            id: messageId,
+            title: model?.title,
+            body: content,
+            createdDate: now.toDate(),
+            listToken: listToken,
+          ).toJson(),
           SetOptions(merge: true));
 
       await batch.commit();
@@ -1068,7 +1350,9 @@ class FireStoreProvider {
   }
 
   Future<void> closeTicket(
-      {required String messageGroupId, required Ticket? ticket}) async {
+      {required String messageGroupId,
+      required Ticket? ticket,
+      required List userIds}) async {
     loading.value = true;
     try {
       final batch = fireStore.batch();
@@ -1104,6 +1388,24 @@ class FireStoreProvider {
         'lastMessage': lastMessage.toJson(),
         'lastUpdatedTime': now.toDate().toString(),
       });
+
+      final listToken = await getListToken(userIds);
+
+      batch.set(
+          fireStore
+              .collection(FirebaseCollectionName.notification)
+              .doc(messageGroupId)
+              .collection(FirebaseCollectionName.itemsNotification)
+              .doc(messageId),
+          NotificationModel(
+            id: messageId,
+            title: ticket?.getTicketName(),
+            body:
+                '${'message_group_end'.tr}\n${'point_paid'.tr}${formatCurrency(ticket?.calculateTotalPrice())}',
+            createdDate: now.toDate(),
+            listToken: listToken,
+          ).toJson(),
+          SetOptions(merge: true));
 
       batch.set(
           messageGroupReference
@@ -1209,6 +1511,160 @@ class FireStoreProvider {
       await batch.commit();
     } on FirebaseException catch (e) {
       throw FireStoreException(e.code, e.message, e.stackTrace);
+    }
+  }
+
+  Future<void> setTransferInformation(
+      {required TransferInformationModel model}) async {
+    try {
+      await fireStore
+          .collection(FirebaseCollectionName.transferInformation)
+          .doc(model.id)
+          .set(model.toJson(), SetOptions(merge: true));
+    } on FirebaseException catch (e) {
+      throw FireStoreException(e.code, e.message, e.stackTrace);
+    }
+  }
+
+  Future<TransferInformationModel?> getTransferInformationDetail(
+      {required String? id}) async {
+    TransferInformationModel? model;
+    loading.value = true;
+    try {
+      final doc = await fireStore
+          .collection(FirebaseCollectionName.transferInformation)
+          .doc(id)
+          .get();
+      if (doc.data() != null) {
+        model = TransferInformationModel.fromJson(doc.data()!);
+      }
+    } on FirebaseException catch (e) {
+      throw FireStoreException(e.code, e.message, e.stackTrace);
+    } finally {
+      loading.value = false;
+    }
+    return model;
+  }
+
+  Future<void> setTransferRequest({required TransferRequestModel model}) async {
+    final now = Timestamp.now();
+    final id = generateMd5('${now.millisecondsSinceEpoch}');
+    model.id = id;
+    try {
+      final batch = fireStore.batch();
+      batch.set(
+          fireStore
+              .collection(FirebaseCollectionName.transferRequest)
+              .doc(model.id),
+          model.toJson(),
+          SetOptions(merge: true));
+
+      batch.set(
+          fireStore
+              .collection(FirebaseCollectionName.pointsHistory)
+              .doc(user.value?.id)
+              .collection(FirebaseCollectionName.collectionPointsHistory)
+              .doc(id),
+          PointCostModel(
+            id: id,
+            point: -(model.totalPrice?.toInt() ?? 0),
+            createTime: now.toDate(),
+            reason: PointReason.remittancePayment.name,
+            status: TransferStatus.waiting.name,
+          ).toJson(),
+          SetOptions(merge: true));
+
+      batch.update(
+          fireStore
+              .collection(FirebaseCollectionName.users)
+              .doc(user.value?.id),
+          {
+            'currentPoint':
+                FieldValue.increment(-(model.totalPrice?.toInt() ?? 0))
+          });
+
+      await batch.commit();
+    } on FirebaseException catch (e) {
+      throw FireStoreException(e.code, e.message, e.stackTrace);
+    }
+  }
+
+  StreamSubscription? listenerTransferRequest(
+      {required ValueSetter<QuerySnapshot<Map<String, dynamic>>> valueChanged,
+      DateTime? minDate,
+      DateTime? maxDate,
+      required int page,
+      String? status}) {
+    StreamSubscription? streamSubscription;
+    try {
+      final timeStampMaxDate = maxDate != null
+          ? Timestamp.fromDate(
+              DateTime(maxDate.year, maxDate.month, maxDate.day, 23, 59, 59))
+          : null;
+      final timeStampMinDate = minDate != null
+          ? Timestamp.fromDate(
+              DateTime(minDate.year, minDate.month, minDate.day, 0, 0, 0))
+          : null;
+      streamSubscription = fireStore
+          .collection(FirebaseCollectionName.transferRequest)
+          .where('status', isEqualTo: status)
+          .where('createdDate',
+              isLessThan: timeStampMaxDate, isGreaterThan: timeStampMinDate)
+          .limit(page * kPagingSize)
+          .snapshots()
+          .listen((event) async {
+        valueChanged(event);
+      });
+    } on FirebaseException catch (e) {
+      throw FireStoreException(e.code, e.message, e.stackTrace);
+    }
+    return streamSubscription;
+  }
+
+  Future<void> changeStatusListTransfer(
+      {required String status,
+      required List<TransferRequestModel> list}) async {
+    loading.value = true;
+    try {
+      final batch = fireStore.batch();
+      for (var element in list) {
+        if (element.status == TransferStatus.cancel.name ||
+            element.status == TransferStatus.alreadyTransfer.name) {
+          continue;
+        }
+        if (element.status != status) {
+          batch.update(
+              fireStore
+                  .collection(FirebaseCollectionName.transferRequest)
+                  .doc(element.id),
+              {'status': status});
+
+          batch.update(
+            fireStore
+                .collection(FirebaseCollectionName.pointsHistory)
+                .doc(element.createdId)
+                .collection(FirebaseCollectionName.collectionPointsHistory)
+                .doc(element.id),
+            {'status': status},
+          );
+
+          if (status == TransferStatus.cancel.name) {
+            batch.update(
+                fireStore
+                    .collection(FirebaseCollectionName.users)
+                    .doc(element.createdId),
+                {
+                  'currentPoint':
+                      FieldValue.increment(element.totalPrice?.toInt() ?? 0)
+                });
+          }
+        }
+      }
+      await batch.commit();
+    } on FirebaseException catch (e) {
+      throw FireStoreException(e.code, e.message, e.stackTrace);
+    } finally {
+      loading.value = false;
     }
   }
 }

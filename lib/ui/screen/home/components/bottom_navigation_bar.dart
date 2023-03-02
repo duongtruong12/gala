@@ -1,7 +1,9 @@
 import 'package:base_flutter/utils/const.dart';
 import 'package:base_flutter/utils/global/globals_functions.dart';
+import 'package:base_flutter/utils/global/globals_variable.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:badges/badges.dart' as badges;
 
 class BottomNavigatorWidget extends StatelessWidget {
   const BottomNavigatorWidget({
@@ -21,13 +23,30 @@ class BottomNavigatorWidget extends StatelessWidget {
             ? kPrimaryColorFemale
             : kPrimaryColor
         : kMenuGray;
+    String labelText = label;
+    if (label == 'call') {
+      labelText = casterAccount.value ? 'search_female' : label;
+    }
+
     return BottomNavigationBarItem(
-      icon: getSvgImage(index == currentIndex ? '$label${'_select'}' : label,
-          color: color, boxFit: BoxFit.fitHeight),
+      icon: Obx(() {
+        return badges.Badge(
+          badgeContent: Text(
+            '${unread.value}',
+            style: tButtonWhiteTextStyle.copyWith(fontSize: 8),
+          ),
+          showBadge: unread.value > 0 && index == 1,
+          position: badges.BadgePosition.topEnd(),
+          child: getSvgImage(
+              index == currentIndex ? '$label${'_select'}' : label,
+              color: color,
+              boxFit: BoxFit.fitHeight),
+        );
+      }),
       backgroundColor: femaleGender
           ? kPrimaryBackgroundColorFemale
           : kPrimaryBackgroundColor,
-      label: label.tr,
+      label: labelText.tr,
     );
   }
 

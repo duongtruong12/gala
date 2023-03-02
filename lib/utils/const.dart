@@ -1,6 +1,5 @@
 import 'package:base_flutter/utils/global/globals_functions.dart';
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
 
 const kPagingSize = 25;
 const kPrimaryColor = Color(0xFFBCA674);
@@ -72,10 +71,12 @@ const double kDefaultPadding = 16.0;
 const double kMediumTextSize = 16.0;
 const double kNormalTextSize = 14.0;
 
-final tNormalTextStyle = GoogleFonts.notoSansJavanese(
-    color: kTextColorDark, fontSize: kNormalTextSize);
-final tButtonWhiteTextStyle = GoogleFonts.notoSansJavanese(
-    color: kTextColorSecond, fontSize: kMediumTextSize);
+const tNormalTextStyle = TextStyle(
+    fontFamily: 'NotoSansJP', color: kTextColorDark, fontSize: kNormalTextSize);
+const tButtonWhiteTextStyle = TextStyle(
+    fontFamily: 'NotoSansJP',
+    color: kTextColorSecond,
+    fontSize: kMediumTextSize);
 
 const defaultBorder =
     UnderlineInputBorder(borderSide: BorderSide(color: kBorderColor, width: 1));
@@ -96,7 +97,7 @@ ThemeData lightTheme = ThemeData(
   primaryColor: kPrimaryColor,
   scaffoldBackgroundColor: Colors.transparent,
   appBarTheme: const AppBarTheme(backgroundColor: Colors.transparent),
-  textTheme: TextTheme(bodyLarge: tNormalTextStyle),
+  textTheme: const TextTheme(bodyLarge: tNormalTextStyle),
   fontFamily: 'NotoSansJP',
   switchTheme: SwitchThemeData(
     thumbColor: MaterialStateProperty.resolveWith<Color?>(
@@ -146,6 +147,7 @@ ThemeData lightTheme = ThemeData(
 ThemeData femaleTheme = ThemeData(
   primaryColor: kPrimaryColorFemale,
   scaffoldBackgroundColor: Colors.white,
+  fontFamily: 'NotoSansJP',
   textTheme:
       TextTheme(bodyLarge: tNormalTextStyle.copyWith(color: kTextColorSecond)),
   appBarTheme: const AppBarTheme(backgroundColor: kPrimaryColorFemale),

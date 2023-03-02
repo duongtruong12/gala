@@ -1,5 +1,3 @@
-import 'dart:convert';
-
 import 'package:base_flutter/model/user_model.dart';
 import 'package:base_flutter/routes/app_pages.dart';
 import 'package:base_flutter/utils/constant.dart';
@@ -22,7 +20,7 @@ class GlobalMiddleware extends GetMiddleware {
     final box = GetStorage();
     final str = box.read(SharedPrefKey.user);
     if (str?.isNotEmpty == true) {
-      user.value = UserModel.fromJson(json.decode(str!));
+      user.value = userModelFromJsonSaveValue(str!);
     } else {
       return const RouteSettings(name: Routes.login);
     }

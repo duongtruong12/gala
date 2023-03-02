@@ -8,10 +8,19 @@ import 'package:get/get.dart';
 import 'package:syncfusion_flutter_datepicker/datepicker.dart';
 
 class FindDatePicker extends StatefulWidget {
-  const FindDatePicker({super.key, required this.valueSetter, this.date});
+  const FindDatePicker(
+      {super.key,
+      required this.valueSetter,
+      this.date,
+      this.minDate,
+      this.hideHour = false,
+      required this.label});
 
   final ValueSetter<DateTime> valueSetter;
   final DateTime? date;
+  final DateTime? minDate;
+  final String label;
+  final bool hideHour;
 
   @override
   FindDatePickerState createState() => FindDatePickerState();
@@ -86,10 +95,7 @@ class FindDatePickerState extends State<FindDatePicker> {
           InkWell(
             onTap: showTimerPicker,
             child: Container(
-              padding: const EdgeInsets.only(
-                  top: kSmallPadding,
-                  right: kSmallPadding,
-                  left: kSmallPadding),
+              padding: const EdgeInsets.all(kSmallPadding),
               decoration: const BoxDecoration(
                   borderRadius:
                       BorderRadius.all(Radius.circular(kSmallPadding)),
@@ -115,11 +121,11 @@ class FindDatePickerState extends State<FindDatePicker> {
 
   Widget _buildDatePicker() {
     return SfDateRangePicker(
-        todayHighlightColor: kPrimaryColorFemale,
+        todayHighlightColor: getColorPrimary(),
         view: DateRangePickerView.month,
         initialSelectedDate: date,
         showNavigationArrow: true,
-        minDate: DateTime.now().add(const Duration(days: 1)),
+        minDate: widget.minDate ?? DateTime.now().add(const Duration(days: 1)),
         onSelectionChanged: (dateRange) {
           final DateTime? dateArg = dateRange.value;
           if (dateArg != null) {
@@ -163,10 +169,12 @@ class FindDatePickerState extends State<FindDatePicker> {
           ),
           const Divider(),
           _buildDatePicker(),
-          _buildTimePicker(),
+          if (!widget.hideHour) _buildTimePicker(),
           Padding(
             padding: const EdgeInsets.all(kDefaultPadding),
             child: CustomButton(
+                color: getColorPrimary(),
+                borderColor: getColorPrimary(),
                 onPressed: () async {
                   Get.back(closeOverlays: true);
                   widget.valueSetter(date);

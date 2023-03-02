@@ -1,11 +1,11 @@
 {
-    "name": "ガラ",
-    "short_name": "ギャラ飲みアプリデザイン修正",
+    "name": "Claha",
+    "short_name": "Claha",
     "start_url": ".",
     "display": "standalone",
     "background_color": "#857552",
     "theme_color": "#857552",
-    "description": "ギャラ飲みアプリデザイン修正",
+    "description": "Claha",
     "orientation": "portrait-primary",
     "prefer_related_applications": false,
     "icons": [

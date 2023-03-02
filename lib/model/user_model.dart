@@ -9,13 +9,18 @@ import 'package:get/get.dart';
 
 import 'json_parse/date_to_string.dart';
 
-UserModel userModelFromJson(String str) => UserModel.fromJson(json.decode(str));
+UserModel userModelFromJsonSaveValue(String str) =>
+    UserModel.fromJsonSaveValue(json.decode(str));
 
 String userModelToJson(UserModel data) => json.encode(data.toJson());
+
+String userModelToJsonSaveValue(UserModel data) =>
+    json.encode(data.toJsonSaveValue());
 
 class UserModel {
   UserModel({
     this.id,
+    this.userId,
     this.realName,
     this.displayName,
     this.password,
@@ -48,14 +53,17 @@ class UserModel {
     this.livingWithFamily,
     this.hairStyle,
     this.hairColor,
+    this.notificationToken,
   });
 
   String? id;
+  String? userId;
   String? realName;
   String? displayName;
   String? password;
   String? email;
   String? avatar;
+  String? notificationToken;
   List<dynamic> previewImage;
   List<dynamic> applyTickets;
   List<dynamic> approveTickets;
@@ -150,6 +158,52 @@ class UserModel {
             ? []
             : List<dynamic>.from(json["approveTickets"]!.map((x) => x)),
         typeAccount: json["typeAccount"],
+        userId: json["userId"],
+        createdDate: fromJsonTimeStamp(json["createdDate"]),
+        birthday: fromJsonTimeStamp(json["birthday"]),
+        currentPoint: json["currentPoint"],
+        notificationToken: json["notificationToken"],
+        hideAge: json["hideAge"],
+        cityId: json["cityId"],
+        stateId: json["stateId"],
+        stateName: json["stateName"],
+        cityName: json["cityName"],
+        description: json["description"],
+        height: json["height"],
+        address: json["address"],
+        birthPlace: json["birthPlace"],
+        education: json["education"],
+        annualIncome: json["annualIncome"],
+        job: json["job"],
+        isDrink: json["isDrink"],
+        isSmoke: json["isSmoke"],
+        familyStatus: json["familyStatus"],
+        livingWithFamily: json["livingWithFamily"],
+        hairStyle: json["hairStyle"],
+        pointPer30Minutes: json["pointPer30Minutes"],
+        hairColor: json["hairColor"],
+        tagInformation: json["tagInformation"] == null
+            ? []
+            : List<dynamic>.from(json["tagInformation"]!.map((x) => x)),
+      );
+
+  factory UserModel.fromJsonSaveValue(Map<String, dynamic> json) => UserModel(
+        id: json["id"],
+        realName: json["realName"],
+        displayName: json["displayName"],
+        email: json["email"],
+        avatar: json["avatar"],
+        previewImage: json["previewImage"] == null
+            ? []
+            : List<dynamic>.from(json["previewImage"]!.map((x) => x)),
+        applyTickets: json["applyTickets"] == null
+            ? []
+            : List<dynamic>.from(json["applyTickets"]!.map((x) => x)),
+        approveTickets: json["approveTickets"] == null
+            ? []
+            : List<dynamic>.from(json["approveTickets"]!.map((x) => x)),
+        typeAccount: json["typeAccount"],
+        userId: json["userId"],
         createdDate: fromJsonDate(json["createdDate"]),
         birthday: fromJsonDate(json["birthday"]),
         currentPoint: json["currentPoint"],
@@ -180,6 +234,43 @@ class UserModel {
   Map<String, dynamic> toJson() => {
         "id": id,
         "realName": realName,
+        "userId": userId,
+        "displayName": displayName,
+        "stateId": stateId,
+        "cityId": cityId,
+        "stateName": stateName,
+        "cityName": cityName,
+        "email": email,
+        "avatar": avatar,
+        "previewImage": List<dynamic>.from(previewImage.map((x) => x)),
+        "approveTickets": List<dynamic>.from(approveTickets.map((x) => x)),
+        "typeAccount": typeAccount,
+        "createdDate": createdDate,
+        "birthday": birthday,
+        "currentPoint": currentPoint,
+        "pointPer30Minutes": pointPer30Minutes,
+        "hideAge": hideAge,
+        "description": description,
+        "height": height,
+        "address": address,
+        "birthPlace": birthPlace,
+        "education": education,
+        "annual_income": annualIncome,
+        "job": job,
+        "isDrink": isDrink,
+        "isSmoke": isSmoke,
+        "family_status": familyStatus,
+        "livingWithFamily": livingWithFamily,
+        "hairStyle": hairStyle,
+        "hairColor": hairColor,
+        "tagInformation": List<dynamic>.from(tagInformation.map((x) => x)),
+        "applyTickets": List<dynamic>.from(applyTickets.map((x) => x)),
+      };
+
+  Map<String, dynamic> toJsonSaveValue() => {
+        "id": id,
+        "realName": realName,
+        "userId": userId,
         "displayName": displayName,
         "stateId": stateId,
         "cityId": cityId,
@@ -207,12 +298,9 @@ class UserModel {
         "family_status": familyStatus,
         "livingWithFamily": livingWithFamily,
         "hairStyle": hairStyle,
+        "notificationToken": notificationToken,
         "hairColor": hairColor,
         "tagInformation": List<dynamic>.from(tagInformation.map((x) => x)),
         "applyTickets": List<dynamic>.from(applyTickets.map((x) => x)),
       };
-}
-
-extension ExtensionDateTime on DateTime {
-  String? toJson() => toString();
 }

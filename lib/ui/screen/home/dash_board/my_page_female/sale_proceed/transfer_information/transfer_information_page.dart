@@ -5,6 +5,7 @@ import 'package:base_flutter/components/custom_view.dart';
 import 'package:base_flutter/ui/responsive.dart';
 import 'package:base_flutter/ui/screen/home/dash_board/my_page_female/sale_proceed/components/item_input.dart';
 import 'package:base_flutter/utils/const.dart';
+import 'package:base_flutter/utils/validate.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
@@ -30,35 +31,99 @@ class TransferInformationMobilePage extends StatelessWidget {
 
   Widget _buildBody() {
     final list = <Widget>[
-      ItemInputSale(
-        label: 'transfer_information'.tr,
-        content: '銀行名',
-      ),
+      Obx(() {
+        return ItemInputSale(
+          label: 'transfer_information'.tr,
+          content: controller.bankName.value,
+          onTap: () {
+            controller.showInputCustom(
+                label: 'transfer_information'.tr,
+                type: 'bankName',
+                initText: controller.bankName.value,
+                validate: (String? str) {
+                  return Validate.emptyValidate(
+                      str: str, field: 'transfer_information'.tr);
+                });
+          },
+        );
+      }),
       const SizedBox(height: kDefaultPadding),
-      ItemInputSale(
-        label: 'account_type'.tr,
-        content: '普通',
-      ),
+      Obx(() {
+        return ItemInputSale(
+          label: 'account_type'.tr,
+          content: 'bank_${controller.bankType.value}'.tr,
+          onTap: controller.showSelectLabel,
+        );
+      }),
       const SizedBox(height: kSmallPadding),
-      ItemInputSale(
-        label: 'branch_code'.tr,
-        content: '123',
-      ),
+      Obx(() {
+        return ItemInputSale(
+          label: 'branch_code'.tr,
+          content: controller.branchCode.value,
+          onTap: () {
+            controller.showInputCustom(
+                label: 'branch_code'.tr,
+                type: 'branchCode',
+                initText: controller.branchCode.value,
+                maxLength: 3,
+                validate: (String? str) {
+                  return Validate.emptyValidate(
+                      str: str, field: 'branch_code'.tr);
+                });
+          },
+        );
+      }),
       const SizedBox(height: kSmallPadding),
-      ItemInputSale(
-        label: 'account_number'.tr,
-        content: '1234567',
-      ),
+      Obx(() {
+        return ItemInputSale(
+          label: 'account_number'.tr,
+          content: controller.bankNumber.value,
+          onTap: () {
+            controller.showInputCustom(
+                label: 'account_number'.tr,
+                type: 'bankNumber',
+                initText: controller.bankNumber.value,
+                maxLength: 7,
+                validate: (String? str) {
+                  return Validate.emptyValidate(
+                      str: str, field: 'account_number'.tr);
+                });
+          },
+        );
+      }),
       const SizedBox(height: kDefaultPadding),
-      ItemInputSale(
-        label: 'name_say'.tr,
-        content: 'Name',
-      ),
+      Obx(() {
+        return ItemInputSale(
+          label: 'name_say'.tr,
+          content: controller.lastName.value,
+          onTap: () {
+            controller.showInputCustom(
+                label: 'name_say'.tr,
+                type: 'lastName',
+                initText: controller.lastName.value,
+                validate: (String? str) {
+                  return Validate.emptyValidate(str: str, field: 'name_say'.tr);
+                });
+          },
+        );
+      }),
       const SizedBox(height: kSmallPadding),
-      ItemInputSale(
-        label: 'name_real'.tr,
-        content: 'Name',
-      ),
+      Obx(() {
+        return ItemInputSale(
+          label: 'name_real'.tr,
+          content: controller.firstName.value,
+          onTap: () {
+            controller.showInputCustom(
+                label: 'name_real'.tr,
+                type: 'firstName',
+                initText: controller.firstName.value,
+                validate: (String? str) {
+                  return Validate.emptyValidate(
+                      str: str, field: 'name_real'.tr);
+                });
+          },
+        );
+      }),
       const SizedBox(height: kDefaultPadding),
       Text(
         'transfer_account_content'.tr,
@@ -67,9 +132,7 @@ class TransferInformationMobilePage extends StatelessWidget {
       ),
       const SizedBox(height: kDefaultPadding),
       CustomButton(
-          onPressed: () async {
-            controller.onPressedBack();
-          },
+          onPressed: controller.onConfirm,
           widget: Text(
             'save_card'.tr,
             style: tButtonWhiteTextStyle.copyWith(

@@ -5,10 +5,10 @@ packages:
     dependency: transitive
     description:
       name: _flutterfire_internals
-      sha256: "953f097772b5fd095e0ee6eeeab34e3a42de91d5f43fa86b5de8485a57494f96"
+      sha256: "64fcb0dbca4386356386c085142fa6e79c00a3326ceaa778a2d25f5d9ba61441"
       url: "https://pub.dev"
     source: hosted
-    version: "1.0.15"
+    version: "1.0.16"
   archive:
     dependency: transitive
     description:
@@ -25,6 +25,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "2.10.0"
+  badges:
+    dependency: "direct main"
+    description:
+      name: badges
+      sha256: "461031a60efbb95276f52107f63d5d45008b5ca1eb7f8ca440cadda9ec2143b0"
+      url: "https://pub.dev"
+    source: hosted
+    version: "3.0.2"
   base58check:
     dependency: transitive
     description:
@@ -57,6 +65,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "1.2.1"
+  cherry_toast:
+    dependency: "direct main"
+    description:
+      name: cherry_toast
+      sha256: d3c30441e6a3e4ae553d72faf2f9a465295639138ad79cf92d94a632aef476c0
+      url: "https://pub.dev"
+    source: hosted
+    version: "1.1.0"
   clock:
     dependency: transitive
     description:
@@ -229,10 +245,10 @@ packages:
     dependency: "direct main"
     description:
       name: firebase_core
-      sha256: "46b80acfb472d8abc500c2cb6ce65c4b5237d825e4c23bfc3efc70df9eec1a6e"
+      sha256: fe30ac230f12f8836bb97e6e09197340d3c584526825b1746ea362a82e1e43f7
       url: "https://pub.dev"
     source: hosted
-    version: "2.6.1"
+    version: "2.7.0"
   firebase_core_platform_interface:
     dependency: transitive
     description:
@@ -249,6 +265,30 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "2.2.1"
+  firebase_messaging:
+    dependency: "direct main"
+    description:
+      name: firebase_messaging
+      sha256: "95f7565b8e992d2188cdd8dc5612330f7c309485fe425d3f9844f18e90741e3e"
+      url: "https://pub.dev"
+    source: hosted
+    version: "14.2.5"
+  firebase_messaging_platform_interface:
+    dependency: transitive
+    description:
+      name: firebase_messaging_platform_interface
+      sha256: c5e79e15d1018cafffea1a6e45249db0d6bc42dbe35178634c77488179880e79
+      url: "https://pub.dev"
+    source: hosted
+    version: "4.2.14"
+  firebase_messaging_web:
+    dependency: transitive
+    description:
+      name: firebase_messaging_web
+      sha256: cd0cfcab7a63282049dec95a9955e7a487b5e580162310d12a82a10c0c32c546
+      url: "https://pub.dev"
+    source: hosted
+    version: "3.2.15"
   firebase_storage:
     dependency: "direct main"
     description:
@@ -381,14 +421,6 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "2.0.3"
-  google_fonts:
-    dependency: "direct main"
-    description:
-      name: google_fonts
-      sha256: "148c716f5929371d335d29c2952119b34842b1a8e5607e37bb9f68f96e88068a"
-      url: "https://pub.dev"
-    source: hosted
-    version: "4.0.1"
   http:
     dependency: "direct main"
     description:
@@ -413,6 +445,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "4.0.2"
+  image:
+    dependency: transitive
+    description:
+      name: image
+      sha256: "483a389d6ccb292b570c31b3a193779b1b0178e7eb571986d9a49904b6861227"
+      url: "https://pub.dev"
+    source: hosted
+    version: "4.0.15"
   image_picker:
     dependency: "direct main"
     description:
@@ -469,6 +509,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "3.1.4"
+  jiffy:
+    dependency: transitive
+    description:
+      name: jiffy
+      sha256: "85172c4fc975a50224521c05bf43abc845288863b19d91bd3c221a96a8785dd3"
+      url: "https://pub.dev"
+    source: hosted
+    version: "5.0.0"
   js:
     dependency: transitive
     description:
@@ -774,10 +822,10 @@ packages:
     dependency: transitive
     description:
       name: syncfusion_flutter_core
-      sha256: "66529f3f102c6501a75811e8d931a1908ad9865ea4d3416c40ac05cf62fdcd44"
+      sha256: "5f7dae40707df507325ee045d1a172aea9f449ac4244d7c52391dd97208eeef8"
       url: "https://pub.dev"
     source: hosted
-    version: "20.4.44"
+    version: "20.4.51"
   syncfusion_flutter_datepicker:
     dependency: "direct main"
     description:
@@ -786,6 +834,22 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "20.4.44"
+  syncfusion_flutter_xlsio:
+    dependency: "direct main"
+    description:
+      name: syncfusion_flutter_xlsio
+      sha256: e39fbd891ac0f92638010121b0f1d3f0a842a7077fcce77abf09f5263b6fde27
+      url: "https://pub.dev"
+    source: hosted
+    version: "20.4.51-beta"
+  syncfusion_officecore:
+    dependency: transitive
+    description:
+      name: syncfusion_officecore
+      sha256: "17cff6d45e781954a8a1d7f0a8f759106af6ae13492f4ea81e6289efee9350f0"
+      url: "https://pub.dev"
+    source: hosted
+    version: "20.4.51-beta"
   term_glyph:
     dependency: transitive
     description:

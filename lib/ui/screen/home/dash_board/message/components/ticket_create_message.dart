@@ -100,6 +100,7 @@ class TicketCreatedMessage extends StatelessWidget {
             children: [
               Container(
                 color: kGrayColor,
+                height: 200,
                 alignment: Alignment.center,
                 width: Get.width * 0.7,
                 padding: const EdgeInsets.all(kDefaultPadding),

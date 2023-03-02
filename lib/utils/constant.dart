@@ -1,3 +1,7 @@
+class DefaultFee {
+  static const transfer = 654;
+}
+
 class Gender {
   static const male = 'male';
   static const female = 'female';
@@ -25,6 +29,7 @@ class CurrencySymbol {
   static const pointPerMinutes = 'pointPerMinutes';
   static const pointFull = 'ポイント';
   static const japan = '￥';
+  static const yen = '円';
 }
 
 class RouteIdAdmin {

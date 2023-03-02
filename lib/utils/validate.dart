@@ -1,35 +1,11 @@
+import 'package:base_flutter/utils/constant.dart';
+import 'package:base_flutter/utils/global/globals_variable.dart';
 import 'package:get/get.dart';
 import 'package:sprintf/sprintf.dart';
 
 import 'global/globals_functions.dart';
 
 class Validate {
-  static const passwordPattern =
-      r'^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])([a-zA-Z0-9!@#$%^&*()_+-=]+)$';
-
-  // email validate
-  final String emailPattern = r'^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}';
-
-  // name validate: special character, number
-  final String namePattern =
-      r'[ぁ-ゖ]|[ァ-ヷ]|ー|[ぁ-ゖァ-ヷ]|[ｧ-ﾝﾞﾟ]|[一-龥]|[一-龥ぁ-ゖ]|[ぁ-ゖァ-ヷ一-龥]|[a-zA-Z]|[ａ-ｚＡ-Ｚ]|ー|々|\s';
-
-  // validate email userID
-  String? emailIDValidate(String email) {
-    final emailString = email.toString().trim();
-
-    RegExp regExp = RegExp(emailPattern);
-
-    if (emailString.isEmpty) {
-      return "msg_userId_empty".tr;
-    } else if (emailString.length > 255) {
-      return "msg_userId_maxLength".tr;
-    } else if (!regExp.hasMatch(emailString)) {
-      return "msg_userId_format".tr;
-    }
-    return null;
-  }
-
   static String? phoneValidate(String? phone) {
     final phoneString = phone.toString().trim();
     if (phoneString.isEmpty) {
@@ -52,6 +28,22 @@ class Validate {
   static String? emptyValidate({required String? str, required String field}) {
     if (str == null || str.isEmpty) {
       return sprintf('error_empty'.tr, [field]);
+    }
+
+    return null;
+  }
+
+  static String? validateUserId(String? str) {
+    if (str == null || str.isEmpty) {
+      return sprintf('error_empty'.tr, ['user_id'.tr]);
+    }
+
+    const userIdPattern =
+        r'^(?=[a-zA-Z0-9._]{3,20}$)(?!.*[_.]{2})[^_.].*[^_.]$';
+    RegExp regExp = RegExp(userIdPattern);
+
+    if (!regExp.hasMatch(str)) {
+      return "msg_userId_format".tr;
     }
     return null;
   }
@@ -114,23 +106,23 @@ class Validate {
     return null;
   }
 
-  // validate phone number
-  static String? userValidate(String? phone) {
-    final phoneString = phone.toString().trim();
-    RegExp regExp = RegExp(r'^[0-9\-+]{9,15}$');
-    if (phoneString.isEmpty) {
-      return "msg_phone_empty".tr;
-    } else if (!regExp.hasMatch(phoneString)) {
-      return 'msg_phone_validate'.tr;
-    }
-    return null;
-  }
-
   static String? numberValidate(String? str, String name) {
     if (str == null || str.isEmpty) {
       return sprintf('error_empty'.tr, [name]);
     } else if (!isNumeric(str)) {
       return sprintf('error_number_validate'.tr, [name]);
+    }
+    return null;
+  }
+
+  static String? pointWithdrawal(String? str) {
+    if (str == null || str.isEmpty) {
+      return sprintf('error_empty'.tr, ['attendance_point'.tr]);
+    } else if (!isNumeric(str)) {
+      return sprintf('error_number_validate'.tr, ['attendance_point'.tr]);
+    } else if ((num.parse(str) + DefaultFee.transfer) >
+        (user.value?.currentPoint ?? 0)) {
+      return 'point_bigger'.tr;
     }
     return null;
   }

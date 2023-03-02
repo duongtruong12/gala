@@ -50,17 +50,21 @@ class CustomInput extends StatefulWidget {
       required this.myValueSetter,
       required this.label,
       required this.initText,
+      this.nullable = false,
       this.numeric = false,
       this.validate,
       this.hint,
+      this.maxLength,
       this.minLines = 1})
       : super(key: key);
-  final ValueSetter<String> myValueSetter;
+  final ValueSetter<String?> myValueSetter;
   final String label;
   final bool numeric;
+  final bool nullable;
   final String? initText;
   final String? hint;
   final int minLines;
+  final int? maxLength;
   final String? Function(String? str)? validate;
 
   @override
@@ -93,6 +97,7 @@ class _CustomInput extends State<CustomInput>
             autofocus: true,
             keyboardType:
                 widget.numeric ? TextInputType.number : TextInputType.multiline,
+            maxLength: widget.maxLength,
             decoration: InputDecoration(
                 hintMaxLines: 14,
                 focusedBorder: defaultBorder,
@@ -105,6 +110,9 @@ class _CustomInput extends State<CustomInput>
                 hintStyle: tNormalTextStyle.copyWith(
                     fontSize: 12, color: kBorderColor)),
             validator: (str) {
+              if (widget.nullable && str == null || str!.isEmpty) {
+                return null;
+              }
               if (widget.validate != null) {
                 return widget.validate!(str);
               } else {
@@ -118,12 +126,16 @@ class _CustomInput extends State<CustomInput>
             onPressed: () async {
               if (formKey.currentState!.validate()) {
                 Get.back();
-                widget.myValueSetter(textEditingController.text);
+                if (widget.nullable && textEditingController.text.isEmpty) {
+                  widget.myValueSetter(null);
+                } else {
+                  widget.myValueSetter(textEditingController.text);
+                }
               }
             },
             color: getColorPrimary(),
             widget: Text(
-              'save_card'.tr,
+              'save'.tr,
               style: tButtonWhiteTextStyle.copyWith(
                   fontSize: 14, fontWeight: FontWeight.w500),
             ))
@@ -226,7 +238,7 @@ class _CustomInputPassword extends State<CustomInputPassword>
             },
             color: getColorPrimary(),
             widget: Text(
-              'save_card'.tr,
+              'save'.tr,
               style: tButtonWhiteTextStyle.copyWith(
                   fontSize: 14, fontWeight: FontWeight.w500),
             ))
@@ -321,7 +333,7 @@ class _CustomInputDate extends State<CustomInputDate>
                 },
                 color: getColorPrimary(),
                 widget: Text(
-                  'save_card'.tr,
+                  'save'.tr,
                   style: tButtonWhiteTextStyle.copyWith(
                       fontSize: 14, fontWeight: FontWeight.w500),
                 ))
@@ -487,7 +499,7 @@ class _CustomInputCity extends State<CustomInputCity>
             },
             color: getColorPrimary(),
             widget: Text(
-              'save_card'.tr,
+              'save'.tr,
               style: tButtonWhiteTextStyle.copyWith(
                   fontSize: 14, fontWeight: FontWeight.w500),
             ))
@@ -651,7 +663,7 @@ class _CustomSelectAddress extends State<CustomSelectAddress>
             },
             color: getColorPrimary(),
             widget: Text(
-              'save_card'.tr,
+              'save'.tr,
               style: tButtonWhiteTextStyle.copyWith(
                   fontSize: 14, fontWeight: FontWeight.w500),
             ))
@@ -743,7 +755,7 @@ class _CustomInputState extends State<CustomInputState>
             },
             color: getColorPrimary(),
             widget: Text(
-              'save_card'.tr,
+              'save'.tr,
               style: tButtonWhiteTextStyle.copyWith(
                   fontSize: 14, fontWeight: FontWeight.w500),
             ))

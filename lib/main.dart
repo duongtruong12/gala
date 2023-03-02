@@ -14,7 +14,6 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_stripe/flutter_stripe.dart';
 import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
-import 'package:google_fonts/google_fonts.dart';
 
 import 'firebase_options.dart';
 import 'routes/app_pages.dart';
@@ -26,7 +25,6 @@ Future<void> main() async {
   Stripe.publishableKey =
       'pk_test_51McKsOIx8zBC2fSm1X8BLS7ftrvvXcAEWHM5DFiozymIY2HntE8pxgiywAjuLRbyhiXpg7uGAMhXxuxBnYpsx2Lq00TQ6dxLuO';
   await Stripe.instance.applySettings();
-  GoogleFonts.notoSansJavanese();
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
   );
@@ -61,6 +59,9 @@ class MyApp extends StatelessWidget {
         },
         theme: casterAccount.value ? femaleTheme : lightTheme,
         defaultTransition: Transition.fade,
+        onGenerateTitle: (BuildContext context) {
+          return 'Claha';
+        },
         localizationsDelegates: const [
           GlobalWidgetsLocalizations.delegate,
           GlobalCupertinoLocalizations.delegate,

@@ -41,9 +41,22 @@ class LoginMobilePage extends StatelessWidget {
   Widget _buildEmail() {
     return TextFormField(
       controller: controller.emailController,
-      validator: Validate.emailValidate,
+      autofillHints: const [
+        AutofillHints.email,
+        AutofillHints.username,
+      ],
+      enableSuggestions: true,
+      validator: (str) {
+        final errorEmail = Validate.emailValidate(str);
+        final errorUserId = Validate.validateUserId(str);
+        if (errorEmail == null || errorUserId == null) {
+          return null;
+        } else {
+          return errorUserId;
+        }
+      },
       decoration: InputDecoration(
-          hintText: 'email'.tr,
+          hintText: 'user_id'.tr,
           contentPadding:
               const EdgeInsets.symmetric(horizontal: kDefaultPadding),
           border: defaultBorderLoginRounded,
@@ -58,7 +71,9 @@ class LoginMobilePage extends StatelessWidget {
     return TextFormField(
       controller: controller.passController,
       validator: Validate.passwordValidate,
+      autofillHints: const [AutofillHints.password],
       obscureText: true,
+      enableSuggestions: true,
       onFieldSubmitted: (value) {
         controller.onLogin();
       },
@@ -92,25 +107,36 @@ class LoginMobilePage extends StatelessWidget {
                 ),
               ),
             ),
-            Form(
-              key: controller.formKey,
-              child: Column(
-                children: [
-                  _buildEmail(),
-                  const SizedBox(height: kDefaultPadding),
-                  _buildPassword(),
-                  const SizedBox(height: kDefaultPadding * 2),
-                  CustomButton(
-                      onPressed: controller.onLogin,
-                      borderRadius: kSmallPadding,
-                      gradient: kLoginGradient,
-                      loginPage: true,
-                      widget: Text(
-                        'login'.tr,
-                        style: tButtonWhiteTextStyle.copyWith(
-                            fontSize: 16, fontWeight: FontWeight.w500),
-                      ))
-                ],
+            AutofillGroup(
+              child: Form(
+                key: controller.formKey,
+                child: Column(
+                  children: [
+                    _buildEmail(),
+                    const SizedBox(height: kDefaultPadding),
+                    _buildPassword(),
+                    const SizedBox(height: kDefaultPadding * 2),
+                    CustomButton(
+                        onPressed: controller.onLogin,
+                        borderRadius: kSmallPadding,
+                        gradient: kLoginGradient,
+                        loginPage: true,
+                        widget: Text(
+                          'login'.tr,
+                          style: tButtonWhiteTextStyle.copyWith(
+                              fontSize: 16, fontWeight: FontWeight.w500),
+                        )),
+                    const SizedBox(height: kDefaultPadding),
+                    InkWell(
+                      onTap: controller.forgotPassword,
+                      child: GradientText(
+                        'forgot_password'.tr,
+                        style: tNormalTextStyle,
+                        gradient: kLoginGradient,
+                      ),
+                    ),
+                  ],
+                ),
               ),
             )
           ],

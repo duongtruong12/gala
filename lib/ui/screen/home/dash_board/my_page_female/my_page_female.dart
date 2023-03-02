@@ -45,7 +45,8 @@ class MyPageFemaleMobilePage extends StatelessWidget {
               : getSvgImage('ic_$label'),
           SizedBox(width: logout ? kSmallPadding : kDefaultPadding),
           Expanded(
-              child: Text(label.tr,
+              child: Text(
+                  label == 'user_guide' ? 'user_guide_female'.tr : label.tr,
                   style: tNormalTextStyle.copyWith(
                       color: logout ? kErrorColor : kTextColorDark))),
           const SizedBox(width: kDefaultPadding),
@@ -89,12 +90,14 @@ class MyPageFemaleMobilePage extends StatelessWidget {
         ),
       ),
       const SizedBox(height: 4),
-      Center(
-        child: Text(
-          formatCurrency(user.value?.currentPoint),
-          style: tNormalTextStyle.copyWith(color: kTextColorPrimary),
-        ),
-      ),
+      Obx(() {
+        return Center(
+          child: Text(
+            formatCurrency(user.value?.currentPoint),
+            style: tNormalTextStyle.copyWith(color: kTextColorPrimary),
+          ),
+        );
+      }),
       const SizedBox(height: kDefaultPadding),
       Card(
         color: kTextColorSecond,

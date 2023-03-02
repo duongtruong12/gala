@@ -13,7 +13,7 @@ class HomeController extends GetxController {
   RxInt currentIndex = 0.obs;
 
   late Map<int, String> map;
-  StreamSubscription? streamSubscription;
+  StreamSubscription? streamSubscription, steamNotification;
 
   @override
   void onInit() async {
@@ -49,11 +49,15 @@ class HomeController extends GetxController {
         RouteId.myPage: Routes.myPage,
       };
     }
+
+    await fireStoreProvider.installNotification();
+    steamNotification = fireStoreProvider.listenNotification();
   }
 
   @override
   void onClose() {
     streamSubscription?.cancel();
+    steamNotification?.cancel();
     super.onClose();
   }
 

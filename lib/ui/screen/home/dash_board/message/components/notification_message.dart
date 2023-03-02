@@ -16,9 +16,12 @@ class NotificationMessage extends StatelessWidget {
       mainAxisAlignment: MainAxisAlignment.center,
       mainAxisSize: MainAxisSize.max,
       children: [
-        Text(
-          content ?? '',
-          style: tNormalTextStyle.copyWith(fontSize: 12, color: kBorderColor),
+        Expanded(
+          child: Text(
+            content ?? '',
+            textAlign: TextAlign.center,
+            style: tNormalTextStyle.copyWith(fontSize: 12, color: kBorderColor),
+          ),
         )
       ],
     );

@@ -1,6 +1,8 @@
 import 'package:base_flutter/utils/const.dart';
+import 'package:base_flutter/utils/global/globals_variable.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:badges/badges.dart' as badges;
 
 class WebNavigator extends StatelessWidget {
   const WebNavigator({
@@ -18,12 +20,22 @@ class WebNavigator extends StatelessWidget {
       onTap: () async {
         onTap(index);
       },
-      child: Padding(
-          padding: const EdgeInsetsDirectional.all(kDefaultPadding),
-          child: Text(
-            label,
-            style: tNormalTextStyle.copyWith(color: color),
-          )),
+      child: Obx(() {
+        return badges.Badge(
+          badgeContent: Text(
+            '${unread.value}',
+            style: tButtonWhiteTextStyle.copyWith(fontSize: 8),
+          ),
+          showBadge: unread.value > 0 && index == 2,
+          position: badges.BadgePosition.topEnd(),
+          child: Padding(
+              padding: const EdgeInsetsDirectional.all(kDefaultPadding),
+              child: Text(
+                label,
+                style: tNormalTextStyle.copyWith(color: color),
+              )),
+        );
+      }),
     );
   }
 
@@ -51,9 +63,9 @@ class WebNavigator extends StatelessWidget {
               _buildItem(label: 'caster_manager'.tr, index: 0),
               _buildItem(label: 'guest_manager'.tr, index: 1),
               _buildItem(label: 'chat_manager'.tr, index: 2),
-              _buildItem(label: 'payment_manager'.tr, index: 3),
-              _buildItem(label: 'cast_payment_manager'.tr, index: 4),
-              _buildItem(label: 'call_list'.tr, index: 5),
+              // _buildItem(label: 'payment_manager'.tr, index: 3),
+              _buildItem(label: 'cast_payment_manager'.tr, index: 3),
+              _buildItem(label: 'call_list'.tr, index: 4),
             ],
           )),
     );
