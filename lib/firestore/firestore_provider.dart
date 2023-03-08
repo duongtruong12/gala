@@ -104,14 +104,21 @@ class FireStoreProvider {
     }
   }
 
-  Future<List> getListToken(List userId) async {
+  Future<List> getListToken(List userId,
+      {ValueSetter<List>? myEmailSetter}) async {
     final listToken = [];
+    final listEmail = [];
     void parseList(QuerySnapshot<Map<String, dynamic>> doc) {
       if (doc.docs.isNotEmpty) {
         for (var element in doc.docs) {
           if (element.id != user.value?.id) {
             final model = UserModel.fromJson(element.data());
-            listToken.add(model.notificationToken);
+            if (model.notificationToken != null) {
+              listToken.add(model.notificationToken);
+            }
+            if (model.email != null) {
+              listEmail.add(model.email);
+            }
           }
         }
       }
@@ -133,6 +140,9 @@ class FireStoreProvider {
       } else {
         throw FireStoreException(e.code, e.message, e.stackTrace);
       }
+    }
+    if (myEmailSetter != null) {
+      myEmailSetter(listEmail);
     }
     return listToken;
   }
@@ -427,18 +437,38 @@ class FireStoreProvider {
         showError('error_default'.tr);
         return;
       }
+      await queryUserFromFirebase(userCredential.user!, password: password);
+    } on FirebaseException catch (e) {
+      throw FireStoreException(e.code, e.message, e.stackTrace);
+    } finally {
+      loading.value = false;
+    }
+  }
 
+  Future<User?> getCurrentUser() async {
+    User? firebaseUser = auth.currentUser;
+    firebaseUser ??= await auth.authStateChanges().single;
+
+    return firebaseUser;
+  }
+
+  Future<void> queryUserFromFirebase(User authFirebase,
+      {String? password}) async {
+    loading.value = true;
+    try {
       final doc = await fireStore
           .collection(FirebaseCollectionName.users)
-          .doc(userCredential.user?.uid)
+          .doc(authFirebase.uid)
           .get();
       if (doc.data() == null || !doc.exists) {
         showError('error_default'.tr);
         return;
       }
       user.value = UserModel.fromJson(doc.data()!);
-      await storeData(
-          key: SharedPrefKey.password, value: generateMd5(password));
+      if (password != null) {
+        await storeData(
+            key: SharedPrefKey.password, value: generateMd5(password));
+      }
       await storeData(
           key: SharedPrefKey.user,
           value: userModelToJsonSaveValue(user.value!));
@@ -493,8 +523,8 @@ class FireStoreProvider {
     DocumentSnapshot? lastDocument,
     String? address,
     String? birthPlace,
-    int? height,
-    int? age,
+    required List<int> height,
+    required List<int> age,
     TypeAccount? sort,
   }) async {
     loading.value = true;
@@ -504,23 +534,34 @@ class FireStoreProvider {
         if (querySnapshot.docs.isEmpty) {
           return;
         }
-        list.addAll(querySnapshot.docs);
+        if (height.length < 2 || querySnapshot.docs.isEmpty) {
+          list.addAll(querySnapshot.docs);
+          return;
+        }
+
+        for (var element in querySnapshot.docs) {
+          final model = UserModel.fromJson(element.data());
+          if (model.height != null) {
+            if (model.height! >= height[0] && model.height! <= height[1]) {
+              list.add(element);
+            }
+          }
+        }
       }
 
       final now = Timestamp.now();
       Timestamp? minDate, maxDate;
-      if (age != null) {
+      if (age.length > 1) {
         minDate = Timestamp.fromDate(
-            DateTime(now.toDate().year - age, 1, 1, 0, 0, 0));
+            DateTime(now.toDate().year - age[1], 1, 1, 0, 0, 0));
         maxDate = Timestamp.fromDate(
-            DateTime(now.toDate().year - age, 12, 31, 23, 59, 59));
+            DateTime(now.toDate().year - age[0], 12, 31, 23, 59, 59));
       }
 
       var query = fireStore
           .collection(FirebaseCollectionName.users)
           .where('typeAccount', isEqualTo: sort?.name)
           .where('address', isEqualTo: address)
-          .where('height', isEqualTo: height)
           .where('birthPlace', isEqualTo: birthPlace)
           .where('birthday', isLessThan: maxDate, isGreaterThan: minDate)
           .limit(kPagingSize);
@@ -928,12 +969,9 @@ class FireStoreProvider {
               isGreaterThan: queryAll ? null : minDate);
 
       if (user.value?.typeAccount != TypeAccount.admin.name &&
-          user.value?.stateId != null) {
-        query.where('stateId', isEqualTo: user.value?.stateId);
-        if (user.value?.tagInformation.isNotEmpty == true) {
-          query.where('tagInformation',
-              arrayContainsAny: user.value?.tagInformation);
-        }
+          user.value?.tagInformation.isNotEmpty == true) {
+        query.where('tagInformation',
+            arrayContainsAny: user.value?.tagInformation);
       }
 
       streamSubscription =

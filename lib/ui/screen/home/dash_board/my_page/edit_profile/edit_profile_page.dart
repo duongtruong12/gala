@@ -190,7 +190,7 @@ class EditProfileMobilePage extends StatelessWidget {
               label: 'address'.tr,
               content: user.value?.address ?? 'not_entered'.tr,
               onPressed: () {
-                controller.showInput(
+                controller.selectCity(
                     type: 'address',
                     label: 'address'.tr,
                     initText: user.value?.address);
@@ -200,7 +200,7 @@ class EditProfileMobilePage extends StatelessWidget {
               label: 'birth_place'.tr,
               content: user.value?.birthPlace ?? 'not_entered'.tr,
               onPressed: () {
-                controller.showInput(
+                controller.selectCity(
                     type: 'birthPlace',
                     label: 'birth_place'.tr,
                     initText: user.value?.birthPlace);
@@ -210,104 +210,149 @@ class EditProfileMobilePage extends StatelessWidget {
               label: 'education'.tr,
               content: user.value?.education ?? 'not_entered'.tr,
               onPressed: () {
-                controller.showInput(
-                    type: 'education',
-                    label: 'education'.tr,
-                    initText: user.value?.education);
+                controller.showSelectLabel(
+                  type: 'education',
+                  label: 'education'.tr,
+                  initValue: user.value?.education,
+                  map: {
+                    '短大/専門学校卒': '短大/専門学校卒',
+                    '高校卒': '高校卒',
+                    '大学卒': '大学卒',
+                    '大学院卒': '大学院卒',
+                    'その他': 'その他',
+                  },
+                );
               }),
           const Divider(),
           _buildItemInformation(
               label: 'annual_income'.tr,
-              content: user.value?.annualIncome != null
-                  ? formatCurrency(user.value?.annualIncome,
-                      symbol: CurrencySymbol.japan)
-                  : 'not_entered'.tr,
+              content: user.value?.annualIncome ?? 'not_entered'.tr,
               onPressed: () {
-                controller.showInput(
-                    type: 'annualIncome',
-                    label: 'annual_income'.tr,
-                    numeric: true,
-                    initText: '${user.value?.annualIncome ?? 0}');
+                controller.showSelectLabel(
+                  type: 'annualIncome',
+                  label: 'annual_income'.tr,
+                  initValue: '${user.value?.annualIncome ?? 0}',
+                  map: {
+                    '200万未満': '200万未満',
+                    '200万～400万': '200万～400万',
+                    '400万～600万': '400万～600万',
+                    '600万～800万': '600万～800万',
+                    '800万～1000万': '800万～1000万',
+                    '1000万～1500万': '1000万～1500万',
+                    '1500万～2000万': '1500万～2000万',
+                    '2000万～3000万': '2000万～3000万',
+                    '3000万～4000万': '3000万～4000万',
+                    '4000万～5000万': '4000万～5000万',
+                    '5000万～1億': '5000万～1億',
+                    '1億以上': '1億以上',
+                  },
+                );
               }),
           const Divider(),
           _buildItemInformation(
               label: 'job'.tr,
               content: user.value?.job ?? 'not_entered'.tr,
               onPressed: () {
-                controller.showInput(
-                    type: 'job', label: 'job'.tr, initText: user.value?.job);
+                controller.showSelectLabel(
+                  type: 'job',
+                  label: 'job'.tr,
+                  initValue: user.value?.job,
+                  map: {
+                    '会社員': '会社員',
+                    '医者': '医者',
+                    '弁護士': '弁護士',
+                    '公認会計士': '公認会計士',
+                    '経営者・役員': '経営者・役員',
+                    '公務員': '公務員',
+                    '事務員': '事務員',
+                    '大手商社': '大手商社',
+                    '外資金融': '外資金融',
+                    '大手企業': '大手企業',
+                    'クリエイター': 'クリエイター',
+                    'ＩＴ関連': 'ＩＴ関連',
+                    'パイロット': 'パイロット',
+                    '芸能・モデル': '芸能・モデル',
+                    'アパレル': 'アパレル',
+                    'アナウンサー': 'アナウンサー',
+                    '保育士': '保育士',
+                    '自由業': '自由業',
+                    '学生': '学生',
+                    '上場企業': '上場企業',
+                    '金融': '金融',
+                    'コンサル': 'コンサル',
+                    '教育関連': '教育関連',
+                    '不動産': '不動産',
+                    '建築関連': '建築関連',
+                    'WEB業界': 'WEB業界',
+                    'エンタメ': 'エンタメ',
+                    '広告': '広告',
+                    'マスコミ': 'マスコミ',
+                    '接客業': '接客業',
+                    'その他': 'その他',
+                  },
+                );
               }),
           const Divider(),
           _buildItemInformation(
               label: 'sake'.tr,
-              content: user.value?.getTextDrink() ?? 'not_entered'.tr,
+              content: user.value?.sake ?? 'not_entered'.tr,
               onPressed: () {
                 controller.showSelectLabel(
-                    type: 'isDrink',
+                    type: 'sake',
                     label: 'sake'.tr,
                     map: {
-                      'sake_can'.tr: true,
-                      'sake_cannot'.tr: false,
+                      '飲む': '飲む',
+                      '飲まない': '飲まない',
+                      'ときどき飲む': 'ときどき飲む',
                     },
-                    initValue: user.value?.isDrink);
+                    initValue: user.value?.sake);
               }),
           const Divider(),
           _buildItemInformation(
               label: 'smoke'.tr,
-              content: user.value?.getTextSmoke() ?? 'not_entered'.tr,
+              content: user.value?.smoke ?? 'not_entered'.tr,
               onPressed: () {
                 controller.showSelectLabel(
-                    type: 'isSmoke',
+                    type: 'smoke',
                     label: 'smoke'.tr,
                     map: {
-                      'smoke_can'.tr: true,
-                      'smoke_cannot'.tr: false,
+                      '吸う': '吸う',
+                      '吸わない': '吸わない',
+                      '非禁煙者の前では吸わない': '非禁煙者の前では吸わない',
+                      '相手が嫌ならやめる': '相手が嫌ならやめる',
                     },
-                    initValue: user.value?.isSmoke);
+                    initValue: user.value?.smoke);
               }),
           const Divider(),
           _buildItemInformation(
               label: 'family'.tr,
               content: user.value?.familyStatus ?? 'not_entered'.tr,
               onPressed: () {
-                controller.showInput(
+                controller.showSelectLabel(
                     type: 'familyStatus',
                     label: 'family'.tr,
-                    initText: user.value?.familyStatus);
+                    initValue: user.value?.familyStatus,
+                    map: {
+                      '長男': '長男',
+                      '次男': '次男',
+                      '三男': '三男',
+                      'その他': 'その他',
+                    });
               }),
           const Divider(),
           _buildItemInformation(
               label: 'living_family'.tr,
-              content: user.value?.getTextLiveFamily() ?? 'not_entered'.tr,
+              content: user.value?.livingFamily ?? 'not_entered'.tr,
               onPressed: () {
                 controller.showSelectLabel(
-                    type: 'livingWithFamily',
+                    type: 'livingFamily',
                     label: 'living_family'.tr,
                     map: {
-                      'living_family_with'.tr: true,
-                      'living_family_alone'.tr: false,
+                      '一人暮らし': '一人暮らし',
+                      'ペットと一緒': 'ペットと一緒',
+                      '実家暮らし': '実家暮らし',
                     },
-                    initValue: user.value?.livingWithFamily);
-              }),
-          const Divider(),
-          _buildItemInformation(
-              label: 'hair_style'.tr,
-              content: user.value?.hairStyle ?? 'not_entered'.tr,
-              onPressed: () {
-                controller.showInput(
-                    type: 'hairStyle',
-                    label: 'hair_style'.tr,
-                    initText: user.value?.hairStyle);
-              }),
-          const Divider(),
-          _buildItemInformation(
-              label: 'hair_color'.tr,
-              content: user.value?.hairColor ?? 'not_entered'.tr,
-              onPressed: () {
-                controller.showInput(
-                    type: 'hairColor',
-                    label: 'hair_color'.tr,
-                    initText: user.value?.hairColor);
+                    initValue: user.value?.livingFamily);
               }),
           const Divider(),
         ],
@@ -383,18 +428,6 @@ class EditProfileMobilePage extends StatelessWidget {
             onPressed: controller.showDateBottom);
       }),
       _hideAge(),
-      const Divider(),
-      Obx(() {
-        String str = 'please_select'.tr;
-        if (user.value?.cityName != null && user.value?.stateName != null) {
-          str = '${user.value?.cityName} ${user.value?.stateName}';
-        }
-        return buildFieldInput(
-          label: 'good_place'.tr,
-          content: str,
-          onPressed: controller.showSelectCity,
-        );
-      }),
       const Divider(),
       Obx(() {
         return buildFieldInput(

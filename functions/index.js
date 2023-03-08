@@ -2,6 +2,14 @@ const admin = require('firebase-admin');
 const functions = require("firebase-functions");
 const stripe = require("stripe")("sk_test_51McKsOIx8zBC2fSmofXLDyeplkqahxIVSDvxnOPMmODotm0gMnR7QkchaonOgucWPjovZwZfmzQIjl83RuOWqVWA00And2NmwO");
 const cors = require('cors')({origin: true});
+const nodemailer = require("nodemailer");
+let transporter = nodemailer.createTransport({
+    service: "gmail",
+    auth: {
+        user: "claha.sp.ja@gmail.com",
+        pass: "hugkpuqxzipignun",
+    },
+});
 
 admin.initializeApp();
 exports.notificationListener = functions.region('asia-northeast1').firestore.document("/notification/{messageGroupId}/itemsNotification/{itemId}")
@@ -13,8 +21,36 @@ function sendNotification(item) {
     const title = item["title"];
     const body = item["body"];
     const list = item["listToken"];
+    const listEmail = item["listEmail"];
 
     list.forEach(sendNotificationThroughToken);
+    listEmail.forEach(sendEmail);
+
+    async function sendEmail(email) {
+        console.log("Send Email To:", email);
+        let mailOptions = {
+            from: '"Claha" <claha.sp.ja@gmail.com>',
+            to: email,
+            subject: title,
+            html: `
+        <html lang="ja">
+            <head>
+                <title>${title}</title>
+            </head>
+            <body>
+                <h1>${body}</h1>
+                <p>素晴らしい一日をお過ごしください。</p>
+            </body>
+        </html>
+    `
+        };
+
+        transporter
+            .sendMail(mailOptions)
+            .then((info) => {
+                console.log("Message sent: %s", info.messageId);
+            });
+    }
 
     async function sendNotificationThroughToken(token) {
         const message = {

@@ -69,6 +69,24 @@ class EditProfileController extends GetxController {
         });
   }
 
+  Future<void> selectCity(
+      {required String type,
+      required String? initText,
+      required String label}) async {
+    await showModalBottomSheet(
+        context: Get.context!,
+        isScrollControlled: true,
+        builder: (BuildContext context) {
+          return CustomInputCity(
+            myValueSetter: (cityModel) async {
+              await fireStoreProvider.updateUser(data: {type: cityModel?.name});
+            },
+            label: label,
+            init: initText,
+          );
+        });
+  }
+
   Future<void> showPasswordChange() async {
     await showModalBottomSheet(
         context: Get.context!,

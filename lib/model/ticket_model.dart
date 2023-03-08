@@ -21,7 +21,6 @@ class Ticket {
     this.startTimeAfter,
     this.cityId,
     this.cityName,
-    this.stateId,
     this.stateName,
     this.numberPeople,
     this.createdDate,
@@ -41,7 +40,6 @@ class Ticket {
   String? status;
   int? cityId;
   String? cityName;
-  int? stateId;
   String? stateName;
   int? numberPeople;
   DateTime? createdDate;
@@ -64,7 +62,6 @@ class Ticket {
         status: json["status"],
         cityName: json["cityName"],
         cityId: json["cityId"],
-        stateId: json["stateId"],
         stateName: json["stateName"],
         numberPeople: json["numberPeople"],
         createdDate: fromJsonTimeStamp(json["createdDate"]),
@@ -90,7 +87,6 @@ class Ticket {
         "startTimeAfter": startTimeAfter,
         "cityId": cityId,
         "cityName": cityName,
-        "stateId": stateId,
         "stateName": stateName,
         "numberPeople": numberPeople,
         "createdDate": createdDate,

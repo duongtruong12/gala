@@ -46,36 +46,45 @@ class ItemTarget extends StatelessWidget {
                 children: [
                   getSvgImage('ic_star'),
                   const SizedBox(width: 4),
-                  Column(
-                    mainAxisSize: MainAxisSize.min,
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Row(
-                        mainAxisSize: MainAxisSize.min,
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(
-                            model.getAge(),
-                            style: tNormalTextStyle.copyWith(
-                                fontWeight: FontWeight.w500),
+                  Expanded(
+                    child: Column(
+                      mainAxisSize: MainAxisSize.min,
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        FittedBox(
+                          fit: BoxFit.scaleDown,
+                          child: Row(
+                            mainAxisSize: MainAxisSize.min,
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(
+                                model.getAge(),
+                                maxLines: 1,
+                                overflow: TextOverflow.fade,
+                                style: tNormalTextStyle.copyWith(
+                                    fontWeight: FontWeight.w500),
+                              ),
+                              const SizedBox(width: 4),
+                              Text(
+                                model.displayName ?? '',
+                                maxLines: 1,
+                                overflow: TextOverflow.fade,
+                                style: tNormalTextStyle.copyWith(
+                                    fontWeight: FontWeight.w500),
+                              )
+                            ],
                           ),
-                          const SizedBox(width: 4),
-                          Text(
-                            model.displayName ?? '',
-                            style: tNormalTextStyle.copyWith(
-                                fontWeight: FontWeight.w500),
-                          )
-                        ],
-                      ),
-                      femaleGender == true
-                          ? const SizedBox()
-                          : Text(
-                              formatCurrency(model.pointPer30Minutes,
-                                  symbol: CurrencySymbol.pointPerMinutes),
-                              style: tNormalTextStyle.copyWith(
-                                  fontWeight: FontWeight.w500),
-                            )
-                    ],
+                        ),
+                        femaleGender == true
+                            ? const SizedBox()
+                            : Text(
+                                formatCurrency(model.pointPer30Minutes,
+                                    symbol: CurrencySymbol.pointPerMinutes),
+                                style: tNormalTextStyle.copyWith(
+                                    fontWeight: FontWeight.w500),
+                              )
+                      ],
+                    ),
                   ),
                 ],
               ),

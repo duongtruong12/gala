@@ -3,7 +3,6 @@ import 'package:base_flutter/model/user_model.dart';
 import 'package:base_flutter/routes/app_pages.dart';
 import 'package:base_flutter/utils/constant.dart';
 import 'package:base_flutter/utils/global/globals_variable.dart';
-import 'package:base_flutter/utils/validate.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -12,43 +11,65 @@ class SearchDetailController extends GetxController {
   static SearchDetailController get to => Get.find();
   final address = Rxn<String>();
   final birthPlace = Rxn<String>();
-  final height = Rxn<int>();
-  final age = Rxn<int>();
+  final listAge = <int>[].obs;
+  final listHeight = <int>[].obs;
   final searchState = false.obs;
   final list = <UserModel>[].obs;
   final isEmpty = false.obs;
   DocumentSnapshot? lastDoc;
 
-  Future<void> showInput(
+  Future<void> selectCity(
       {required String type,
-      required String label,
-      bool numeric = false,
-      required String? initText}) async {
+      required String? initText,
+      required String label}) async {
     await showModalBottomSheet(
         context: Get.context!,
         isScrollControlled: true,
         builder: (BuildContext context) {
-          return CustomInput(
-            numeric: numeric,
-            nullable: true,
-            myValueSetter: (str) async {
+          return CustomInputCity(
+            myValueSetter: (cityModel) async {
               if (type == 'address') {
-                address.value = str;
-              } else if (type == 'birthPlace') {
-                birthPlace.value = str;
-              } else if (type == 'height') {
-                height.value = str != null ? int.parse(str) : null;
+                address.value = cityModel?.name;
               } else {
-                age.value = str != null ? int.parse(str) : null;
+                birthPlace.value = cityModel?.name;
               }
             },
-            validate: (str) {
-              return numeric ? Validate.numberValidate(str, label) : null;
-            },
             label: label,
-            initText: initText,
+            init: initText,
           );
         });
+  }
+
+  Future<void> showSelectRange(
+      {required String type,
+      required String label,
+      required String behindText,
+      required int requiredMinValue,
+      required int requiredMaxValue,
+      required int? minValue,
+      required int? maxValue}) async {
+    final List<int>? list = await showModalBottomSheet(
+        context: Get.context!,
+        isScrollControlled: true,
+        builder: (BuildContext context) {
+          return RangeSelector(
+            label: label,
+            minValue: minValue,
+            maxValue: maxValue,
+            requiredMinValue: requiredMinValue,
+            requireMaxValue: requiredMaxValue,
+            behindText: behindText,
+          );
+        });
+    if (list != null && list.isNotEmpty == true) {
+      if (type == 'height') {
+        listHeight.clear();
+        listHeight.addAll(list.toList());
+      } else {
+        listAge.clear();
+        listAge.addAll(list.toList());
+      }
+    }
   }
 
   void onPressedBack() {
@@ -68,8 +89,8 @@ class SearchDetailController extends GetxController {
     final listDoc = await fireStoreProvider.searchListUser(
         lastDocument: lastDoc,
         sort: casterAccount.value ? TypeAccount.guest : TypeAccount.caster,
-        height: height.value,
-        age: age.value,
+        height: listHeight.toList(),
+        age: listAge.toList(),
         address: address.value,
         birthPlace: birthPlace.value);
     if (listDoc.isNotEmpty) {

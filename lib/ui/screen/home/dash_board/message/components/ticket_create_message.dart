@@ -7,6 +7,7 @@ import 'package:base_flutter/utils/global/globals_variable.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:sprintf/sprintf.dart';
 
 class TicketCreatedMessage extends StatelessWidget {
   const TicketCreatedMessage({
@@ -55,44 +56,61 @@ class TicketCreatedMessage extends StatelessWidget {
           );
           if (snapshot.connectionState == ConnectionState.done) {
             if (ticket != null) {
-              item = Column(
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: [
-                  Text(
-                    content ?? '',
-                    textAlign: TextAlign.center,
-                    style: tButtonWhiteTextStyle.copyWith(
-                        fontSize: 14, fontWeight: FontWeight.w600),
-                  ),
-                  const SizedBox(height: kSmallPadding),
-                  _buildItemIcon(
-                      content: ticket.durationDate?.tr ?? '',
-                      icon: 'ic_start_time'),
-                  const SizedBox(width: kDefaultPadding),
-                  _buildItemIcon(
-                      content: '${ticket.numberPeople}${'number_people'.tr}',
-                      icon: 'ic_number_people'),
-                  const SizedBox(width: kDefaultPadding),
-                  _buildItemIcon(
-                      content: formatDateTime(
-                          date: ticket.startTime,
-                          formatString: DateTimeFormatString.yyyyMMddhhMM),
-                      icon: 'ic_start_time'),
-                  const SizedBox(width: kDefaultPadding),
-                  if (user.value?.typeAccount == TypeAccount.admin.name)
-                    CustomButton(
-                        onPressed: onSwitchDetail,
-                        color: kPrimaryColor,
-                        widget: Text(
-                          'detail'.tr,
-                          style: tButtonWhiteTextStyle,
-                        ))
-                ],
-              );
+              if (user.value?.typeAccount == TypeAccount.admin.name) {
+                item = Column(
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    Text(
+                      content ?? '',
+                      textAlign: TextAlign.center,
+                      style: tButtonWhiteTextStyle.copyWith(
+                          fontSize: 14, fontWeight: FontWeight.w600),
+                    ),
+                    const SizedBox(height: kSmallPadding),
+                    _buildItemIcon(
+                        content: ticket.durationDate?.tr ?? '',
+                        icon: 'ic_start_time'),
+                    const SizedBox(width: kDefaultPadding),
+                    _buildItemIcon(
+                        content: '${ticket.numberPeople}${'number_people'.tr}',
+                        icon: 'ic_number_people'),
+                    const SizedBox(width: kDefaultPadding),
+                    _buildItemIcon(
+                        content: formatDateTime(
+                            date: ticket.startTime,
+                            formatString: DateTimeFormatString.yyyyMMddhhMM),
+                        icon: 'ic_start_time'),
+                    const SizedBox(width: kDefaultPadding),
+                    if (user.value?.typeAccount == TypeAccount.admin.name)
+                      CustomButton(
+                          onPressed: onSwitchDetail,
+                          color: kPrimaryColor,
+                          widget: Text(
+                            'detail'.tr,
+                            style: tButtonWhiteTextStyle,
+                          ))
+                  ],
+                );
+              } else {
+                item = Text(
+                  sprintf('ticket_created_content'.tr, [
+                    '${ticket.numberPeople}',
+                    formatDateTime(
+                        date: ticket.startTime,
+                        formatString: DateTimeFormatString.yyyyMMddhhMM),
+                    '${ticket.cityName} ${ticket.stateName}',
+                    ticket.durationDate?.tr ?? '',
+                  ]),
+                  textAlign: TextAlign.center,
+                  style: tButtonWhiteTextStyle.copyWith(
+                      fontSize: 14, fontWeight: FontWeight.w500),
+                );
+              }
             } else {
               return const SizedBox();
             }
           }
+
           return Row(
             crossAxisAlignment: CrossAxisAlignment.center,
             mainAxisAlignment: MainAxisAlignment.center,
@@ -100,7 +118,6 @@ class TicketCreatedMessage extends StatelessWidget {
             children: [
               Container(
                 color: kGrayColor,
-                height: 200,
                 alignment: Alignment.center,
                 width: Get.width * 0.7,
                 padding: const EdgeInsets.all(kDefaultPadding),

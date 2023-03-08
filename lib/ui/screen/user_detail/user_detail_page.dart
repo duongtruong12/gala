@@ -207,19 +207,16 @@ class UserDetailMobilePage extends StatelessWidget {
             content: controller.model.value?.job ?? 'not_entered'.tr),
         _buildItemInformation(
             label: 'sake'.tr,
-            content:
-                controller.model.value?.getTextDrink() ?? 'not_entered'.tr),
+            content: controller.model.value?.sake ?? 'not_entered'.tr),
         _buildItemInformation(
             label: 'smoke'.tr,
-            content:
-                controller.model.value?.getTextSmoke() ?? 'not_entered'.tr),
+            content: controller.model.value?.smoke ?? 'not_entered'.tr),
         _buildItemInformation(
             label: 'family'.tr,
             content: controller.model.value?.familyStatus ?? 'not_entered'.tr),
         _buildItemInformation(
             label: 'living_family'.tr,
-            content: controller.model.value?.getTextLiveFamily() ??
-                'not_entered'.tr),
+            content: controller.model.value?.livingFamily ?? 'not_entered'.tr),
         _buildItemInformation(
             label: 'hair_style'.tr,
             content: controller.model.value?.hairStyle ?? 'not_entered'.tr),

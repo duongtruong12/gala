@@ -78,7 +78,7 @@ class SearchDetailMobilePage extends StatelessWidget {
             label: 'address'.tr,
             content: controller.address.value,
             onPressed: () {
-              controller.showInput(
+              controller.selectCity(
                   type: 'address',
                   label: 'address'.tr,
                   initText: controller.address.value);
@@ -92,7 +92,7 @@ class SearchDetailMobilePage extends StatelessWidget {
             label: 'birth_place'.tr,
             content: controller.birthPlace.value,
             onPressed: () {
-              controller.showInput(
+              controller.selectCity(
                   type: 'birthPlace',
                   label: 'birth_place'.tr,
                   initText: controller.birthPlace.value);
@@ -103,39 +103,50 @@ class SearchDetailMobilePage extends StatelessWidget {
       const SizedBox(height: 16),
       Obx(() {
         return _buildItemInformation(
-            label: 'age_drop_down'.tr,
-            content:
-                controller.age.value != null ? '${controller.age.value}' : null,
-            onPressed: () {
-              controller.showInput(
-                numeric: true,
-                type: 'age',
-                label: 'age_drop_down'.tr,
-                initText: controller.age.value != null
-                    ? '${controller.age.value}'
-                    : null,
-              );
-            });
+          label: 'age_drop_down'.tr,
+          content: controller.listAge.length > 1
+              ? '${controller.listAge[0]}${'age'.tr}~${controller.listAge[1]}${'age'.tr}'
+              : null,
+          onPressed: () {
+            controller.showSelectRange(
+              type: 'age',
+              label: 'age_drop_down'.tr,
+              minValue:
+                  controller.listAge.length > 1 ? controller.listAge[0] : null,
+              maxValue:
+                  controller.listAge.length > 1 ? controller.listAge[1] : null,
+              requiredMinValue: 20,
+              requiredMaxValue: 35,
+              behindText: 'age'.tr,
+            );
+          },
+        );
       }),
       const SizedBox(height: 16),
       const Divider(),
       const SizedBox(height: 16),
       Obx(() {
         return _buildItemInformation(
-            label: 'height'.tr,
-            content: controller.height.value != null
-                ? '${controller.height.value}'
-                : null,
-            onPressed: () {
-              controller.showInput(
-                numeric: true,
-                type: 'height',
-                label: 'height'.tr,
-                initText: controller.height.value != null
-                    ? '${controller.height.value}'
-                    : null,
-              );
-            });
+          label: 'height'.tr,
+          content: controller.listHeight.length > 1
+              ? '${controller.listHeight[0]}cm~${controller.listHeight[1]}cm'
+              : null,
+          onPressed: () {
+            controller.showSelectRange(
+              type: 'height',
+              label: 'height'.tr,
+              minValue: controller.listHeight.length > 1
+                  ? controller.listHeight[0]
+                  : null,
+              maxValue: controller.listHeight.length > 1
+                  ? controller.listHeight[1]
+                  : null,
+              requiredMinValue: 130,
+              requiredMaxValue: 200,
+              behindText: 'cm',
+            );
+          },
+        );
       }),
       const SizedBox(height: 16),
       const Divider(),

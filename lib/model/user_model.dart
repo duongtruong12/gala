@@ -47,10 +47,10 @@ class UserModel {
     this.education,
     this.annualIncome,
     this.job,
-    this.isDrink,
-    this.isSmoke,
+    this.sake,
+    this.smoke,
     this.familyStatus,
-    this.livingWithFamily,
+    this.livingFamily,
     this.hairStyle,
     this.hairColor,
     this.notificationToken,
@@ -80,12 +80,12 @@ class UserModel {
   String? address;
   String? birthPlace;
   String? education;
-  int? annualIncome;
+  String? annualIncome;
   String? job;
-  bool? isDrink;
-  bool? isSmoke;
+  String? sake;
+  String? smoke;
   String? familyStatus;
-  bool? livingWithFamily;
+  String? livingFamily;
   String? hairStyle;
   String? hairColor;
   List<dynamic> tagInformation;
@@ -94,39 +94,6 @@ class UserModel {
 
   bool isAdminAccount() {
     return typeAccount == TypeAccount.admin.name;
-  }
-
-  String getTextSmoke() {
-    if (isSmoke != null) {
-      if (isSmoke == true) {
-        return 'smoke_can'.tr;
-      } else {
-        return 'smoke_cannot'.tr;
-      }
-    }
-    return 'not_entered'.tr;
-  }
-
-  String getTextDrink() {
-    if (isDrink != null) {
-      if (isDrink == true) {
-        return 'sake_can'.tr;
-      } else {
-        return 'sake_cannot'.tr;
-      }
-    }
-    return 'not_entered'.tr;
-  }
-
-  String getTextLiveFamily() {
-    if (livingWithFamily != null) {
-      if (livingWithFamily == true) {
-        return 'living_family_with'.tr;
-      } else {
-        return 'living_family_alone'.tr;
-      }
-    }
-    return 'not_entered'.tr;
   }
 
   String getAge() {
@@ -175,10 +142,10 @@ class UserModel {
         education: json["education"],
         annualIncome: json["annualIncome"],
         job: json["job"],
-        isDrink: json["isDrink"],
-        isSmoke: json["isSmoke"],
+        sake: json["sake"],
+        smoke: json["smoke"],
         familyStatus: json["familyStatus"],
-        livingWithFamily: json["livingWithFamily"],
+        livingFamily: json["livingFamily"],
         hairStyle: json["hairStyle"],
         pointPer30Minutes: json["pointPer30Minutes"],
         hairColor: json["hairColor"],
@@ -219,10 +186,10 @@ class UserModel {
         education: json["education"],
         annualIncome: json["annualIncome"],
         job: json["job"],
-        isDrink: json["isDrink"],
-        isSmoke: json["isSmoke"],
+        sake: json["sake"],
+        smoke: json["smoke"],
         familyStatus: json["familyStatus"],
-        livingWithFamily: json["livingWithFamily"],
+        livingFamily: json["livingFamily"],
         hairStyle: json["hairStyle"],
         pointPer30Minutes: json["pointPer30Minutes"],
         hairColor: json["hairColor"],
@@ -257,10 +224,10 @@ class UserModel {
         "education": education,
         "annual_income": annualIncome,
         "job": job,
-        "isDrink": isDrink,
-        "isSmoke": isSmoke,
+        "sake": sake,
+        "smoke": smoke,
         "family_status": familyStatus,
-        "livingWithFamily": livingWithFamily,
+        "livingFamily": livingFamily,
         "hairStyle": hairStyle,
         "hairColor": hairColor,
         "tagInformation": List<dynamic>.from(tagInformation.map((x) => x)),
@@ -293,10 +260,10 @@ class UserModel {
         "education": education,
         "annual_income": annualIncome,
         "job": job,
-        "isDrink": isDrink,
-        "isSmoke": isSmoke,
+        "sake": sake,
+        "smoke": smoke,
         "family_status": familyStatus,
-        "livingWithFamily": livingWithFamily,
+        "livingFamily": livingFamily,
         "hairStyle": hairStyle,
         "notificationToken": notificationToken,
         "hairColor": hairColor,

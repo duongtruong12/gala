@@ -188,6 +188,7 @@ class MessageMobilePage extends StatelessWidget {
                       controller.onRefresh(1);
                     },
                     child: ListView.builder(
+                      cacheExtent: 10000,
                       controller: controller.scrollController,
                       physics: const AlwaysScrollableScrollPhysics(),
                       padding: const EdgeInsets.symmetric(

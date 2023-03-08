@@ -22,7 +22,11 @@ class LoginController extends GetxController {
     SchedulerBinding.instance.addPostFrameCallback((_) async {
       storeData(key: SharedPrefKey.femaleGender, value: false);
       casterAccount.value = false;
-      await handleLogin();
+      final currentAuth = await fireStoreProvider.getCurrentUser();
+      if (currentAuth != null) {
+        await fireStoreProvider.queryUserFromFirebase(currentAuth);
+        await handleLogin();
+      }
     });
   }
 

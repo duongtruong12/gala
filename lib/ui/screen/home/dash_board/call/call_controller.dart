@@ -1,4 +1,5 @@
 import 'package:base_flutter/components/custom_bottom_sheet.dart';
+import 'package:base_flutter/model/city_model.dart';
 import 'package:base_flutter/model/ticket_model.dart';
 import 'package:base_flutter/model/user_model.dart';
 import 'package:base_flutter/routes/app_pages.dart';
@@ -6,7 +7,6 @@ import 'package:base_flutter/ui/screen/home/dash_board/call_female/components/fi
 import 'package:base_flutter/utils/constant.dart';
 import 'package:base_flutter/utils/global/globals_functions.dart';
 import 'package:base_flutter/utils/global/globals_variable.dart';
-import 'package:base_flutter/utils/validate.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:get/get.dart';
@@ -51,7 +51,6 @@ class CallController extends GetxController {
     if (ticket.value.numberPeople == null ||
         ticket.value.cityId == null ||
         ticket.value.cityName == null ||
-        ticket.value.stateId == null ||
         ticket.value.stateName == null ||
         ticket.value.startTimeAfter == null ||
         ticket.value.durationDate == null) {
@@ -79,23 +78,19 @@ class CallController extends GetxController {
   }
 
   Future<void> showInputMaxNumber() async {
-    await showModalBottomSheet(
+    final result = await showModalBottomSheet(
         context: Get.context!,
         isScrollControlled: true,
         builder: (BuildContext context) {
-          return CustomInput(
-            numeric: true,
-            myValueSetter: (str) async {
-              ticket.value.numberPeople = int.parse(str!);
-              ticket.refresh();
-            },
-            validate: (str) {
-              return Validate.numberValidate(str, 'number_people'.tr);
-            },
-            label: 'number_people'.tr,
-            initText: '${ticket.value.numberPeople ?? ''}',
+          return CustomStepperNumberPeople(
+            label: 'number_people_select'.tr,
+            init: ticket.value.numberPeople,
           );
         });
+    if (result != null) {
+      ticket.value.numberPeople = result;
+      ticket.refresh();
+    }
   }
 
   Future<void> showSelectCity() async {
@@ -109,10 +104,19 @@ class CallController extends GetxController {
                 ticket.value.cityName = cityModel?.name;
                 ticket.value.cityId = cityModel?.id;
                 ticket.value.stateName = null;
-                ticket.value.stateId = null;
                 ticket.refresh();
               }
             },
+            initList: [
+              CityModel(
+                id: 12,
+                name: '東京',
+              ),
+              CityModel(
+                id: 26,
+                name: '大阪',
+              ),
+            ],
             label: 'please_select_label'.tr,
             init: ticket.value.cityName,
           );
@@ -123,21 +127,40 @@ class CallController extends GetxController {
     if (ticket.value.cityId == null) {
       return;
     }
-    await showModalBottomSheet(
+    final result = await showModalBottomSheet(
         context: Get.context!,
         isScrollControlled: true,
         builder: (BuildContext context) {
-          return CustomInputState(
-            myValueSetter: (stateModel) async {
-              ticket.value.stateName = stateModel?.name;
-              ticket.value.stateId = stateModel?.id;
-              ticket.refresh();
-            },
-            cityId: ticket.value.cityId,
-            label: 'please_select_label'.tr,
+          return CustomSelectStateChip(
+            label: 'select_state_label'.tr,
             init: ticket.value.stateName,
+            initListState: ticket.value.cityId == 12
+                ? [
+                    '恵比寿',
+                    '六本木',
+                    '西麻布',
+                    '麻布十番',
+                    '渋谷',
+                    '赤坂',
+                    '銀座',
+                    '中目黒',
+                    '池袋',
+                    '新宿'
+                  ]
+                : [
+                    '梅田'
+                        '北新地',
+                    '心斎橋・なんば',
+                    '京橋',
+                    '天満',
+                    '福島'
+                  ],
           );
         });
+    if (result != null) {
+      ticket.value.stateName = result;
+      ticket.refresh();
+    }
   }
 
   Future<void> selectListStartTime() async {
@@ -169,7 +192,7 @@ class CallController extends GetxController {
               }
               ticket.refresh();
             },
-            label: 'please_select_label'.tr,
+            label: 'start_time_question'.tr,
             init: ticket.value.startTimeAfter,
             listChips: StartTimeAfter.values.map((e) => e.name).toList(),
           );
@@ -186,7 +209,7 @@ class CallController extends GetxController {
               ticket.value.durationDate = str;
               ticket.refresh();
             },
-            label: 'please_select_label'.tr,
+            label: 'duration_select'.tr,
             init: ticket.value.durationDate,
             listChips: DurationDate.values.map((e) => e.name).toList(),
           );

@@ -1,4 +1,5 @@
 import 'package:base_flutter/components/custom_button.dart';
+import 'package:base_flutter/components/custom_spinner.dart';
 import 'package:base_flutter/components/date_picker_dropdown.dart';
 import 'package:base_flutter/model/city_model.dart';
 import 'package:base_flutter/ui/screen/home/dash_board/call/components/chip_item_select.dart';
@@ -42,6 +43,82 @@ Widget buildLabelWidget(
       ),
     ),
   );
+}
+
+class CustomStepperNumberPeople extends StatefulWidget {
+  const CustomStepperNumberPeople(
+      {Key? key, required this.label, required this.init})
+      : super(key: key);
+  final String label;
+  final int? init;
+
+  @override
+  _CustomStepperNumberPeople createState() => _CustomStepperNumberPeople();
+}
+
+class _CustomStepperNumberPeople extends State<CustomStepperNumberPeople>
+    with SingleTickerProviderStateMixin {
+  late int _stepperValue;
+
+  @override
+  void initState() {
+    super.initState();
+    _stepperValue = widget.init ?? 2;
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return buildLabelWidget(
+      context: context,
+      label: widget.label,
+      children: [
+        Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            IconButton(
+              icon: const Icon(Icons.remove),
+              onPressed: () {
+                if (_stepperValue > 2) {
+                  if (mounted) {
+                    setState(() {
+                      _stepperValue--;
+                    });
+                  }
+                }
+              },
+            ),
+            const SizedBox(width: kDefaultPadding),
+            Text(
+              '$_stepperValue${'number_people'.tr}',
+              style: tNormalTextStyle,
+            ),
+            const SizedBox(width: kDefaultPadding),
+            IconButton(
+              icon: const Icon(Icons.add),
+              onPressed: () {
+                if (mounted) {
+                  setState(() {
+                    _stepperValue++;
+                  });
+                }
+              },
+            ),
+          ],
+        ),
+        const SizedBox(width: kDefaultPadding),
+        CustomButton(
+            onPressed: () async {
+              Get.back(closeOverlays: true, result: _stepperValue);
+            },
+            color: getColorPrimary(),
+            widget: Text(
+              'save'.tr,
+              style: tButtonWhiteTextStyle.copyWith(
+                  fontSize: 14, fontWeight: FontWeight.w500),
+            ))
+      ],
+    );
+  }
 }
 
 class CustomInput extends StatefulWidget {
@@ -369,6 +446,10 @@ class _CustomSelectDropdown extends State<CustomSelectDropdown>
   void initState() {
     super.initState();
     init = widget.init;
+    final contains = widget.map.values.where((element) => element == init);
+    if (contains.isEmpty) {
+      init = null;
+    }
   }
 
   Widget _buildDropdown() {
@@ -422,11 +503,13 @@ class CustomInputCity extends StatefulWidget {
     Key? key,
     required this.myValueSetter,
     required this.label,
+    this.initList,
     this.init,
   }) : super(key: key);
   final ValueSetter<CityModel?> myValueSetter;
   final String label;
   final String? init;
+  final List<CityModel>? initList;
 
   @override
   _CustomInputCity createState() => _CustomInputCity();
@@ -445,7 +528,15 @@ class _CustomInputCity extends State<CustomInputCity>
   }
 
   Future<void> getListCity() async {
-    listCity.addAll(await fireStoreProvider.getListCityModel());
+    if (widget.initList != null) {
+      listCity.addAll(widget.initList!);
+    } else {
+      listCity.addAll(await fireStoreProvider.getListCityModel());
+    }
+    var contain = listCity.where((element) => element.name == city);
+    if (contain.isEmpty) {
+      city = null;
+    }
     if (mounted) setState(() {});
   }
 
@@ -672,6 +763,132 @@ class _CustomSelectAddress extends State<CustomSelectAddress>
   }
 }
 
+class CustomSelectStateChip extends StatefulWidget {
+  const CustomSelectStateChip({
+    Key? key,
+    required this.label,
+    required this.initListState,
+    this.init,
+  }) : super(key: key);
+  final String label;
+  final String? init;
+  final List<String> initListState;
+
+  @override
+  _CustomSelectStateChip createState() => _CustomSelectStateChip();
+}
+
+class _CustomSelectStateChip extends State<CustomSelectStateChip>
+    with SingleTickerProviderStateMixin {
+  String? state;
+  bool showInput = false;
+  final list = <String>[];
+  final formKey = GlobalKey<FormState>();
+  final textEditController = TextEditingController();
+
+  @override
+  void initState() {
+    super.initState();
+    state = widget.init;
+    list.addAll(widget.initListState);
+    list.add('input_state'.tr);
+  }
+
+  void onSelectedChip(String e) {
+    state = e;
+    if (e == list.last) {
+      showInput = true;
+    } else {
+      showInput = false;
+    }
+    if (mounted) setState(() {});
+  }
+
+  Widget _buildDropdown() {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.start,
+      mainAxisSize: MainAxisSize.max,
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Expanded(
+          child: Wrap(
+              spacing: 8,
+              runSpacing: 8,
+              alignment: WrapAlignment.start,
+              children: list
+                  .map((e) => ChipItemSelect(
+                        value: e,
+                        label: e.tr,
+                        isSelect: state == e,
+                        borderColor: Colors.black,
+                        selectedBackgroundColor: Colors.black,
+                        selectedTextColor: Colors.white,
+                        backgroundColor: Colors.white,
+                        textColor: Colors.black,
+                        onPress: onSelectedChip,
+                      ))
+                  .toList()),
+        ),
+      ],
+    );
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return buildLabelWidget(
+      context: context,
+      label: widget.label,
+      children: [
+        _buildDropdown(),
+        const SizedBox(height: kDefaultPadding),
+        if (showInput) ...[
+          Form(
+            key: formKey,
+            child: TextFormField(
+              controller: textEditController,
+              autofocus: true,
+              keyboardType: TextInputType.name,
+              decoration: InputDecoration(
+                  focusedBorder: defaultBorder,
+                  disabledBorder: defaultBorder,
+                  border: defaultBorder,
+                  enabledBorder: defaultBorder,
+                  errorBorder: errorBorder,
+                  focusedErrorBorder: errorBorder,
+                  hintText: 'please_enter'.tr,
+                  hintStyle: tNormalTextStyle.copyWith(
+                      fontSize: 12, color: kBorderColor)),
+              validator: (str) {
+                return Validate.emptyValidate(
+                    str: str, field: 'meeting_place'.tr);
+              },
+            ),
+          ),
+          const SizedBox(height: kDefaultPadding),
+        ],
+        CustomButton(
+            onPressed: () async {
+              if (state == list.last) {
+                if (formKey.currentState?.validate() == true) {
+                  Get.back(
+                      closeOverlays: true,
+                      result: textEditController.text.trim());
+                }
+              } else {
+                Get.back(closeOverlays: true, result: state);
+              }
+            },
+            color: getColorPrimary(),
+            widget: Text(
+              'save'.tr,
+              style: tButtonWhiteTextStyle.copyWith(
+                  fontSize: 14, fontWeight: FontWeight.w500),
+            ))
+      ],
+    );
+  }
+}
+
 class CustomInputState extends StatefulWidget {
   const CustomInputState({
     Key? key,
@@ -844,6 +1061,92 @@ class _CustomSelectChip extends State<CustomSelectChip>
             onPressed: () async {
               widget.myValueSetter(initValue);
               Get.back(closeOverlays: true);
+            },
+            color: getColorPrimary(),
+            widget: Text(
+              'save'.tr,
+              style: tButtonWhiteTextStyle.copyWith(
+                  fontSize: 14, fontWeight: FontWeight.w500),
+            ))
+      ],
+    );
+  }
+}
+
+class RangeSelector extends StatefulWidget {
+  final int? minValue;
+  final int? maxValue;
+  final int requireMaxValue;
+  final int requiredMinValue;
+  final String label;
+  final String behindText;
+
+  const RangeSelector(
+      {Key? key,
+      this.minValue,
+      this.maxValue,
+      required this.behindText,
+      required this.label,
+      required this.requiredMinValue,
+      required this.requireMaxValue})
+      : super(key: key);
+
+  @override
+  _RangeSelectorState createState() => _RangeSelectorState();
+}
+
+class _RangeSelectorState extends State<RangeSelector> {
+  late int _minValue;
+  late int _maxValue;
+
+  @override
+  void initState() {
+    super.initState();
+    _minValue = widget.minValue ?? widget.requiredMinValue;
+    _maxValue = widget.maxValue ?? widget.requireMaxValue;
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return buildLabelWidget(
+      context: context,
+      label: widget.label,
+      children: [
+        Row(
+          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+          children: [
+            Spinner(
+              value: _minValue,
+              minValue: widget.requiredMinValue,
+              maxValue: _maxValue,
+              onChanged: (value) {
+                if (mounted) {
+                  setState(() {
+                    _minValue = value;
+                  });
+                }
+              },
+              behindText: widget.behindText,
+            ),
+            Spinner(
+              value: _maxValue,
+              minValue: _minValue,
+              maxValue: widget.requireMaxValue,
+              onChanged: (value) {
+                if (mounted) {
+                  setState(() {
+                    _maxValue = value;
+                  });
+                }
+              },
+              behindText: widget.behindText,
+            ),
+          ],
+        ),
+        const SizedBox(height: kDefaultPadding),
+        CustomButton(
+            onPressed: () async {
+              Get.back(closeOverlays: true, result: [_minValue, _maxValue]);
             },
             color: getColorPrimary(),
             widget: Text(
