@@ -1,5 +1,6 @@
 import 'package:base_flutter/utils/global/globals_functions.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 
 const kPagingSize = 25;
 const kPrimaryColor = Color(0xFFBCA674);
@@ -26,6 +27,8 @@ const kDividerColor = Color(0xFFDEDEDE);
 const kDividerColorFemale = Color(0xFF3C3C3C);
 const kTextFieldBackground = Color(0xFFBFBFBF);
 const kErrorColor = Colors.red;
+const kStatusGreen = Color(0xFF0FB783);
+const kStatusRed = Color(0xFFF85959);
 const kHintColor = Colors.grey;
 const kDisableColor = Colors.grey;
 const kMenuGray = Color(0xFF95989A);
@@ -96,7 +99,9 @@ const errorBorderRounded = OutlineInputBorder(
 ThemeData lightTheme = ThemeData(
   primaryColor: kPrimaryColor,
   scaffoldBackgroundColor: Colors.transparent,
-  appBarTheme: const AppBarTheme(backgroundColor: Colors.transparent),
+  appBarTheme: const AppBarTheme(
+    backgroundColor: Colors.transparent,
+  ),
   textTheme: const TextTheme(bodyLarge: tNormalTextStyle),
   fontFamily: 'NotoSansJP',
   switchTheme: SwitchThemeData(
@@ -150,7 +155,9 @@ ThemeData femaleTheme = ThemeData(
   fontFamily: 'NotoSansJP',
   textTheme:
       TextTheme(bodyLarge: tNormalTextStyle.copyWith(color: kTextColorSecond)),
-  appBarTheme: const AppBarTheme(backgroundColor: kPrimaryColorFemale),
+  appBarTheme: const AppBarTheme(
+      backgroundColor: kPrimaryColorFemale,
+      systemOverlayStyle: SystemUiOverlayStyle.light),
   switchTheme: SwitchThemeData(
     thumbColor: MaterialStateProperty.resolveWith<Color?>(
       (Set<MaterialState> states) {

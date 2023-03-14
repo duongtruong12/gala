@@ -58,6 +58,9 @@
     <script src="https://js.stripe.com/v3/"></script>
 </head>
 <body>
+<script src="https://www.gstatic.com/firebasejs/7.15.2/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/7.15.2/firebase-messaging-compat.js"></script>
+
 <script>
 <!--Update with yours config-->
   const firebaseConfig = {
@@ -72,23 +75,14 @@
   firebase.initializeApp(firebaseConfig);
 
 </script>
-<script>
-    if ("serviceWorker" in navigator) {
-    window.addEventListener('load', function(ev) {
-      // Download main.dart.js
-      navigator.serviceWorker.register("/firebase-messaging-sw.js");
-      _flutter.loader.loadEntrypoint({
-        serviceWorker: {
-          serviceWorkerVersion: serviceWorkerVersion,
-        }
-      }).then(function(engineInitializer) {
-        return engineInitializer.initializeEngine();
-      }).then(function(appRunner) {
-        return appRunner.runApp();
-      });
-    });
-    }
 
+<script>
+    if ('serviceWorker' in navigator) {
+      window.addEventListener('load', function () {
+        navigator.serviceWorker.register("/firebase-messaging-sw.js");
+      });
+    }
 </script>
+<script src="main.dart.js" type="application/javascript"></script>
 </body>
 </html>

@@ -76,6 +76,7 @@ class _DataTableTicket extends State<DataTableTicket> {
   List<DataColumn> get _columns {
     return [
       _buildItem(label: 'nick_name'.tr, size: ColumnSize.S),
+      _buildItem(label: 'date_status'.tr, center: true, size: ColumnSize.S),
       _buildItem(label: 'avatar'.tr, center: true, size: ColumnSize.S),
       _buildItem(label: 'meeting_place'.tr),
       _buildItem(label: 'number_people'.tr, size: ColumnSize.S),
@@ -126,6 +127,30 @@ class _DataTableTicket extends State<DataTableTicket> {
                         style: tNormalTextStyle.copyWith(fontSize: 12),
                       );
                     })),
+                DataCell(
+                  Center(
+                    child: Container(
+                      decoration: BoxDecoration(
+                          color: model.status == TicketStatus.done.name
+                              ? kStatusGreen
+                              : kStatusRed,
+                          borderRadius:
+                              const BorderRadius.all(Radius.circular(22))),
+                      padding: const EdgeInsets.symmetric(
+                          vertical: 4, horizontal: kSmallPadding),
+                      margin: const EdgeInsets.all(kSmallPadding),
+                      child: FittedBox(
+                        fit: BoxFit.scaleDown,
+                        child: Text(
+                          model.status == TicketStatus.done.name
+                              ? 'in_date'.tr
+                              : 'date_finish'.tr,
+                          style: tButtonWhiteTextStyle.copyWith(fontSize: 12),
+                        ),
+                      ),
+                    ),
+                  ),
+                ),
                 DataCell(
                   FutureBuilder<UserModel?>(
                       future: fireStoreProvider.getUserDetail(

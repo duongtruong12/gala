@@ -364,17 +364,22 @@ class FireStoreProvider {
   Future<List<CityModel>> getListCityModel() async {
     final list = <CityModel>[];
     try {
-      final doc = fireStore.collection(FirebaseCollectionName.city);
+      final doc = fireStore
+          .collection(FirebaseCollectionName.city)
+          .orderBy('id', descending: false);
       final query = await doc.get(const GetOptions(source: Source.cache));
       if (query.docs.isEmpty) {
         await doc.get().then((value) => list.addAll(
             value.docs.map((e) => CityModel.fromJson(e.data())).toList()));
-      } else {
-        list.addAll(
-            query.docs.map((e) => CityModel.fromJson(e.data())).toList());
       }
     } on FirebaseException catch (e) {
-      throw FireStoreException(e.code, e.message, e.stackTrace);
+      if (e.code == 'unavailable') {
+        final doc = fireStore.collection(FirebaseCollectionName.city);
+        await doc.get().then((value) => list.addAll(
+            value.docs.map((e) => CityModel.fromJson(e.data())).toList()));
+      } else {
+        throw FireStoreException(e.code, e.message, e.stackTrace);
+      }
     }
     return list;
   }
@@ -867,6 +872,23 @@ class FireStoreProvider {
     }
   }
 
+  Future<int> checkTicketAvailable({required String? userId}) async {
+    int length = 0;
+    try {
+      final data = await fireStore
+          .collection(FirebaseCollectionName.ticket)
+          .where('createdUser', isEqualTo: userId)
+          .where('status', whereIn: [
+        TicketStatus.done.name,
+        TicketStatus.created.name
+      ]).get();
+      length = data.docs.length;
+    } on FirebaseException catch (e) {
+      throw FireStoreException(e.code, e.message, e.stackTrace);
+    }
+    return length;
+  }
+
   Future<Ticket?> getTicketDetail(
       {required id, Source source = Source.serverAndCache}) async {
     Ticket? ticket;
@@ -959,20 +981,21 @@ class FireStoreProvider {
 
       final query = fireStore
           .collection(FirebaseCollectionName.ticket)
-          .where('status', isEqualTo: status)
+          .where('status',
+              isEqualTo: status != TicketStatus.all.name ? status : null)
           .where('startTime',
               isLessThan: queryAll
                   ? null
                   : futureData
                       ? null
                       : maxDate,
-              isGreaterThan: queryAll ? null : minDate);
-
-      if (user.value?.typeAccount != TypeAccount.admin.name &&
-          user.value?.tagInformation.isNotEmpty == true) {
-        query.where('tagInformation',
-            arrayContainsAny: user.value?.tagInformation);
-      }
+              isGreaterThan: queryAll ? null : minDate)
+          .where('tagInformation',
+              arrayContainsAny:
+                  user.value?.typeAccount != TypeAccount.admin.name &&
+                          user.value?.tagInformation.isNotEmpty == true
+                      ? user.value?.tagInformation
+                      : null);
 
       streamSubscription =
           query.limit(page * kPagingSize).snapshots().listen((event) async {
@@ -1225,6 +1248,152 @@ class FireStoreProvider {
       throw FireStoreException(e.code, e.message, e.stackTrace);
     }
     return streamSubscription;
+  }
+
+  Future<void> guestFinishTicket(
+      {required String messageGroupId,
+      required Map<String, CountTimeModel> map,
+      required List userIds,
+      required Ticket ticket}) async {
+    try {
+      final batch = fireStore.batch();
+      final now = Timestamp.now();
+      final messageId = generateMd5('${now.millisecondsSinceEpoch}');
+      final messageIdPointCost =
+          generateMd5('${now.millisecondsSinceEpoch}_point_cost');
+
+      final lastMessage = MessageModel(
+        id: messageId,
+        content: 'message_group_end'.tr,
+        userId: user.value?.id,
+        delete: false,
+        createdTime: now.toDate(),
+        type: SendMessageType.create.name,
+      );
+
+      final lastMessageCostPoint = MessageModel(
+        id: messageIdPointCost,
+        content:
+            '${'message_group_end'.tr}\n${'point_paid'.tr}${formatCurrency(ticket.calculateTotalPrice())}',
+        userId: user.value?.id,
+        delete: false,
+        createdTime: now.toDate().add(const Duration(milliseconds: 100)),
+        type: SendMessageType.pointCost.name,
+      );
+
+      final messageGroupReference = fireStore
+          .collection(FirebaseCollectionName.messageGroup)
+          .doc(messageGroupId);
+
+      batch.update(messageGroupReference, {
+        'lastMessage': lastMessage.toJson(),
+        'lastUpdatedTime': now.toDate().toString(),
+      });
+
+      final listToken = await getListToken(userIds);
+
+      batch.set(
+          fireStore
+              .collection(FirebaseCollectionName.notification)
+              .doc(messageGroupId)
+              .collection(FirebaseCollectionName.itemsNotification)
+              .doc(messageId),
+          NotificationModel(
+            id: messageId,
+            title: ticket.getTicketName(),
+            body:
+                '${'message_group_end'.tr}\n${'point_paid'.tr}${formatCurrency(ticket.calculateTotalPrice())}',
+            createdDate: now.toDate(),
+            listToken: listToken,
+          ).toJson(),
+          SetOptions(merge: true));
+
+      batch.set(
+          messageGroupReference
+              .collection(FirebaseCollectionName.messagesCollection)
+              .doc(messageId),
+          lastMessage.toJson(),
+          SetOptions(merge: true));
+
+      batch.set(
+          messageGroupReference
+              .collection(FirebaseCollectionName.messagesCollection)
+              .doc(messageIdPointCost),
+          lastMessageCostPoint.toJson(),
+          SetOptions(merge: true));
+
+      batch.update(
+          fireStore.collection(FirebaseCollectionName.ticket).doc(ticket.id), {
+        'status': TicketStatus.finish.name,
+      });
+
+      for (var element in ticket.peopleApprove) {
+        final model = map[element];
+        batch.update(
+            fireStore.collection(FirebaseCollectionName.users).doc(element), {
+          'approveTickets': FieldValue.arrayRemove([ticket.id]),
+        });
+
+        if (model == null || model.endDate != null) {
+          continue;
+        }
+        model.startDate ??= now.toDate();
+        model.endDate ??= now.toDate();
+        batch.update(
+            messageGroupReference
+                .collection(FirebaseCollectionName.countTimeTicket)
+                .doc(element),
+            model.toJson());
+
+        batch.update(
+            fireStore.collection(FirebaseCollectionName.users).doc(element), {
+          'currentPoint': FieldValue.increment(model.point ?? 0),
+          'approveTickets': FieldValue.arrayRemove([ticket.id]),
+        });
+
+        batch.set(
+            fireStore
+                .collection(FirebaseCollectionName.pointsHistory)
+                .doc(element)
+                .collection(FirebaseCollectionName.collectionPointsHistory)
+                .doc(messageId),
+            PointCostModel(
+              id: messageId,
+              point: model.point,
+              createTime: now.toDate(),
+              reason: PointReason.gift.name,
+              status: TransferStatus.received.name,
+            ).toJson(),
+            SetOptions(merge: true));
+
+        batch.update(
+            fireStore
+                .collection(FirebaseCollectionName.users)
+                .doc(ticket.createdUser),
+            {'currentPoint': FieldValue.increment(-(model.point ?? 0))});
+
+        batch.set(
+            fireStore
+                .collection(FirebaseCollectionName.pointsHistory)
+                .doc(ticket.createdUser)
+                .collection(FirebaseCollectionName.collectionPointsHistory)
+                .doc(messageId),
+            PointCostModel(
+              id: messageId,
+              point: -(model.point ?? 0),
+              createTime: now.toDate(),
+              reason: PointReason.pay.name,
+              status: TransferStatus.received.name,
+            ).toJson(),
+            SetOptions(merge: true));
+      }
+
+      await batch.commit();
+    } on FirebaseException catch (e) {
+      throw FireStoreException(e.code, e.message, e.stackTrace);
+    } catch (e) {
+      logger.e(e);
+    }
   }
 
   Future<void> startCountTimeTicket({required String messageGroupId}) async {

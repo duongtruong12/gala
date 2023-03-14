@@ -1,6 +1,7 @@
 import 'package:base_flutter/components/custom_circle_image.dart';
 import 'package:base_flutter/components/custom_network_image.dart';
 import 'package:base_flutter/model/message_group_model.dart';
+import 'package:base_flutter/model/ticket_model.dart';
 import 'package:base_flutter/model/user_model.dart';
 import 'package:base_flutter/utils/const.dart';
 import 'package:base_flutter/utils/constant.dart';
@@ -50,6 +51,44 @@ class MessageGroupItem extends StatelessWidget {
         id: model.lastMessage?.userId, source: Source.cache);
   }
 
+  Widget _buildTicketStatus() {
+    return FutureBuilder<Ticket?>(
+        future: fireStoreProvider.getTicketDetail(
+            id: model.ticketId, source: Source.cache),
+        builder: (context, snapshot) {
+          Widget getTextItem() {
+            if (snapshot.connectionState == ConnectionState.waiting) {
+              return const Center(
+                  child: SizedBox(
+                      height: 18,
+                      width: 18,
+                      child: CircularProgressIndicator()));
+            }
+            String text = snapshot.data?.status == TicketStatus.done.name
+                ? 'in_date'.tr
+                : 'date_finish'.tr;
+            return Text(
+              text,
+              style: tButtonWhiteTextStyle.copyWith(fontSize: 12),
+            );
+          }
+
+          return Container(
+            decoration: BoxDecoration(
+                color: snapshot.data?.status == TicketStatus.done.name
+                    ? kStatusGreen
+                    : kStatusRed,
+                borderRadius: const BorderRadius.all(Radius.circular(22))),
+            padding: const EdgeInsets.symmetric(
+                vertical: 4, horizontal: kSmallPadding),
+            child: FittedBox(
+              fit: BoxFit.scaleDown,
+              child: getTextItem(),
+            ),
+          );
+        });
+  }
+
   @override
   Widget build(BuildContext context) {
     return FutureBuilder<UserModel?>(
@@ -88,12 +127,22 @@ class MessageGroupItem extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   mainAxisAlignment: MainAxisAlignment.start,
                   children: [
-                    Text(
-                      snapshot.data?.displayName ?? model.title ?? '',
-                      style: tNormalTextStyle.copyWith(
-                          color: getTextColorSecond(),
-                          fontWeight: font,
-                          fontSize: 16),
+                    Row(
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: [
+                        Text(
+                          snapshot.data?.displayName ?? model.title ?? '',
+                          style: tNormalTextStyle.copyWith(
+                              color: getTextColorSecond(),
+                              fontWeight: font,
+                              fontSize: 16),
+                        ),
+                        if (user.value?.typeAccount == TypeAccount.admin.name &&
+                            model.ticketId != null) ...[
+                          const SizedBox(width: kSmallPadding),
+                          _buildTicketStatus(),
+                        ]
+                      ],
                     ),
                     const SizedBox(height: kSmallPadding),
                     FutureBuilder<UserModel?>(

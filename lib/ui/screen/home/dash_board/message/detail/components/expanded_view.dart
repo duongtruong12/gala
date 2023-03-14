@@ -6,6 +6,7 @@ import 'package:base_flutter/model/message_group_model.dart';
 import 'package:base_flutter/model/ticket_model.dart';
 import 'package:base_flutter/ui/screen/home/dash_board/call/components/chip_item_select.dart';
 import 'package:base_flutter/utils/const.dart';
+import 'package:base_flutter/utils/constant.dart';
 import 'package:base_flutter/utils/global/globals_functions.dart';
 import 'package:base_flutter/utils/global/globals_variable.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -109,11 +110,16 @@ class ExpandedView extends StatelessWidget {
                 ),
                 casterAccount.value
                     ? ExpandedViewFemale(
+                        ticket: ticket,
                         model: list.firstWhere(
                             (element) => element.id == user.value?.id),
                         onPressed: onPressed,
                       )
-                    : ExpandedViewMale(list: list),
+                    : ExpandedViewMale(
+                        list: list,
+                        onPressed: onPressed,
+                        ticket: ticket,
+                      ),
                 const SizedBox(height: kSmallPadding),
               ],
             ),
@@ -125,11 +131,15 @@ class ExpandedView extends StatelessWidget {
 }
 
 class ExpandedViewFemale extends StatefulWidget {
-  const ExpandedViewFemale(
-      {Key? key, required this.model, required this.onPressed})
-      : super(key: key);
+  const ExpandedViewFemale({
+    Key? key,
+    required this.model,
+    required this.onPressed,
+    required this.ticket,
+  }) : super(key: key);
   final CountTimeModel model;
   final Future<void> Function() onPressed;
+  final Ticket ticket;
 
   @override
   _ExpandedViewFemaleState createState() => _ExpandedViewFemaleState();
@@ -188,28 +198,37 @@ class _ExpandedViewFemaleState extends State<ExpandedViewFemale> {
               fontSize: 18, fontWeight: FontWeight.w600, color: kTextColorDark),
         ),
         const SizedBox(width: kSmallPadding),
-        widget.model.startDate != null && widget.model.endDate != null
-            ? const SizedBox()
-            : CustomButton(
-                onPressed: widget.onPressed,
-                color: kPrimaryColorFemale,
-                borderColor: kPrimaryColorFemale,
-                width: 140,
-                height: 42,
-                borderRadius: kSmallPadding,
-                widget: Text(
-                  widget.model.startDate != null
-                      ? 'end_count_time'.tr
-                      : 'start_count_time'.tr,
-                )),
+        if ((widget.model.startDate != null && widget.model.endDate != null) ||
+            widget.ticket.status != TicketStatus.done.name)
+          const SizedBox()
+        else
+          CustomButton(
+              onPressed: widget.onPressed,
+              color: kPrimaryColorFemale,
+              borderColor: kPrimaryColorFemale,
+              width: 140,
+              height: 42,
+              borderRadius: kSmallPadding,
+              widget: Text(
+                widget.model.startDate != null
+                    ? 'end_count_time'.tr
+                    : 'start_count_time'.tr,
+              )),
       ],
     );
   }
 }
 
 class ExpandedViewMale extends StatefulWidget {
-  const ExpandedViewMale({Key? key, required this.list}) : super(key: key);
+  const ExpandedViewMale(
+      {Key? key,
+      required this.list,
+      required this.onPressed,
+      required this.ticket})
+      : super(key: key);
   final List<CountTimeModel> list;
+  final Future<void> Function() onPressed;
+  final Ticket ticket;
 
   @override
   _ExpandedViewMaleState createState() => _ExpandedViewMaleState();
@@ -255,26 +274,47 @@ class _ExpandedViewMaleState extends State<ExpandedViewMale> {
 
   @override
   Widget build(BuildContext context) {
-    return Wrap(
-      spacing: 8,
-      runSpacing: 8,
-      alignment: WrapAlignment.start,
-      children: map.entries
-          .map(
-            (e) => FutureBuilder(
-                future: fireStoreProvider.getUserDetail(
-                    id: e.key, source: Source.cache),
-                builder: (context, data) {
-                  final userData = data.data;
-                  return ChipItemSelect(
-                    value:
-                        '${userData?.displayName ?? ''} ${printDuration(e.value)}',
-                    label:
-                        '${userData?.displayName ?? ''} ${printDuration(e.value)}',
-                  );
-                }),
-          )
-          .toList(),
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Wrap(
+          spacing: 8,
+          runSpacing: 8,
+          alignment: WrapAlignment.start,
+          children: map.entries
+              .map(
+                (e) => FutureBuilder(
+                    future: fireStoreProvider.getUserDetail(
+                        id: e.key, source: Source.cache),
+                    builder: (context, data) {
+                      final userData = data.data;
+                      return ChipItemSelect(
+                        value:
+                            '${userData?.displayName ?? ''} ${printDuration(e.value)}',
+                        label:
+                            '${userData?.displayName ?? ''} ${printDuration(e.value)}',
+                      );
+                    }),
+              )
+              .toList(),
+        ),
+        if (user.value?.typeAccount == TypeAccount.guest.name &&
+            widget.ticket.status == TicketStatus.done.name) ...[
+          const SizedBox(height: kSmallPadding),
+          CustomButton(
+            onPressed: widget.onPressed,
+            color: Colors.black,
+            borderColor: Colors.white,
+            width: 140,
+            height: 38,
+            borderRadius: kSmallPadding,
+            widget: Text(
+              'finish'.tr,
+              style: tButtonWhiteTextStyle.copyWith(fontSize: 14),
+            ),
+          ),
+        ]
+      ],
     );
   }
 }

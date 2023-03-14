@@ -12,13 +12,14 @@ class CallListController extends GetxController {
   static CallListController get to => Get.find();
 
   final listStatus = <String>[
+    TicketStatus.all.name,
     TicketStatus.created.name,
     TicketStatus.done.name,
     TicketStatus.finish.name,
     TicketStatus.cancelled.name,
   ];
 
-  final currentStatus = TicketStatus.created.name.obs;
+  final currentStatus = TicketStatus.all.name.obs;
 
   final list = <Ticket>[].obs;
   int page = 1;
@@ -39,7 +40,7 @@ class CallListController extends GetxController {
   }
 
   bool checkEmpty() {
-    return list.length > page * kPagingSize;
+    return (page * kPagingSize) > list.length;
   }
 
   Future<void> getData() async {

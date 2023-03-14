@@ -6,7 +6,6 @@ abstract class Routes {
   static const casterManager = '/casterManager';
   static const guestManager = '/guestManager';
   static const chatManager = '/chatManager';
-  static const paymentManager = '/paymentManager';
   static const castPaymentManager = '/castPaymentManager';
   static const callList = '/callList';
   static const homeFemale = '/homeFemale';

@@ -99,6 +99,7 @@ enum DurationDate {
 }
 
 enum TicketStatus {
+  all,
   created,
   done,
   finish,

@@ -81,13 +81,15 @@ class MyPageFemaleMobilePage extends StatelessWidget {
       ),
       const SizedBox(height: kSmallPadding),
       Center(
-        child: Text(
-          'ニックネーム',
-          style: tNormalTextStyle.copyWith(
-              color: getTextColorSecond(),
-              fontWeight: FontWeight.w500,
-              fontSize: 18),
-        ),
+        child: Obx(() {
+          return Text(
+            user.value?.displayName ?? '',
+            style: tNormalTextStyle.copyWith(
+                color: getTextColorSecond(),
+                fontWeight: FontWeight.w500,
+                fontSize: 18),
+          );
+        }),
       ),
       const SizedBox(height: 4),
       Obx(() {

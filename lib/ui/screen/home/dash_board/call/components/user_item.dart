@@ -8,11 +8,13 @@ import 'package:flutter/material.dart';
 class UserItem extends StatelessWidget {
   final UserModel model;
   final VoidCallback onPressed;
+  final bool showNickName;
 
   const UserItem({
     Key? key,
     required this.model,
     required this.onPressed,
+    this.showNickName = false,
   }) : super(key: key);
 
   @override
@@ -43,18 +45,26 @@ class UserItem extends StatelessWidget {
                         colors: [
                           Colors.transparent,
                           Colors.transparent,
-                          Colors.black.withOpacity(0.5),
+                          Colors.black.withOpacity(0.7),
                           Colors.black,
                         ],
                         begin: Alignment.topCenter,
                         end: Alignment.bottomCenter,
-                        stops: const [0, 0.2, 0.5, 1],
+                        stops: const [0, 0.3, 0.7, 1],
                       ),
                     ),
                     child: Column(
                       mainAxisAlignment: MainAxisAlignment.end,
                       mainAxisSize: MainAxisSize.min,
                       children: [
+                        if (showNickName)
+                          Text(
+                            '${model.realName}',
+                            style: tNormalTextStyle.copyWith(
+                                fontSize: 11,
+                                fontWeight: FontWeight.w500,
+                                color: kTextColorPrimary),
+                          ),
                         Text(
                           '${model.getAge()}  ${model.displayName}',
                           style: tNormalTextStyle.copyWith(

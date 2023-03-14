@@ -54,6 +54,7 @@ class PagingListState extends State<PagingListCustom>
       },
       child: ListView.builder(
         controller: _scrollController,
+        cacheExtent: 1000,
         physics: const AlwaysScrollableScrollPhysics(),
         itemCount: widget.childWidget.length,
         itemBuilder: (BuildContext context, int index) {

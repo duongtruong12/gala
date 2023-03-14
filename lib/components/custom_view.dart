@@ -13,9 +13,9 @@ Widget getTransferRequestStatus({required String? status}) {
     } else if (TransferStatus.received.name == status) {
       return const Color(0xFF07C6D6);
     } else if (TransferStatus.alreadyTransfer.name == status) {
-      return const Color(0xFF0FB783);
+      return kStatusGreen;
     } else {
-      return const Color(0xFFF85959);
+      return kStatusRed;
     }
   }
 

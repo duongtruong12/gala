@@ -116,11 +116,6 @@ Widget getLottieImage(String assetName,
   );
 }
 
-void setStatusBarColor({Brightness brightness = Brightness.light}) {
-  SystemChrome.setSystemUIOverlayStyle(
-      SystemUiOverlayStyle(statusBarBrightness: brightness));
-}
-
 Widget getSvgImage(String assetName,
     {BoxFit? boxFit, double? height, double? width, Color? color}) {
   String path = 'assets/image/$assetName.svg';

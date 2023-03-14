@@ -7,12 +7,14 @@ import 'package:base_flutter/routes/app_pages.dart';
 import 'package:base_flutter/utils/const.dart';
 import 'package:base_flutter/utils/constant.dart';
 import 'package:base_flutter/utils/global/globals_functions.dart';
+import 'package:base_flutter/utils/global/globals_variable.dart';
 import 'package:data_table_2/data_table_2.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
 enum DataColumnOrder {
   nickname,
+  dateStatus,
   avatar,
   realName,
   email,
@@ -148,9 +150,12 @@ class _DataTableUser extends State<DataTableUser> {
       ColumnSize size = ColumnSize.M}) {
     final child = Padding(
       padding: EdgeInsets.only(left: horizontal),
-      child: Text(
-        label,
-        style: tNormalTextStyle.copyWith(fontWeight: FontWeight.w600),
+      child: FittedBox(
+        fit: BoxFit.scaleDown,
+        child: Text(
+          label,
+          style: tNormalTextStyle.copyWith(fontWeight: FontWeight.w600),
+        ),
       ),
     );
     return DataColumn2(
@@ -177,6 +182,12 @@ class _DataTableUser extends State<DataTableUser> {
           center: true,
           size: ColumnSize.S),
       _buildItem(
+          label: 'date_status'.tr,
+          order: DataColumnOrder.dateStatus,
+          horizontal: kDefaultPadding,
+          center: true,
+          size: ColumnSize.S),
+      _buildItem(
           label: 'real_name'.tr,
           order: DataColumnOrder.realName,
           size: ColumnSize.S),
@@ -184,14 +195,68 @@ class _DataTableUser extends State<DataTableUser> {
           label: 'email'.tr, order: DataColumnOrder.email, size: ColumnSize.L),
       _buildItem(label: 'birthday'.tr, order: DataColumnOrder.birthDay),
       _buildItem(label: 'created_date'.tr, order: DataColumnOrder.createdDate),
-      _buildItem(label: 'point'.tr, order: DataColumnOrder.point),
+      _buildItem(
+          label: 'point'.tr, order: DataColumnOrder.point, size: ColumnSize.S),
       _buildItem(
         label: 'status'.tr,
         order: DataColumnOrder.status,
+        size: ColumnSize.S,
         center: true,
         horizontal: kDefaultPadding,
       ),
     ];
+  }
+
+  DataCell _buildDateStatusItem({required UserModel model}) {
+    return DataCell(
+      FutureBuilder(
+          future: widget.isCaster
+              ? null
+              : fireStoreProvider.checkTicketAvailable(userId: model.id),
+          builder: (context, snapshot) {
+            Widget getTextItem() {
+              if (snapshot.connectionState == ConnectionState.waiting) {
+                return const Center(
+                    child: SizedBox(
+                        height: 18,
+                        width: 18,
+                        child: CircularProgressIndicator()));
+              }
+              late String text;
+              if (widget.isCaster) {
+                text = model.approveTickets.isNotEmpty
+                    ? 'in_date'.tr
+                    : 'not_in_date'.tr;
+              } else {
+                text = snapshot.data == 0 ? 'not_in_date'.tr : 'in_date'.tr;
+              }
+
+              return Text(
+                text,
+                style: tButtonWhiteTextStyle.copyWith(fontSize: 12),
+              );
+            }
+
+            Color color;
+            if (widget.isCaster) {
+              color =
+                  model.approveTickets.isNotEmpty ? kStatusRed : kStatusGreen;
+            } else {
+              color = snapshot.data == 0 ? kStatusGreen : kStatusRed;
+            }
+
+            return Padding(
+              padding: const EdgeInsets.all(kSmallPadding),
+              child: CustomButton(
+                onPressed: () async {},
+                borderColor: color,
+                color: color,
+                borderRadius: kDefaultPadding,
+                widget: getTextItem(),
+              ),
+            );
+          }),
+    );
   }
 
   DataCell _buildItemCellText({required String? label}) {
@@ -235,6 +300,7 @@ class _DataTableUser extends State<DataTableUser> {
                     ),
                   ),
                 ),
+                _buildDateStatusItem(model: model),
                 _buildItemCellText(label: model.realName),
                 _buildItemCellText(label: model.email),
                 _buildItemCellText(
@@ -259,7 +325,7 @@ class _DataTableUser extends State<DataTableUser> {
                       borderRadius: kDefaultPadding,
                       widget: Text(
                         'valid'.tr,
-                        style: tNormalTextStyle,
+                        style: tNormalTextStyle.copyWith(fontSize: 12),
                       ),
                     ),
                   ),

@@ -98,7 +98,7 @@ class UserModel {
 
   String getAge() {
     if (hideAge == true) {
-      return 'hidden'.tr;
+      return '';
     }
 
     if (birthday != null) {

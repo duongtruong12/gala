@@ -184,7 +184,7 @@ class UserDetailMobilePage extends StatelessWidget {
         Text(
           'information'.tr,
           style: tNormalTextStyle.copyWith(
-            color: kTextColorSecond,
+            color: getTextColorSecond(),
             fontWeight: FontWeight.w500,
             fontSize: 20,
           ),
@@ -281,8 +281,8 @@ class UserDetailMobilePage extends StatelessWidget {
                     const SizedBox(width: 4),
                     Text(
                       'favorite'.tr,
-                      style:
-                          tButtonWhiteTextStyle.copyWith(color: Colors.white),
+                      style: tButtonWhiteTextStyle.copyWith(
+                          color: getTextColorSecond()),
                     )
                   ],
                 ),

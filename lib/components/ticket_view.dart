@@ -77,10 +77,16 @@ class TicketView extends StatelessWidget {
         },
         color: color,
         borderRadius: kSmallPadding,
-        widget: Text(
-          text,
-          style: tButtonWhiteTextStyle.copyWith(
-              fontSize: 16, fontWeight: FontWeight.w500),
+        widget: FittedBox(
+          fit: BoxFit.scaleDown,
+          child: Padding(
+            padding: const EdgeInsets.symmetric(horizontal: kSmallPadding),
+            child: Text(
+              text,
+              style: tButtonWhiteTextStyle.copyWith(
+                  fontSize: 16, fontWeight: FontWeight.w500),
+            ),
+          ),
         ));
   }
 

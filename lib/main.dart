@@ -22,12 +22,12 @@ import 'utils/constant.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  Stripe.publishableKey =
-      'pk_test_51McKsOIx8zBC2fSm1X8BLS7ftrvvXcAEWHM5DFiozymIY2HntE8pxgiywAjuLRbyhiXpg7uGAMhXxuxBnYpsx2Lq00TQ6dxLuO';
-  await Stripe.instance.applySettings();
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
   );
+  Stripe.publishableKey =
+      'pk_test_51McKsOIx8zBC2fSm1X8BLS7ftrvvXcAEWHM5DFiozymIY2HntE8pxgiywAjuLRbyhiXpg7uGAMhXxuxBnYpsx2Lq00TQ6dxLuO';
+  await Stripe.instance.applySettings();
   await GetStorage.init();
   casterAccount.value = await getData(key: SharedPrefKey.femaleGender) ?? false;
   runApp(const MyApp());
@@ -45,7 +45,6 @@ class MyApp extends StatelessWidget {
     SystemChrome.setPreferredOrientations([
       DeviceOrientation.portraitUp,
     ]);
-    setStatusBarColor();
     return ScreenUtilInit(
       designSize: const Size(375, 904),
       builder: (context, child) => GetMaterialApp(

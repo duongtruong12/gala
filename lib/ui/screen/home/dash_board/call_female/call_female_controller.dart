@@ -66,9 +66,9 @@ class CallFemaleController extends GetxController
 
   bool checkEmpty() {
     if (todayTab()) {
-      return list.length > page * kPagingSize;
+      return (page * kPagingSize) > list.length;
     } else {
-      return listFutureTicket.length > futurePage * kPagingSize;
+      return (futurePage * kPagingSize) > listFutureTicket.length;
     }
   }
 

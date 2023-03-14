@@ -89,7 +89,7 @@ class _CustomStepperNumberPeople extends State<CustomStepperNumberPeople>
             ),
             const SizedBox(width: kDefaultPadding),
             Text(
-              '$_stepperValue${'number_people'.tr}',
+              '$_stepperValue${'people'.tr}',
               style: tNormalTextStyle,
             ),
             const SizedBox(width: kDefaultPadding),

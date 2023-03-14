@@ -195,6 +195,7 @@ class MessageMobilePage extends StatelessWidget {
                           horizontal: kDefaultPadding, vertical: kSmallPadding),
                       itemBuilder: _buildMessageList,
                       itemCount: controller.list.length,
+                      reverse: true,
                     ),
                   ),
                 )

@@ -51,7 +51,7 @@ class SearchCallController extends GetxController {
   }
 
   bool checkEmpty() {
-    return list.length > page * kPagingSize;
+    return (page * kPagingSize) > list.length;
   }
 
   Future<void> getData() async {

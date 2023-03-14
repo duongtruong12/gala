@@ -56,7 +56,7 @@ class MessageDetailController extends GetxController {
   }
 
   bool checkEmpty() {
-    return list.length > page * kPagingSize;
+    return (page * kPagingSize) > list.length;
   }
 
   Future<void> getGroupModel() async {
@@ -121,7 +121,7 @@ class MessageDetailController extends GetxController {
           for (var value in listDoc.docs) {
             try {
               final messageModel = MessageModel.fromJson(value.data());
-              list.insert(0, messageModel);
+              list.add(messageModel);
             } catch (e) {
               logger.e(e);
             }
@@ -131,8 +131,6 @@ class MessageDetailController extends GetxController {
             return;
           }
           fireStoreProvider.uploadSeenMessage(messageGroup: model.value?.id);
-          await Future.delayed(const Duration(milliseconds: 100));
-          scrollController.jumpTo(scrollController.position.maxScrollExtent);
         }
       },
     );
@@ -166,7 +164,8 @@ class MessageDetailController extends GetxController {
       if (checkEmpty()) {
         return;
       }
-      if (scrollController.position.pixels == 0) {
+      if (scrollController.position.pixels ==
+          scrollController.position.maxScrollExtent) {
         page++;
         scrollDown = true;
         getData();
@@ -200,6 +199,20 @@ class MessageDetailController extends GetxController {
   }
 
   Future<void> countTicketTime() async {
+    if (user.value?.typeAccount == TypeAccount.guest.name) {
+      if (ticket == null) {
+        return;
+      }
+      await fireStoreProvider
+          .guestFinishTicket(
+            messageGroupId: id,
+            map: mapCountTime,
+            userIds: model.value?.userIds ?? [],
+            ticket: ticket!,
+          )
+          .then((value) => ticket?.status == TicketStatus.finish.name);
+      return;
+    }
     final countModel = mapCountTime[user.value?.id];
     if (countModel == null) {
       return;
@@ -216,10 +229,12 @@ class MessageDetailController extends GetxController {
           .then((value) async {
         mapCountTime[user.value?.id]?.endDate = DateTime.now();
         if (messageGroupEnd() && ticket?.status == TicketStatus.done.name) {
-          await fireStoreProvider.closeTicket(
-              messageGroupId: id,
-              ticket: ticket,
-              userIds: model.value?.userIds ?? []);
+          await fireStoreProvider
+              .closeTicket(
+                  messageGroupId: id,
+                  ticket: ticket,
+                  userIds: model.value?.userIds ?? [])
+              .then((value) => ticket?.status == TicketStatus.finish.name);
         }
       });
     }

@@ -27,7 +27,7 @@ class WebNavigator extends StatelessWidget {
             style: tButtonWhiteTextStyle.copyWith(fontSize: 8),
           ),
           showBadge: unread.value > 0 && index == 2,
-          position: badges.BadgePosition.topEnd(),
+          position: badges.BadgePosition.topEnd(top: 2, end: 0),
           child: Padding(
               padding: const EdgeInsetsDirectional.all(kDefaultPadding),
               child: Text(

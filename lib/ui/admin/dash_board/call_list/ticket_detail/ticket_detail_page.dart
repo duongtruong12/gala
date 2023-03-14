@@ -49,29 +49,32 @@ class TicketDetailWebPage extends StatelessWidget {
               },
               child: Row(
                 mainAxisSize: MainAxisSize.min,
-                crossAxisAlignment: CrossAxisAlignment.start,
+                crossAxisAlignment: CrossAxisAlignment.center,
                 mainAxisAlignment: MainAxisAlignment.start,
                 children: [
+                  CustomCircleImage(
+                      radius: 99,
+                      image: CustomNetworkImage(
+                        url: userData?.avatar,
+                        fit: BoxFit.cover,
+                        height: 155,
+                        width: 155,
+                      )),
+                  const SizedBox(width: kDefaultPadding),
                   Column(
                     crossAxisAlignment: CrossAxisAlignment.center,
-                    mainAxisAlignment: MainAxisAlignment.start,
                     children: [
-                      CustomCircleImage(
-                          radius: 99,
-                          image: CustomNetworkImage(
-                            url: userData?.avatar,
-                            fit: BoxFit.cover,
-                            height: 102,
-                            width: 102,
-                          )),
-                      const SizedBox(height: kDefaultPadding),
                       Text(
                         '${userData?.getAge() ?? ''} ${userData?.displayName ?? ''}',
                         style: tButtonWhiteTextStyle.copyWith(
                             fontSize: 20, fontWeight: FontWeight.w600),
                       ),
                       const SizedBox(height: kSmallPadding),
-                      const Divider(),
+                      Text(
+                        'confirm_call'.tr,
+                        style: tButtonWhiteTextStyle.copyWith(
+                            fontWeight: FontWeight.w500),
+                      ),
                     ],
                   ),
                 ],
@@ -103,13 +106,9 @@ class TicketDetailWebPage extends StatelessWidget {
               ],
             ),
           ),
-          Padding(
-            padding: const EdgeInsets.only(top: kSmallPadding),
-            child: Text(
-              ': ${content ?? ''}',
-              style:
-                  tButtonWhiteTextStyle.copyWith(fontWeight: FontWeight.w500),
-            ),
+          Text(
+            ': ${content ?? ''}',
+            style: tButtonWhiteTextStyle.copyWith(fontWeight: FontWeight.w500),
           )
         ],
       ),
@@ -126,27 +125,39 @@ class TicketDetailWebPage extends StatelessWidget {
               fontSize: 18, fontWeight: FontWeight.w500),
         ),
         const SizedBox(height: kSmallPadding),
-        Obx(() {
-          return _buildReservationItem(
-              label: 'start_time',
-              content: controller.model.value?.startTimeAfter?.tr);
-        }),
-        Obx(() {
-          return _buildReservationItem(
-              label: 'required_time',
-              content: controller.model.value?.durationDate?.tr);
-        }),
-        Obx(() {
-          return _buildReservationItem(
-              label: 'meeting_place',
-              content: controller.model.value?.stateName);
-        }),
-        Obx(() {
-          return _buildReservationItem(
-              label: 'number_people',
-              content:
-                  '${controller.model.value?.numberPeople ?? 0}${'people'.tr}');
-        }),
+        Row(
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            Obx(() {
+              return _buildReservationItem(
+                  label: 'start_time',
+                  content: controller.model.value?.startTimeAfter?.tr);
+            }),
+            const SizedBox(width: kDefaultPadding * 2),
+            Obx(() {
+              return _buildReservationItem(
+                  label: 'required_time',
+                  content: controller.model.value?.durationDate?.tr);
+            }),
+          ],
+        ),
+        Row(
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            Obx(() {
+              return _buildReservationItem(
+                  label: 'meeting_place',
+                  content: controller.model.value?.stateName);
+            }),
+            const SizedBox(width: kDefaultPadding * 2),
+            Obx(() {
+              return _buildReservationItem(
+                  label: 'number_people',
+                  content:
+                      '${controller.model.value?.numberPeople ?? 0}${'people'.tr}');
+            }),
+          ],
+        ),
         const SizedBox(height: kSmallPadding),
         const Divider(),
       ],
@@ -236,6 +247,7 @@ class TicketDetailWebPage extends StatelessWidget {
                       onPressed: () {
                         controller.onSwitchMessageDetail(e);
                       },
+                      showNickName: true,
                     );
                   });
             }).toList());
@@ -313,6 +325,7 @@ class TicketDetailWebPage extends StatelessWidget {
                                 onPressed: () {
                                   controller.onSwitchMessageDetail(element);
                                 },
+                                showNickName: true,
                               );
                             });
                       },
@@ -376,11 +389,8 @@ class TicketDetailWebPage extends StatelessWidget {
   Widget build(BuildContext context) {
     final list = [
       _buildAvatar(),
-      Text(
-        'confirm_call'.tr,
-        style: tButtonWhiteTextStyle.copyWith(fontWeight: FontWeight.w500),
-      ),
-      const SizedBox(height: kDefaultPadding),
+      const Divider(),
+      const SizedBox(height: kSmallPadding),
       _buildReservationDetail(),
       const SizedBox(height: kSmallPadding),
       _buildTags(),

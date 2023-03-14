@@ -8,8 +8,6 @@ import 'package:base_flutter/ui/admin/dash_board/caster_manager/caster_manager_b
 import 'package:base_flutter/ui/admin/dash_board/caster_manager/caster_manager_page.dart';
 import 'package:base_flutter/ui/admin/dash_board/guest_manager/guest_manager_binding.dart';
 import 'package:base_flutter/ui/admin/dash_board/guest_manager/guest_manager_page.dart';
-import 'package:base_flutter/ui/admin/dash_board/payment_manager/payment_manager_binding.dart';
-import 'package:base_flutter/ui/admin/dash_board/payment_manager/payment_manager_page.dart';
 import 'package:base_flutter/ui/admin/home_admin/home_admin_binding.dart';
 import 'package:base_flutter/ui/admin/home_admin/home_admin_page.dart';
 import 'package:base_flutter/ui/login/login_binding.dart';
@@ -190,13 +188,6 @@ Route onGenerateRouteDashboardAdmin(RouteSettings settings) {
         name: Routes.chatManager,
         child: const MessagePage(),
         bindings: MessageBinding());
-  }
-
-  if (settings.name == Routes.paymentManager) {
-    return _getPageRoute(
-        name: Routes.paymentManager,
-        child: const PaymentManagerPage(),
-        bindings: PaymentManagerBinding());
   }
 
   if (settings.name == Routes.castPaymentManager) {
