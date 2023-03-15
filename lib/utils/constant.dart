@@ -72,6 +72,7 @@ enum MessageGroupType { admin, group }
 enum PointReason { buy, gift, pay, remittancePayment }
 
 enum TransferStatus {
+  all,
   waiting,
   received,
   alreadyTransfer,

@@ -484,6 +484,27 @@ class FireStoreProvider {
     }
   }
 
+  StreamSubscription? listenerListUser(
+      {required ValueSetter<QuerySnapshot<Map<String, dynamic>>> valueChanged,
+      TypeAccount? sort,
+      required int page}) {
+    StreamSubscription? streamSubscription;
+    try {
+      streamSubscription = fireStore
+          .collection(FirebaseCollectionName.users)
+          .where('typeAccount', isEqualTo: sort?.name)
+          .orderBy('createdDate', descending: true)
+          .limit(kPagingSize * page)
+          .snapshots()
+          .listen((event) async {
+        valueChanged(event);
+      });
+    } on FirebaseException catch (e) {
+      throw FireStoreException(e.code, e.message, e.stackTrace);
+    }
+    return streamSubscription;
+  }
+
   Future<List<DocumentSnapshot<Map<String, dynamic>>>> getListUser({
     DocumentSnapshot? lastDocument,
     TypeAccount? sort,
@@ -872,21 +893,34 @@ class FireStoreProvider {
     }
   }
 
-  Future<int> checkTicketAvailable({required String? userId}) async {
-    int length = 0;
+  Future<MessageGroupModel?> getMessageGroupByTicketId(
+      {required ticketId, Source source = Source.serverAndCache}) async {
+    MessageGroupModel? model;
     try {
       final data = await fireStore
-          .collection(FirebaseCollectionName.ticket)
-          .where('createdUser', isEqualTo: userId)
-          .where('status', whereIn: [
-        TicketStatus.done.name,
-        TicketStatus.created.name
-      ]).get();
-      length = data.docs.length;
+          .collection(FirebaseCollectionName.messageGroup)
+          .where('ticketId', isEqualTo: ticketId)
+          .get(GetOptions(source: source));
+      if (data.docs.isNotEmpty) {
+        model = MessageGroupModel.fromJson(data.docs.first.data());
+      }
     } on FirebaseException catch (e) {
-      throw FireStoreException(e.code, e.message, e.stackTrace);
+      if (e.code == 'unavailable') {
+        final data = await fireStore
+            .collection(FirebaseCollectionName.messageGroup)
+            .where('ticketId', isEqualTo: ticketId)
+            .get();
+        if (data.docs.isNotEmpty) {
+          model = MessageGroupModel.fromJson(data.docs.first.data());
+        }
+      } else {
+        throw FireStoreException(e.code, e.message, e.stackTrace);
+      }
+    } finally {
+      loading.value = false;
     }
-    return length;
+
+    return model;
   }
 
   Future<Ticket?> getTicketDetail(
@@ -1814,7 +1848,8 @@ class FireStoreProvider {
           : null;
       streamSubscription = fireStore
           .collection(FirebaseCollectionName.transferRequest)
-          .where('status', isEqualTo: status)
+          .where('status',
+              isEqualTo: status == TransferStatus.all.name ? null : status)
           .where('createdDate',
               isLessThan: timeStampMaxDate, isGreaterThan: timeStampMinDate)
           .limit(page * kPagingSize)

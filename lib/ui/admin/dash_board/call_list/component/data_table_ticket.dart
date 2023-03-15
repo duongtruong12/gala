@@ -133,7 +133,11 @@ class _DataTableTicket extends State<DataTableTicket> {
                       decoration: BoxDecoration(
                           color: model.status == TicketStatus.done.name
                               ? kStatusGreen
-                              : kStatusRed,
+                              : model.status == TicketStatus.created.name
+                                  ? kColorWaiting
+                                  : model.status == TicketStatus.cancelled.name
+                                      ? kGrayColor
+                                      : kStatusRed,
                           borderRadius:
                               const BorderRadius.all(Radius.circular(22))),
                       padding: const EdgeInsets.symmetric(
@@ -142,9 +146,7 @@ class _DataTableTicket extends State<DataTableTicket> {
                       child: FittedBox(
                         fit: BoxFit.scaleDown,
                         child: Text(
-                          model.status == TicketStatus.done.name
-                              ? 'in_date'.tr
-                              : 'date_finish'.tr,
+                          'ticket_${model.status}'.tr,
                           style: tButtonWhiteTextStyle.copyWith(fontSize: 12),
                         ),
                       ),

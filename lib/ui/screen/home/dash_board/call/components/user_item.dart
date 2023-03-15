@@ -66,7 +66,7 @@ class UserItem extends StatelessWidget {
                                 color: kTextColorPrimary),
                           ),
                         Text(
-                          '${model.getAge()}  ${model.displayName}',
+                          model.getDisplayName(),
                           style: tNormalTextStyle.copyWith(
                               fontSize: 11,
                               fontWeight: FontWeight.w500,

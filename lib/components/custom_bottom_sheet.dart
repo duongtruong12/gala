@@ -1023,29 +1023,25 @@ class _CustomSelectChip extends State<CustomSelectChip>
         ),
       );
     }
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.start,
-      mainAxisSize: MainAxisSize.max,
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Wrap(
-            spacing: 8,
-            runSpacing: 8,
-            alignment: WrapAlignment.start,
-            children: widget.listChips
-                .map((e) => ChipItemSelect(
-                      value: e,
-                      label: e.tr,
-                      isSelect: initValue == e,
-                      borderColor: Colors.black,
-                      selectedBackgroundColor: Colors.black,
-                      selectedTextColor: Colors.white,
-                      backgroundColor: Colors.white,
-                      textColor: Colors.black,
-                      onPress: onSelectedChip,
-                    ))
-                .toList()),
-      ],
+    return SizedBox(
+      width: Get.width,
+      child: Wrap(
+          spacing: 8,
+          alignment: WrapAlignment.start,
+          crossAxisAlignment: WrapCrossAlignment.start,
+          children: widget.listChips
+              .map((e) => ChipItemSelect(
+                    value: e,
+                    label: e.tr,
+                    isSelect: initValue == e,
+                    borderColor: Colors.black,
+                    selectedBackgroundColor: Colors.black,
+                    selectedTextColor: Colors.white,
+                    backgroundColor: Colors.white,
+                    textColor: Colors.black,
+                    onPress: onSelectedChip,
+                  ))
+              .toList()),
     );
   }
 

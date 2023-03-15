@@ -113,7 +113,7 @@ class SelectUserDialogState extends State<SelectUserDialog> {
                       )),
                   const SizedBox(width: kSmallPadding),
                   Text(
-                    '${userData.getAge()} ${userData.displayName ?? ''}',
+                    userData.getDisplayName(),
                     style: tNormalTextStyle.copyWith(
                         fontSize: 12, fontWeight: FontWeight.w600),
                   ),

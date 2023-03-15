@@ -44,7 +44,7 @@ class CasterManagerWebPage extends StatelessWidget {
                 return DataTableUser(
                   list: controller.list.toList(),
                   onScrollDown: controller.scrollDown,
-                  isEmpty: controller.isEmpty.value,
+                  isEmpty: controller.checkEmpty(),
                 );
               }),
             ),

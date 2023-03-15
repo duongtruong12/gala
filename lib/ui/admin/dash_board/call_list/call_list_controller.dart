@@ -63,8 +63,8 @@ class CallListController extends GetxController {
           }
 
           list.sort((a, b) =>
-              a.startTime?.millisecondsSinceEpoch
-                  .compareTo(b.startTime?.millisecondsSinceEpoch ?? 0) ??
+              b.createdDate?.millisecondsSinceEpoch
+                  .compareTo(a.createdDate?.millisecondsSinceEpoch ?? 0) ??
               0);
 
           list.refresh();

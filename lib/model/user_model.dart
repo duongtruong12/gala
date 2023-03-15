@@ -96,6 +96,10 @@ class UserModel {
     return typeAccount == TypeAccount.admin.name;
   }
 
+  String getDisplayName() {
+    return '${displayName ?? ''} ${getAge()}';
+  }
+
   String getAge() {
     if (hideAge == true) {
       return '';

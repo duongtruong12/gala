@@ -86,7 +86,7 @@ class UserDetailMobilePage extends StatelessWidget {
           child: RichText(
             text: TextSpan(
                 style: tNormalTextStyle.copyWith(
-                    color: kTextColorSecond,
+                    color: getTextColorSecond(),
                     fontWeight: FontWeight.w500,
                     fontSize: 24),
                 children: [
@@ -99,14 +99,15 @@ class UserDetailMobilePage extends StatelessWidget {
                 ]),
           ),
         ),
-        Text(
-          formatCurrency(controller.model.value?.pointPer30Minutes,
-              symbol: CurrencySymbol.pointPerMinutes),
-          style: tNormalTextStyle.copyWith(
-              color: kTextColorSecond,
-              fontWeight: FontWeight.w500,
-              fontSize: 24),
-        )
+        if (controller.model.value?.typeAccount == TypeAccount.caster.name)
+          Text(
+            formatCurrency(controller.model.value?.pointPer30Minutes,
+                symbol: CurrencySymbol.pointPerMinutes),
+            style: tNormalTextStyle.copyWith(
+                color: getTextColorSecond(),
+                fontWeight: FontWeight.w500,
+                fontSize: 24),
+          )
       ],
     );
   }

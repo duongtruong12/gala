@@ -53,8 +53,7 @@ class MessageGroupItem extends StatelessWidget {
 
   Widget _buildTicketStatus() {
     return FutureBuilder<Ticket?>(
-        future: fireStoreProvider.getTicketDetail(
-            id: model.ticketId, source: Source.cache),
+        future: fireStoreProvider.getTicketDetail(id: model.ticketId),
         builder: (context, snapshot) {
           Widget getTextItem() {
             if (snapshot.connectionState == ConnectionState.waiting) {
@@ -128,14 +127,16 @@ class MessageGroupItem extends StatelessWidget {
                   mainAxisAlignment: MainAxisAlignment.start,
                   children: [
                     Row(
-                      crossAxisAlignment: CrossAxisAlignment.center,
+                      crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Text(
-                          snapshot.data?.displayName ?? model.title ?? '',
-                          style: tNormalTextStyle.copyWith(
-                              color: getTextColorSecond(),
-                              fontWeight: font,
-                              fontSize: 16),
+                        Flexible(
+                          child: Text(
+                            snapshot.data?.displayName ?? model.title ?? '',
+                            style: tNormalTextStyle.copyWith(
+                                color: getTextColorSecond(),
+                                fontWeight: font,
+                                fontSize: 16),
+                          ),
                         ),
                         if (user.value?.typeAccount == TypeAccount.admin.name &&
                             model.ticketId != null) ...[

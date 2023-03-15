@@ -65,7 +65,7 @@ class TicketDetailWebPage extends StatelessWidget {
                     crossAxisAlignment: CrossAxisAlignment.center,
                     children: [
                       Text(
-                        '${userData?.getAge() ?? ''} ${userData?.displayName ?? ''}',
+                        userData?.getDisplayName() ?? '',
                         style: tButtonWhiteTextStyle.copyWith(
                             fontSize: 20, fontWeight: FontWeight.w600),
                       ),

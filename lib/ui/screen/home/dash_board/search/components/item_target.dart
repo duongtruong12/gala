@@ -44,8 +44,6 @@ class ItemTarget extends StatelessWidget {
                 mainAxisSize: MainAxisSize.max,
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  getSvgImage('ic_star'),
-                  const SizedBox(width: 4),
                   Expanded(
                     child: Column(
                       mainAxisSize: MainAxisSize.min,
@@ -53,27 +51,10 @@ class ItemTarget extends StatelessWidget {
                       children: [
                         FittedBox(
                           fit: BoxFit.scaleDown,
-                          child: Row(
-                            mainAxisSize: MainAxisSize.min,
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Text(
-                                model.getAge(),
-                                maxLines: 1,
-                                overflow: TextOverflow.fade,
-                                style: tNormalTextStyle.copyWith(
-                                    fontWeight: FontWeight.w500),
-                              ),
-                              const SizedBox(width: 4),
-                              Text(
-                                model.displayName ?? '',
-                                maxLines: 1,
-                                overflow: TextOverflow.fade,
-                                style: tNormalTextStyle.copyWith(
-                                    fontWeight: FontWeight.w500),
-                              )
-                            ],
-                          ),
+                          child: Text(model.getDisplayName(),
+                              overflow: TextOverflow.fade,
+                              style: tNormalTextStyle.copyWith(
+                                  fontWeight: FontWeight.w500)),
                         ),
                         femaleGender == true
                             ? const SizedBox()

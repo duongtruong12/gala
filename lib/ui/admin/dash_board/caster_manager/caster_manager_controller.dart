@@ -1,17 +1,19 @@
+import 'dart:async';
+
 import 'package:base_flutter/model/user_model.dart';
 import 'package:base_flutter/ui/admin/components/register_user_dialog.dart';
+import 'package:base_flutter/utils/const.dart';
 import 'package:base_flutter/utils/constant.dart';
 import 'package:base_flutter/utils/global/globals_functions.dart';
 import 'package:base_flutter/utils/global/globals_variable.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:get/get.dart';
 
 class CasterManagerController extends GetxController {
   static CasterManagerController get to => Get.find();
   final list = <UserModel>[].obs;
-  final isEmpty = false.obs;
-  DocumentSnapshot? lastDoc;
+  int page = 1;
+  StreamSubscription? streamSubscription;
 
   @override
   void onInit() {
@@ -19,28 +21,40 @@ class CasterManagerController extends GetxController {
     SchedulerBinding.instance.addPostFrameCallback((_) => getData());
   }
 
+  @override
+  void onClose() {
+    streamSubscription?.cancel();
+    super.onClose();
+  }
+
+  bool checkEmpty() {
+    return list.length > page * kPagingSize;
+  }
+
   Future<void> getData() async {
-    final listDoc = await fireStoreProvider.getListUser(
-        lastDocument: lastDoc, sort: TypeAccount.caster);
-    if (listDoc.isNotEmpty) {
-      lastDoc = listDoc.last;
-      for (var value in listDoc) {
-        try {
-          if (value.data() != null) {
-            final userModel = UserModel.fromJson(value.data()!);
-            list.add(userModel);
+    streamSubscription?.cancel();
+    streamSubscription = fireStoreProvider.listenerListUser(
+        sort: TypeAccount.caster,
+        page: page,
+        valueChanged: (query) {
+          list.clear();
+          final listDoc = query.docs;
+          if (listDoc.isNotEmpty) {
+            for (var value in listDoc) {
+              try {
+                final userModel = UserModel.fromJson(value.data());
+                list.add(userModel);
+              } catch (e) {
+                logger.e(e);
+              }
+            }
           }
-        } catch (e) {
-          logger.e(e);
-        }
-      }
-    } else {
-      isEmpty.value = true;
-    }
-    list.refresh();
+          list.refresh();
+        });
   }
 
   Future<void> scrollDown(int i) async {
+    page = i;
     await getData();
   }
 

@@ -8,6 +8,7 @@ import 'package:base_flutter/utils/const.dart';
 import 'package:base_flutter/utils/constant.dart';
 import 'package:base_flutter/utils/global/globals_functions.dart';
 import 'package:base_flutter/utils/global/globals_variable.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:data_table_2/data_table_2.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -209,53 +210,39 @@ class _DataTableUser extends State<DataTableUser> {
 
   DataCell _buildDateStatusItem({required UserModel model}) {
     return DataCell(
-      FutureBuilder(
-          future: widget.isCaster
-              ? null
-              : fireStoreProvider.checkTicketAvailable(userId: model.id),
-          builder: (context, snapshot) {
-            Widget getTextItem() {
-              if (snapshot.connectionState == ConnectionState.waiting) {
-                return const Center(
-                    child: SizedBox(
-                        height: 18,
-                        width: 18,
-                        child: CircularProgressIndicator()));
-              }
-              late String text;
+      Builder(builder: (context) {
+        bool notInDate = model.approveTickets.isEmpty;
+        if (notInDate) {
+          return const SizedBox();
+        }
+
+        return Padding(
+          padding: const EdgeInsets.all(kSmallPadding),
+          child: CustomButton(
+            onPressed: () async {
+              String? id;
               if (widget.isCaster) {
-                text = model.approveTickets.isNotEmpty
-                    ? 'in_date'.tr
-                    : 'not_in_date'.tr;
-              } else {
-                text = snapshot.data == 0 ? 'not_in_date'.tr : 'in_date'.tr;
+                id = model.approveTickets.first;
+                final messageModelGroup =
+                    await fireStoreProvider.getMessageGroupByTicketId(
+                        ticketId: id, source: Source.cache);
+                if (messageModelGroup != null) {
+                  await Get.toNamed(Routes.messageDetail,
+                      arguments: true,
+                      parameters: {'id': messageModelGroup.id!});
+                }
               }
-
-              return Text(
-                text,
-                style: tButtonWhiteTextStyle.copyWith(fontSize: 12),
-              );
-            }
-
-            Color color;
-            if (widget.isCaster) {
-              color =
-                  model.approveTickets.isNotEmpty ? kStatusRed : kStatusGreen;
-            } else {
-              color = snapshot.data == 0 ? kStatusGreen : kStatusRed;
-            }
-
-            return Padding(
-              padding: const EdgeInsets.all(kSmallPadding),
-              child: CustomButton(
-                onPressed: () async {},
-                borderColor: color,
-                color: color,
-                borderRadius: kDefaultPadding,
-                widget: getTextItem(),
-              ),
-            );
-          }),
+            },
+            borderColor: kStatusRed,
+            color: kStatusRed,
+            borderRadius: kDefaultPadding,
+            widget: Text(
+              'in_date'.tr,
+              style: tButtonWhiteTextStyle.copyWith(fontSize: 12),
+            ),
+          ),
+        );
+      }),
     );
   }
 

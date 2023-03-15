@@ -18,11 +18,12 @@ import 'package:syncfusion_flutter_xlsio/xlsio.dart';
 class CastPaymentManagerController extends GetxController {
   static CastPaymentManagerController get to => Get.find();
   final searchController = TextEditingController();
-  final transferStatus = Rxn<String>();
+  final transferStatus = TransferStatus.all.name.obs;
   final changeStatus = Rxn<String>();
   final minDate = Rxn<DateTime>();
   final maxDate = Rxn<DateTime>();
   final listTransferStatus = [
+    TransferStatus.all.name,
     TransferStatus.waiting.name,
     TransferStatus.received.name,
     TransferStatus.alreadyTransfer.name,
