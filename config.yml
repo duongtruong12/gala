@@ -1,0 +1,9 @@
+# _config.yml
+
+# Include the .well-known directory to be processed by Jekyll
+include:
+  - .well-known
+
+# Exclude Jekyll files or other files that do not need to be processed
+exclude:
+  - README.md

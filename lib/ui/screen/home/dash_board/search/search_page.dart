@@ -7,9 +7,9 @@ import 'package:base_flutter/utils/global/globals_variable.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'components/app_bar_search.dart';
-import 'search_controller.dart';
+import 'search_controller.dart' as search;
 
-class SearchPage extends GetView<SearchController> {
+class SearchPage extends GetView<search.SearchController> {
   const SearchPage({Key? key}) : super(key: key);
 
   @override
@@ -25,7 +25,7 @@ class SearchPage extends GetView<SearchController> {
 class SearchMobilePage extends StatelessWidget {
   const SearchMobilePage({super.key, required this.controller});
 
-  final SearchController controller;
+  final search.SearchController controller;
 
   @override
   Widget build(BuildContext context) {

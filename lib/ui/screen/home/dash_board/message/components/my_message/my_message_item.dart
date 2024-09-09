@@ -27,7 +27,7 @@ class MyMessageItem extends StatelessWidget {
           Text(
             formatDateTime(
                 date: model.createdTime,
-                formatString: DateTimeFormatString.hhmm),
+                formatString: DateTimeFormatString.textBehindHour),
             style: tNormalTextStyle.copyWith(fontSize: 8, color: kBorderColor),
           ),
           const SizedBox(width: 4),

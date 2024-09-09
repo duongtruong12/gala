@@ -22,7 +22,7 @@ class NotificationMessage extends StatelessWidget {
             textAlign: TextAlign.center,
             style: tNormalTextStyle.copyWith(fontSize: 12, color: kBorderColor),
           ),
-        )
+        ),
       ],
     );
   }

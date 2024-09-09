@@ -1,0 +1,46 @@
+[
+  {
+    "relation": ["delegate_permission/common.handle_all_urls"],
+    "target": {
+      "namespace": "android_app",
+      "package_name": "com.zuelligpharma.dpc",
+      "sha256_cert_fingerprints": [
+        "2E:38:FE:B9:74:42:B7:21:FA:57:5A:02:F5:6A:8F:21:8D:59:8B:77:03:A5:E4:89:2E:92:57:8E:79:E6:AA:38",
+        "5E:C7:1F:AB:D8:CB:9B:3F:3D:5C:8B:B2:7B:42:A7:03:C1:CD:45:78:B5:12:71:D4:C2:36:30:C0:96:78:7B:49"
+      ]
+    }
+  },
+  {
+    "relation": ["delegate_permission/common.handle_all_urls"],
+    "target": {
+      "namespace": "android_app",
+      "package_name": "com.zuelligpharma.dpc.dev",
+      "sha256_cert_fingerprints": [
+        "2E:38:FE:B9:74:42:B7:21:FA:57:5A:02:F5:6A:8F:21:8D:59:8B:77:03:A5:E4:89:2E:92:57:8E:79:E6:AA:38",
+        "5E:C7:1F:AB:D8:CB:9B:3F:3D:5C:8B:B2:7B:42:A7:03:C1:CD:45:78:B5:12:71:D4:C2:36:30:C0:96:78:7B:49"
+      ]
+    }
+  },
+  {
+    "relation": ["delegate_permission/common.handle_all_urls"],
+    "target": {
+      "namespace": "android_app",
+      "package_name": "com.zuelligpharma.dpc.staging",
+      "sha256_cert_fingerprints": [
+        "2E:38:FE:B9:74:42:B7:21:FA:57:5A:02:F5:6A:8F:21:8D:59:8B:77:03:A5:E4:89:2E:92:57:8E:79:E6:AA:38",
+        "5E:C7:1F:AB:D8:CB:9B:3F:3D:5C:8B:B2:7B:42:A7:03:C1:CD:45:78:B5:12:71:D4:C2:36:30:C0:96:78:7B:49"
+      ]
+    }
+  },
+  {
+    "relation": ["delegate_permission/common.handle_all_urls"],
+    "target": {
+      "namespace": "android_app",
+      "package_name": "com.zuelligpharma.dpc.uat",
+      "sha256_cert_fingerprints": [
+        "2E:38:FE:B9:74:42:B7:21:FA:57:5A:02:F5:6A:8F:21:8D:59:8B:77:03:A5:E4:89:2E:92:57:8E:79:E6:AA:38",
+        "5E:C7:1F:AB:D8:CB:9B:3F:3D:5C:8B:B2:7B:42:A7:03:C1:CD:45:78:B5:12:71:D4:C2:36:30:C0:96:78:7B:49"
+      ]
+    }
+  }
+]

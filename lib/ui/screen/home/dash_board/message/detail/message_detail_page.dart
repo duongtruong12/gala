@@ -110,20 +110,29 @@ class MessageMobilePage extends StatelessWidget {
 
   Widget _buildMessageList(context, i) {
     final model = controller.list[i];
-    Widget dateWidget = const SizedBox();
+    Widget? dateWidget;
     Widget item;
-    if (i != 0 && i != controller.list.length - 1) {
-      final previousModel = controller.list[i - 1];
-      if (model.createdTime!.difference(previousModel.createdTime!).inHours >
-          1) {
-        dateWidget = Padding(
-          padding: const EdgeInsets.only(top: kDefaultPadding),
-          child: NotificationMessage(
-              content: formatDateTime(
-                  date: model.createdTime,
-                  formatString: DateTimeFormatString.mmddeeee)),
-        );
-      }
+    if (model.type != SendMessageType.text.name) {
+      dateWidget = Padding(
+        padding: const EdgeInsets.only(top: 4),
+        child: Row(
+          crossAxisAlignment: CrossAxisAlignment.center,
+          mainAxisAlignment: MainAxisAlignment.center,
+          mainAxisSize: MainAxisSize.max,
+          children: [
+            Expanded(
+              child: Text(
+                formatDateTime(
+                    date: model.createdTime,
+                    formatString: DateTimeFormatString.textBehindHour),
+                textAlign: TextAlign.center,
+                style:
+                    tNormalTextStyle.copyWith(fontSize: 8, color: kBorderColor),
+              ),
+            ),
+          ],
+        ),
+      );
     }
 
     if (model.userId == user.value?.id) {
@@ -167,7 +176,11 @@ class MessageMobilePage extends StatelessWidget {
       mainAxisAlignment: model.userId == 'me'
           ? MainAxisAlignment.end
           : MainAxisAlignment.start,
-      children: [dateWidget, item, const SizedBox(height: kSmallPadding)],
+      children: [
+        const SizedBox(height: kSmallPadding),
+        item,
+        dateWidget ?? const SizedBox(height: kSmallPadding)
+      ],
     );
   }
 

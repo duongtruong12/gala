@@ -1,0 +1,71 @@
+{
+  "applinks": {
+    "apps": [],
+    "details": [
+      {
+        "appID": "42EP3S477B.com.zuelligpharma.dpc.dev",
+        "paths": ["/reset_password", "reset_password", "/reset_password/*"]
+      },
+      {
+        "appID": "42EP3S477B.com.zuelligpharma.dpc.staging",
+        "paths": ["/reset_password", "reset_password", "/reset_password/*"]
+      },
+      {
+        "appID": "42EP3S477B.com.zuelligpharma.dpc.uat",
+        "paths": ["/reset_password", "reset_password", "/reset_password/*"]
+      },
+      {
+        "appID": "42EP3S477B.com.zuelligpharma.dpc",
+        "paths": ["/reset_password", "reset_password", "/reset_password/*"]
+      },
+      {
+        "appID": "42EP3S477B.com.zuelligpharma.dpc.amcare365.dev",
+        "paths": ["/reset_password", "reset_password", "/reset_password/*"]
+      },
+      {
+        "appID": "42EP3S477B.com.zuelligpharma.dpc.amcare365.uat",
+        "paths": ["/reset_password", "reset_password", "/reset_password/*"]
+      },
+      {
+        "appID": "42EP3S477B.com.zuelligpharma.dpc.amcare365.staging",
+        "paths": ["/reset_password", "reset_password", "/reset_password/*"]
+      },
+      {
+        "appID": "42EP3S477B.com.zuelligpharma.dpc.amcare365",
+        "paths": ["/reset_password", "reset_password", "/reset_password/*"]
+      },
+      {
+        "appID": "42EP3S477B.com.zuelligpharma.dpc.azcare4me.dev",
+        "paths": ["/reset_password", "reset_password", "/reset_password/*"]
+      },
+      {
+        "appID": "42EP3S477B.com.zuelligpharma.dpc.azcare4me.uat",
+        "paths": ["/reset_password", "reset_password", "/reset_password/*"]
+      },
+      {
+        "appID": "42EP3S477B.com.zuelligpharma.dpc.azcare4me.staging",
+        "paths": ["/reset_password", "reset_password", "/reset_password/*"]
+      },
+      {
+        "appID": "42EP3S477B.com.zuelligpharma.dpc.azcare4me",
+        "paths": ["/reset_password", "reset_password", "/reset_password/*"]
+      },
+      {
+        "appID": "42EP3S477B.com.zuelligpharma.dpc.servierplusone.dev",
+        "paths": ["/reset_password", "reset_password", "/reset_password/*"]
+      },
+      {
+        "appID": "42EP3S477B.com.zuelligpharma.dpc.servierplusone.staging",
+        "paths": ["/reset_password", "reset_password", "/reset_password/*"]
+      },
+      {
+        "appID": "42EP3S477B.com.zuelligpharma.dpc.servierplusone.uat",
+        "paths": ["/reset_password", "reset_password", "/reset_password/*"]
+      },
+      {
+        "appID": "42EP3S477B.com.zuelligpharma.dpc.servierplusone",
+        "paths": ["/reset_password", "reset_password", "/reset_password/*"]
+      }
+    ]
+  }
+}

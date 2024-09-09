@@ -60,19 +60,20 @@ class TicketView extends StatelessWidget {
 
           if (model.peopleApply.contains(user.value?.id) == true ||
               model.peopleApprove.contains(user.value?.id) == true) {
-            late String messageGroupId;
+            late String? messageGroupId;
             if (model.status == TicketStatus.created.name) {
               messageGroupId = generateIdMessage(['admin', user.value!.id!]);
             } else {
-              final listUser = <String>[
-                ...model.peopleApprove,
-                model.createdUser!
-              ];
-              messageGroupId = generateIdMessage([...listUser, model.id!]);
+              final messageModelGroup =
+                  await fireStoreProvider.getMessageGroupByTicketId(
+                      ticketId: model.id, source: Source.cache);
+              messageGroupId = messageModelGroup?.id;
             }
 
-            await Get.toNamed(Routes.messageDetail,
-                arguments: true, parameters: {'id': messageGroupId});
+            if (messageGroupId != null) {
+              await Get.toNamed(Routes.messageDetail,
+                  arguments: true, parameters: {'id': messageGroupId});
+            }
           }
         },
         color: color,
